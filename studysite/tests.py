@@ -10,6 +10,6 @@ class LoginTest(unittest.TestCase):
     user2.save()
   def test_login(self):
     c = Client()
-    response = c.login(username='user1', password='1234567')
+    response = c.post('/login/', {'username': 'user1', 'password': '1234567'})
     self.assertEqual(response.status_code, 200)
     self.assertEqual(str(response.context['user']), 'user1')
