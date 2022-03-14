@@ -14,3 +14,6 @@ django-allauth
 
 # whitenoise is used for heroku
 whitenoise
+
+dj-database-url 
+psycopg2
