@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 
-app_name='study_buddy'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name="index.html")),
