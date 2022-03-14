@@ -1,3 +1,4 @@
+import unittest
 from django.contrib.auth.models import User
 from django.test import Client
 
@@ -9,6 +10,6 @@ class LoginTest(unittest.TestCase):
     user2.save()
   def test_login(self):
     c = Client()
-    response = c.post('', {'username': 'user1', 'password': 1234567'})
+    response = c.login(username='user1', password='1234567')
     self.assertEqual(response.status_code, 200)
     self.assertEqual(str(response.context['user']), 'user1')
