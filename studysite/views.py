@@ -10,3 +10,9 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
+
+class AboutView(generic.TemplateView):
+    template_name = 'about.html'
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
