@@ -1,11 +1,6 @@
-<html>
-  <nav>
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'index' %}">Home</a>
-    <a href="{% url 'about' %}">About Us</a>
-  </nav>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
   <h1>Studdy Buddy</h1>
   <p>Welcome to the Studdy Buddy Site!</p>
-</body>
-</html>
+{% endblock %}
