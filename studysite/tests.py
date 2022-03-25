@@ -16,7 +16,7 @@ class LoginTest(unittest.TestCase):
     self.assertTrue(True)
 
   def test_login_valid(self):
-    response = self.client.get('/studysite/accounts/google/login/')
+    response = self.client.get('/accounts/login/')
     self.client.login(username='user1', password='1234567')
     self.assertEqual(response.status_code, 200)
     #self.assertEqual(str(response.context['user']), 'user1') # context does not exist, only context_data which doesnt have a user field. something flucky about this
