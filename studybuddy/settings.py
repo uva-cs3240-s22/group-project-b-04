@@ -158,7 +158,11 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+<<<<<<< HEAD
 SITE_ID = 0
+=======
+SITE_ID = 3
+>>>>>>> 2ba02bb (comment asserT)
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
