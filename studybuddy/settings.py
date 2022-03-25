@@ -90,6 +90,21 @@ DATABASES = {
     }
 }
 
+SYSTEM_ENV = os.environ.get('SYSTEM_ENV', None)
+if SYSTEM_ENV == 'GITHUB_WORKFLOW':
+    DEBUG = True
+    SECRET_KEY = 'TESTING_KEY'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'github_actions',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+}
+
 # add if statement from piazza
 if 'test' in sys.argv:
     DATABASES['default'] = {
