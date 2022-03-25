@@ -1,4 +1,3 @@
-
 from re import template
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
