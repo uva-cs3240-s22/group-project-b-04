@@ -2,7 +2,9 @@
 group-project-b-04 created by GitHub Classroom
 
 ## View the Website 
-Include Link here
+https://studdy-buddy-b04.herokuapp.com/
+or
+https://study-buddy-b04.herokuapp.com/
 
 ##### Team B-04
 Tyler Lynch
