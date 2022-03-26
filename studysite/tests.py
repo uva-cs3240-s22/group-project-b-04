@@ -6,16 +6,16 @@ from django.test import Client
 
 class LoginTest(unittest.TestCase):
   def setup(self):
-    # self.user1 = User.objects.create_user(username='user1', password='1234567')
-    # user2 = User.objects.create_user(username='user2', password='89101112')
-    # user1.save()
-    #user2.save()
+    user1 = User.objects.create_user(username='user1', password='1234567')
+    user2 = User.objects.create_user(username='user2', password='89101112')
+    user1.save()
+    user2.save()
     self.client = Client()
   def test_login(self):
     self.assertTrue(2 > 1)
     # c = Client()
-    # response = self.client.get('/accounts/login/')
+    response = self.client.get(reverse('login'))
     # #login(username='user1', password='1234567')
-    # self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.status_code, 200)
     #self.assertEqual(str(response.context['user']), 'user1')
 
