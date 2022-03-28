@@ -6,5 +6,13 @@
 {% endblock %}
 
 {% block content %}
-    <p>Profile of {{ user.username }}</p>
+    <div style="padding:20px;">
+        <p>Profile of {{ user.username }}</p>
+        <h6>Name: </h6>
+        <p>{{ user.first_name }} {{ user.last_name }}</p>
+        <h6>Email: </h6>
+        <p>{{ user.email }}</p>
+        <h6>Username</h6>
+        <p>{{ user.username }}<p>
+    </div>
 {% endblock %}
