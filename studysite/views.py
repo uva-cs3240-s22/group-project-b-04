@@ -33,11 +33,12 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
     model = Profile
     template_name = 'restricted/profile.html'
-    
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
-
-
+    def get_context_data(self, kwargs):
+        context = super().get_context_data(kwargs)
+        context['course_list'] = self.get_object().courses.all()
+        return context
 # limit access to only logged in users, otherwise redirect to login page
 def validate_user(request, username, ):
     if not request.user.is_authenticated:
