@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load socialaccount %}
 
+{% block title %}
+    <title>Login</title>
+{% endblock %}
+
 {% block content %}
   <h1>Login</h1>
   {% if user.is_authenticated %}
