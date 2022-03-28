@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = 'django-insecure-%izzhrjd!vk*mwofn4vx7(5fm*f=k2%i_3pkch3i1yfp2st9wv'#os.environ.get('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'bootstrap5',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -82,20 +83,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'studybuddy.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 if 'test' in sys.argv:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'testdatabase'
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'd3eanse0roeke7',
+            'USER': 'fjvnlxfiyrfyav',
+            'PASSWORD': '8cc2f52d8381930ecd01e0319589a5236b844d49b3a7715ec36045eb41f10414',
+            'HOST': 'ec2-52-86-177-34.compute-1.amazonaws.com',
+            'PORT': '5432',
         }
     }
 else:
     DATABASES = {
         'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
     }
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    DATABASES['default'].update(db_from_env)
+
+# Database
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
