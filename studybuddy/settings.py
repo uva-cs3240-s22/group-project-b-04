@@ -89,21 +89,6 @@ DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
-SYSTEM_ENV = os.environ.get('SYSTEM_ENV', None)
-if SYSTEM_ENV == 'GITHUB_WORKFLOW':
-    DEBUG = True
-    SECRET_KEY = 'TESTING_KEY'
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'github_actions',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-        }
-}
-
 # add if statement from piazza
 if 'test' in sys.argv:
     DATABASES['default'] = {
@@ -173,11 +158,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-<<<<<<< HEAD
-SITE_ID = 0
-=======
 SITE_ID = 3
->>>>>>> 2ba02bb (comment asserT)
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
