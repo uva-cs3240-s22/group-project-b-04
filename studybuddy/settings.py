@@ -65,7 +65,7 @@ ROOT_URLCONF = 'studybuddy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'studysite' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -153,8 +153,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 0
 
-LOGIN_REDIRECT_URL = 'studysite/'
-LOGOUT_REDIRECT_URL = 'studysite/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Activate Django-Heroku.
 # Use this code to avoid the psycopg2 / django-heroku error!  
