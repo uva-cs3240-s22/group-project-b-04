@@ -87,10 +87,7 @@ WSGI_APPLICATION = 'studybuddy.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # add if statement from piazza
@@ -185,7 +182,6 @@ except ImportError:
     print('fail no local')
     pass
 
-""" 
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
-    DATABASES = {'default': dj_database_url.config()} """
+    DATABASES = {'default': dj_database_url.config()}
