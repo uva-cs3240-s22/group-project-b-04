@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+   # 'studysite.apps.StudysiteConfig'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'studysite'
 ]
 
 MIDDLEWARE = [
@@ -89,7 +91,7 @@ DATABASES = {
     }
 }
 
-
+#AUTH_USER_MODEL = 'studysite.Profile'
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.shortcuts import redirect
 from django.views import generic
+from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -30,7 +31,7 @@ class LoginView(generic.TemplateView):
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
-    model = User
+    model = Profile
     template_name = 'restricted/profile.html'
     
     def get_object(self):
