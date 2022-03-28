@@ -86,7 +86,10 @@ WSGI_APPLICATION = 'studybuddy.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # add if statement from piazza
@@ -166,9 +169,12 @@ LOGOUT_REDIRECT_URL = '/'
 # Activate Django-Heroku.
 # Use this code to avoid the psycopg2 / django-heroku error!  
 # Do NOT import django-heroku above!
-if '\studysite' in os.environ['HOME']:
+try:
+    if '\studysite' in os.environ['HOME']:
         import django_heroku
         django_heroku.settings(locals())
+except ImportError:
+    found = False
 
 try:
     from studybuddy.local_settings import *
@@ -176,6 +182,7 @@ try:
 except ImportError:
     print('fail no local')
     pass
+
 """ 
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
