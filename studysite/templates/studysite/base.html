@@ -10,10 +10,9 @@
         {% block title %}
             
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{% static 'studysite/styles.css' %}"/>
-    </head>
+        <link rel="stylesheet" type="text/css" href="{% static 'studysite/base_styles.css' %}"/>
 
-    <!--Bootstrap Basic Navabar: https://getbootstrap.com/docs/4.1/components/navbar/ -->
+        <!--Bootstrap Basic Navabar: https://getbootstrap.com/docs/4.1/components/navbar/ -->
     <nav class="navbar navbar-light navbar-expand-md bg-light justify-content-md-center justify-content-start">
         <a class="navbar-brand d-md-none d-inline" href="">Brand</a>
         <button class="navbar-toggler ml-1" type="button" data-toggle="collapse" data-target="#collapsingNavbar2">
@@ -24,9 +23,6 @@
             <ul class="navbar-nav mx-auto text-md-center text-left">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'about' %}">About Us</a> 
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
                 </li>
                 <li class="nav-item my-auto">
                     <a class="navbar-brand mx-auto" href="{% url 'index' %}">Studdy Buddy</a>
@@ -45,6 +41,7 @@
             </ul>
         </div>
     </nav>
+    </head>
 
 <body>
   {% block content%}
