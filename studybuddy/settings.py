@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'studysite/static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -169,6 +169,7 @@ except ImportError:
 try:
     from studybuddy.local_settings import *
     print('imported local settings')
+    print(STATIC_URL)
 except ImportError:
     print('fail no local')
     pass
