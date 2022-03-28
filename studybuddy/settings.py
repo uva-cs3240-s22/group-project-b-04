@@ -89,21 +89,6 @@ DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
-SYSTEM_ENV = os.environ.get('SYSTEM_ENV', None)
-if SYSTEM_ENV == 'GITHUB_WORKFLOW':
-    DEBUG = True
-    SECRET_KEY = 'TESTING_KEY'
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'github_actions',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-        }
-}
-
 # add if statement from piazza
 if 'test' in sys.argv:
     DATABASES['default'] = {
@@ -181,12 +166,9 @@ LOGOUT_REDIRECT_URL = '/'
 # Activate Django-Heroku.
 # Use this code to avoid the psycopg2 / django-heroku error!  
 # Do NOT import django-heroku above!
-try:
-    if 'HEROKU' in os.environ:
+if '\studysite' in os.environ['HOME']:
         import django_heroku
         django_heroku.settings(locals())
-except ImportError:
-    found = False
 
 try:
     from studybuddy.local_settings import *
@@ -194,7 +176,7 @@ try:
 except ImportError:
     print('fail no local')
     pass
-
+""" 
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
-    DATABASES = {'default': dj_database_url.config()}
+    DATABASES = {'default': dj_database_url.config()} """
