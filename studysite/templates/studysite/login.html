@@ -1,15 +1,14 @@
-{% extends 'base.html' %}
 {% load socialaccount %}
+{% extends 'studysite/base.html' %}
 
 {% block title %}
     <title>Login</title>
 {% endblock %}
 
 {% block content %}
-  <h1>Login</h1>
+  <h1>My Google OAuth Project </h1>
   {% if user.is_authenticated %}
     <p>Welcome, You are logged in as {{ user.username }}</p>
-    <a href="{% url 'profile' user.id%}">Profile</a>
     <a href="{% url 'logout' %}">Logout</a>
   {% else %}
     <a href="{% provider_login_url 'google' %}">Login With Google</a>
