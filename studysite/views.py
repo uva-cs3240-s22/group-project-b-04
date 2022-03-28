@@ -10,19 +10,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class IndexView(generic.TemplateView):
-    template_name = 'index.html'
+    template_name = 'studysite/index.html'
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
 class AboutView(generic.TemplateView):
-    template_name = 'about.html'
+    template_name = 'studysite/about.html'
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
 class LoginView(generic.TemplateView):
-    template_name = 'registration/login.html'
+    template_name = 'studysite/registration/login.html'
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
@@ -31,7 +31,7 @@ class LoginView(generic.TemplateView):
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
     model = User
-    template_name = 'restricted/profile.html'
+    template_name = 'studysite/restricted/profile.html'
     
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
