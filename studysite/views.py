@@ -1,3 +1,4 @@
+from multiprocessing import context
 from re import template
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -33,6 +34,10 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
     model = User
     template_name = 'studysite/restricted/profile.html'
+    context_object_name = 'courses_list'
+
+    def get_queryset(self):
+        return Course.objects.order_by('course_subject')
     
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
