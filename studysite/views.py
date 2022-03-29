@@ -32,9 +32,9 @@ class LoginView(generic.TemplateView):
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
-    model = User
+    model = CustomUser
     template_name = 'studysite/restricted/profile.html'
-    context_object_name = 'courses_list'
+    context_object_name = 'courses_enrolled'
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
@@ -49,7 +49,6 @@ class CoursesView(generic.ListView):
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
-
 
 # limit access to only logged in users, otherwise redirect to login page
 def validate_user(request):
