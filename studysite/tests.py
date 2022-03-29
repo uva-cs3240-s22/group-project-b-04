@@ -28,9 +28,9 @@ class LoginTest(unittest.TestCase):
     self.assertEqual(response.status_code, 200)
 
   def test_course_made(self):
-    name = "Advanced Software Development Methods"
+    name = "Algorithms"
     subject = "CS"
-    number = "3240"
+    number = "4102"
     num_prev = len(Course.objects.all())
     Course.objects.create(course_name = name, course_subject=subject, course_number=number)
     self.assertEqual(num_prev + 1, len(Course.objects.all()))
