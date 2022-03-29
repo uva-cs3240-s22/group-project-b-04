@@ -64,8 +64,15 @@ def addcourse(request):
         if (len(request.POST['course_subject']) > 0 and len(request.POST['course_name']) > 0 and len(request.POST['course_number']) > 0 ):
             course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'])
             course.save()
+            request.user.CustomUser.courses_enrolled.add(course)
+            request.Course.courses_enrolled.add(CustomUser)
+            print ("added "+ course)
             return HttpResponseRedirect(reverse('course-finder'))
         else: 
             return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists or is incorrect",})
     else:
         return render(request, 'studysite/restricted/courseadd.html')
+
+# def update_profile(request, user_id):
+#     user = User.objects.get(pk=user_id)
+#     user.save()

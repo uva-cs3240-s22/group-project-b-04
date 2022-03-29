@@ -1,8 +1,10 @@
 from operator import truediv
 from xml.etree.ElementTree import tostring
 from django.db import models
-from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -33,5 +35,18 @@ class CustomUser(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
+<<<<<<< HEAD
 #create another model, call it profile manager, creating a profile model that includes the user and all the other parameters i want
 >>>>>>> d8b6ba0 (Added CustomUser model)
+=======
+@receiver(post_save, sender=User)
+def create_customUser(sender, instance, created, **kwargs):
+    if created:
+        CustomUser.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_customUser(sender, instance, **kwargs):
+    instance.customuser.save()
+
+#create another model, call it profile manager, creating a profile model that includes the user and all the other parameters i want
+>>>>>>> 771eba0 (More custom user updates)
