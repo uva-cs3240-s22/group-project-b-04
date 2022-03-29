@@ -21,6 +21,14 @@ class LoginTest(unittest.TestCase):
     self.assertEqual(response.status_code, 200)
     #self.assertEqual(str(response.context['user']), 'user1') # context does not exist, only context_data which doesnt have a user field. something flucky about this
 
+  def test_about_url(self):
+    response = self.client.get('/studysite/about')
+    self.assertEqual(response.status_code, 301)
+
+  def test_base_url(self):
+    response = self.client.get('/studysite/')
+    self.assertEqual(response.status_code, 200)
+
   def tearDown(self):
     self.user1.delete()
     self.user2.delete()
