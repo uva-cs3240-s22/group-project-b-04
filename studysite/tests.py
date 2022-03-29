@@ -34,6 +34,14 @@ class LoginTest(unittest.TestCase):
     num_prev = len(Course.objects.all())
     Course.objects.create(course_name = name, course_subject=subject, course_number=number)
     self.assertEqual(num_prev + 1, len(Course.objects.all()))
+    
+  def test_about_url(self):
+    response = self.client.get('/studysite/about')
+    self.assertEqual(response.status_code, 301)
+
+  def test_base_url(self):
+    response = self.client.get('/studysite/')
+    self.assertEqual(response.status_code, 200)
 
   def tearDown(self):
     self.user1.delete()
