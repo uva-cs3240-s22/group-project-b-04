@@ -13,8 +13,10 @@ class Course(models.Model):
     course_name = models.CharField(max_length = 200, unique = True) # course long name i.e Partial Differential Equations
     course_subject = models.CharField(max_length=5) # subject short hand i.e APMA
     course_number = models.CharField(max_length=5) # course level i.e 3140
-    course_roster = models.ManyToManyField(User)
+    course_roster = models.ManyToManyField(User, blank=True)
 
     # self expressed as short hand and name i.e APMA 3140: Partial Differential Equations
     def __str__(self):
         return self.course_name
+
+
