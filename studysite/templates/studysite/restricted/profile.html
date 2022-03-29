@@ -14,5 +14,14 @@
         <p>{{ user.email }}</p>
         <h6>Username</h6>
         <p>{{ user.username }}<p>
+
+        <h6>Courses: </h6>
+        {% if courses_list %}
+            <ul class="list-group list-group-flush" >
+            
+            </ul>
+        {% endif %}
+        </br>
+          <h6><a href="{% url 'course-add' %}">Add a Class</a></h6>
     </div>
 {% endblock %}
