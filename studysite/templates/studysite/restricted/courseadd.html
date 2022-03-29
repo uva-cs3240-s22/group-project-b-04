@@ -9,7 +9,7 @@
     <div style="padding:20px;">
         <h6>Don't see your class?</h6>
         {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
-        <form action="{% url 'course-add' %}" method="POST" style="padding-bottom: 15px;">
+        <form action="{% url 'course-add' %}" method="POST" style="padding-bottom: 15px;" id="course-add-form">
             {% csrf_token %}
             <div class="form-group" style="padding-bottom: 20px;">
               <label>Course Subject(i.e APMA, CS, etc.): </label>
