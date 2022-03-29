@@ -1,6 +1,8 @@
 import unittest
 from django.contrib.auth.models import User
 from django.test import Client
+from django.urls import reverse
+from studysite.models import Course
 
 #https://docs.djangoproject.com/en/4.0/topics/testing/tools/#:~:text=Some%20of%20the%20things%20you%20can%20do%20with,with%20a%20template%20context%20that%20contains%20certain%20values.
 
@@ -20,6 +22,18 @@ class LoginTest(unittest.TestCase):
     self.client.login(username='user1', password='1234567')
     self.assertEqual(response.status_code, 200)
     #self.assertEqual(str(response.context['user']), 'user1') # context does not exist, only context_data which doesnt have a user field. something flucky about this
+
+  def test_course_form(self):
+    response = self.client.get(reverse('course-add'))
+    self.assertEqual(response.status_code, 200)
+
+  def test_course_made(self):
+    name = "Advanced Software Development Methods"
+    subject = "CS"
+    number = "3240"
+    num_prev = len(Course.objects.all())
+    Course.objects.create(course_name = name, course_subject=subject, course_number=number)
+    self.assertEqual(num_prev + 1, len(Course.objects.all()))
 
   def tearDown(self):
     self.user1.delete()
