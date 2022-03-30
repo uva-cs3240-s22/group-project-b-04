@@ -7,6 +7,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.views import generic
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
 
@@ -32,15 +33,19 @@ class LoginView(generic.TemplateView):
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
-    model = User
+    model = get_user_model()
     template_name = 'studysite/restricted/profile.html'
     context_object_name = 'courses_list'
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
     
-    def get_object(self):
+    def get_object(self, queryset=None):
         return self.model.objects.get(pk=self.request.user.pk)
+    #def get_object(self, queryset=None):
+        #user = super(ProfileView, self).get_object(queryset)
+        #UserProfile.objects.get_or_create(user=user)
+        #return user
 
 class CoursesView(generic.ListView):
     model = Course

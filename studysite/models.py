@@ -1,10 +1,11 @@
-from operator import truediv
-from xml.etree.ElementTree import tostring
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator 
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
+
+years = (('Undergraduate', 'Undergraduate'), ('Masters', 'Masters'), ('PhD', 'PhD'))
 
 # If the User model is constomized we need to change how we set up User
     #from django.contrib.auth import get_user_model
@@ -19,4 +20,22 @@ class Course(models.Model):
     def __str__(self):
         return self.course_name
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, null=True, blank=True)
+    major = models.CharField(max_length=80, blank=True)
+    year = models.CharField(max_length=80, choices=years, blank=True)
+    bio = models.TextField(max_length=250, default='', blank=True)
+    courses_list = models.ManyToManyField(Course, blank=True)
 
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
