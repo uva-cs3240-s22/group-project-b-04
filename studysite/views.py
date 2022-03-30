@@ -7,6 +7,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.views import generic
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
 
@@ -36,11 +37,14 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
     template_name = 'studysite/restricted/profile.html'
     context_object_name = 'courses_enrolled'
 
-    def get_queryset(self):
-        return Course.objects.order_by('course_subject')
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context["courses"] = self.model.objects.get(pk=self.request.user.pk).course_set.all()
+        return context
     
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
+
 
 class CoursesView(generic.ListView):
     model = Course

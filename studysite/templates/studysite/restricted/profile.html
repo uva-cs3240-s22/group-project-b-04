@@ -16,10 +16,10 @@
         <p>{{ user.username }}<p>
 
         <h6>Courses: </h6>
-        <!-- {% if courses_enrolled %}
+        {% if courses %}
             <ul class="list-group list-group-flush" >
-            {% for course in courses_enrolled %}
-            <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+            {% for course in courses %}
+                <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
             {% endfor %}
             </ul>
         {% endif %} -->

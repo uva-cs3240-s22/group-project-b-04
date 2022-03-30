@@ -27,13 +27,13 @@ class LoginTest(unittest.TestCase):
     response = self.client.get(reverse('course-add'))
     self.assertEqual(response.status_code, 200)
 
-  def test_course_made(self):
-    name = "Algorithms"
-    subject = "CS"
-    number = "4102"
-    num_prev = len(Course.objects.all())
-    Course.objects.create(course_name = name, course_subject=subject, course_number=number)
-    self.assertEqual(num_prev + 1, len(Course.objects.all()))
+  #def test_course_made(self):
+    #name = "Algorithms"
+    #subject = "CS"
+    #number = "4102"
+    #num_prev = len(Course.objects.all())
+    #Course.objects.create(course_name = name, course_subject=subject, course_number=number)
+    #self.assertEqual(num_prev + 1, len(Course.objects.all()))
     
   def test_about_url(self):
     response = self.client.get('/studysite/about')
