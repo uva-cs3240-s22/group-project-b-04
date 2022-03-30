@@ -85,6 +85,12 @@ WSGI_APPLICATION = 'studybuddy.wsgi.application'
 
 if 'test' in sys.argv:
     DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    }
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    DATABASES['default'].update(db_from_env)
+else:
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'd3eanse0roeke7',
@@ -94,12 +100,7 @@ if 'test' in sys.argv:
             'PORT': '5432',
         }
     }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-    }
-    db_from_env = dj_database_url.config(conn_max_age=600)
-    DATABASES['default'].update(db_from_env)
+   
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
