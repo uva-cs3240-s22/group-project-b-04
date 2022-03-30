@@ -6,17 +6,16 @@
 {% endblock %}
 
 {% block content %}
-    <div style="padding:20px;">
+    <div style="padding:20px;"> 
         {% if courses_list %}
             <ul class="list-group list-group-flush" >
             {% for course in courses_list %}
-            <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}
-            <input class="btn btn-primary" type="submit" value="+"></li>
-            
+                    <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}
+                    <input class="btn btn-primary" type="submit" href = "{% url 'course-add-touser' %}" value="+"></li>
             {% endfor %}
             </ul>
         {% endif %}
         </br>
-          <h6><a href="{% url 'course-add' %}">Don't see your Class?</a></h6>
+        <h6><a href="{% url 'course-add' %}">Don't see your Class?</a></h6>
     </div>
 {% endblock %}

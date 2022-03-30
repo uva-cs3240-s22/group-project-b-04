@@ -50,6 +50,13 @@ class CoursesView(generic.ListView):
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
 
+def addCourseToUser(request):
+    if request.method == "submit" :
+        #fill in method of how to add to user class list
+        return HttpResponseRedirect(reverse('course-finder'))
+    else:
+        return render(request, 'studysite/courses.html')
+
 
 # limit access to only logged in users, otherwise redirect to login page
 def validate_user(request):
