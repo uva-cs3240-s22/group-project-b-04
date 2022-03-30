@@ -10,7 +10,13 @@
         {% if courses_list %}
             <ul class="list-group list-group-flush" >
             {% for course in courses_list %}
-            <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+                <form action="{% url 'course-finder' %}" method="POST" style="padding-bottom: 15px;" id="course-add-user-form">
+                    {% csrf_token %}
+                    <div class="form-group" style="padding-bottom: 20px;">
+                        <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}
+                        <input class="btn btn-primary" type="submit" value="+"></li>
+                    </div>
+                </form>
             {% endfor %}
             </ul>
         {% endif %}

@@ -53,6 +53,10 @@ class CoursesView(generic.ListView):
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
+    
+    def addCourseToUser(request, self):
+        Course.objects.get(pk=self.pk).course_roster.add(User)
+        return HttpResponseRedirect(reverse('course-finder'))
 
 
 # limit access to only logged in users, otherwise redirect to login page
