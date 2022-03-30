@@ -10,7 +10,9 @@
         {% if courses_list %}
             <ul class="list-group list-group-flush" >
             {% for course in courses_list %}
-            <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+            <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}
+            <input class="btn btn-primary" type="submit" value="+"></li>
+            
             {% endfor %}
             </ul>
         {% endif %}
