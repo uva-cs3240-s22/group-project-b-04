@@ -14,7 +14,7 @@ class Course(models.Model):
     course_name = models.CharField(max_length = 200, unique = True) # course long name i.e Partial Differential Equations
     course_subject = models.CharField(max_length=5) # subject short hand i.e APMA
     course_number = models.CharField(max_length=5) # course level i.e 3140
-    course_roster = models.ManyToManyField(User, blank=True)
+    course_roster = models.ManyToManyField(User, blank=True) # to access from user profile do the user.course_set.all()
 
     # self expressed as short hand and name i.e APMA 3140: Partial Differential Equations
     def __str__(self):
@@ -25,7 +25,7 @@ class UserProfile(models.Model):
     major = models.CharField(max_length=80, blank=True)
     year = models.CharField(max_length=80, choices=years, blank=True)
     bio = models.TextField(max_length=250, default='', blank=True)
-    courses_list = models.ManyToManyField(Course, blank=True)
+    # courses_list = models.ManyToManyField(Course, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -38,4 +38,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    print('profile saved')
     instance.userprofile.save()

@@ -33,19 +33,18 @@ class LoginView(generic.TemplateView):
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
-    model = get_user_model()
+    model = User
     template_name = 'studysite/restricted/profile.html'
     context_object_name = 'courses_list'
 
-    def get_queryset(self):
-        return Course.objects.order_by('course_subject')
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context["courses"] = self.model.objects.get(pk=self.request.user.pk).course_set.all()
+        return context
     
-    def get_object(self, queryset=None):
+    def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
-    #def get_object(self, queryset=None):
-        #user = super(ProfileView, self).get_object(queryset)
-        #UserProfile.objects.get_or_create(user=user)
-        #return user
+
 
 class CoursesView(generic.ListView):
     model = Course
