@@ -83,23 +83,28 @@ TEMPLATES = [
 WSGI_APPLICATION = 'studybuddy.wsgi.application'
 
 
-if 'test' in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'd3eanse0roeke7',
-            'USER': 'fjvnlxfiyrfyav',
-            'PASSWORD': '8cc2f52d8381930ecd01e0319589a5236b844d49b3a7715ec36045eb41f10414',
-            'HOST': 'ec2-52-86-177-34.compute-1.amazonaws.com',
-            'PORT': '5432',
-        }
+#if 'test' in sys.argv:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd3eanse0roeke7',
+        'USER': 'fjvnlxfiyrfyav',
+        'PASSWORD': '8cc2f52d8381930ecd01e0319589a5236b844d49b3a7715ec36045eb41f10414',
+        'HOST': 'ec2-52-86-177-34.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-    }
-    db_from_env = dj_database_url.config(conn_max_age=600)
-    DATABASES['default'].update(db_from_env)
+}
+# else:
+#     DATABASES = {
+#         'default':{
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': 'mydatabase'
+#         }
+#     }
+    
+    # db_from_env = dj_database_url.config(conn_max_age=600)
+    # DATABASES['default'].update(db_from_env)
+    
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
