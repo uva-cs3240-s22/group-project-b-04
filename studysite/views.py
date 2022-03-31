@@ -54,9 +54,13 @@ class CoursesView(generic.ListView):
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
     
-    def addCourseToUser(request, self):
-        Course.objects.get(pk=self.pk).course_roster.add(User)
-        return HttpResponseRedirect(reverse('course-finder'))
+    # def addCourseToUser(request, self.pk, self):
+    #     print("test")
+    #     print(self)
+    #     print(User.first_name)
+    #     # Course.objects.get(pk=self.pk).course_roster.add(User)
+    #     # User.objects.get(pk=User.pk).course_set.add(self)
+    #     # return HttpResponseRedirect(reverse('course-finder'))
 
 
 # limit access to only logged in users, otherwise redirect to login page
@@ -78,3 +82,24 @@ def addcourse(request):
             return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists or is incorrect",})
     else:
         return render(request, 'studysite/restricted/courseadd.html')
+
+def addCourseToUser(request, pk, pku):
+    course = get_object_or_404(Course, pk=pk)
+    try:
+        selected_course = Course.objects.get(pk=pk)
+    except (KeyError, Course.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return render(request, 'studysite/courses.html', {
+            'courses_list': Course.objects.order_by('course_subject'),
+        })
+    else:
+        selected_course.course_roster.add(User.objects.get(pk=pku))
+        #ProfileView.request.user.pk
+        selected_course.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return render(request, 'studysite/courses.html', {
+            'courses_list': Course.objects.order_by('course_subject'),
+        })
