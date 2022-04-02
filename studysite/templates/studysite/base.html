@@ -1,0 +1,66 @@
+{% load bootstrap5 %}
+{% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en">
+    <head>
+        {% block title %}
+            
+        {% endblock %}
+        <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/style.css' %}"/>
+
+        <!--Bootstrap Basic Navabar: https://getbootstrap.com/docs/4.1/components/navbar/ -->
+    <nav class="navbar navbar-light navbar-expand-md bg-light justify-content-md-center justify-content-start" style="width:100%;">
+        <a class="navbar-brand d-md-none d-inline" href="">Brand</a>
+        <button class="navbar-toggler ml-1" type="button" data-toggle="collapse" data-target="#collapsingNavbar2">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="nav-link" href="#_"><i class="fa fa-search mr-1"></i></a> 
+        <div class="navbar-collapse collapse justify-content-between align-items-center w-100" id="collapsingNavbar2">
+            <ul class="navbar-nav mx-auto text-md-center text-left">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">About Us</a> 
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'course-finder' %}">Find a Class</a>
+                   </li>
+                {% endif %}
+                <li class="nav-item my-auto">
+                    <a class="navbar-brand mx-auto" href="{% url 'index' %}">Studdy Buddy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.id%}">Profile</a>
+                   </li>
+                   <li class="nav-item">
+                       <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                   </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    </head>
+
+<body>
+  {% block content%}
+    <h1>Studdy Buddy</h1>
+    <p>Welcome to the Studdy Buddy Site!</p>
+  {% endblock %}
+  <!--Boostrap Footer: https://mdbootstrap.com/docs/standard/navigation/footer/-->
+  <footer class="bg-light text-center text-lg-start" style="width: 100%; bottom:0; position: fixed;">
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      © 2022 Copyright:
+      <a class="text-dark" href="https://github.com/uva-cs3240-s22/group-project-b-04">Group B-04</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+</body>
+</html>

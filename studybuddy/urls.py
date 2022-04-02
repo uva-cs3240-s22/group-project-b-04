@@ -18,13 +18,12 @@ from django.urls import path, include
 from studysite import views
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
+from django.shortcuts import redirect
+
+import studysite
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.IndexView.as_view(), name='index'),
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('accounts/', include('allauth.urls')),
-    path('logout', LogoutView.as_view(), name='logout'),
-    path('about/', views.AboutView.as_view(), name='about'),
-    path('<str:username>/profile', views.ProfileView.as_view(), name='profile'),
+    path('studysite/', include('studysite.urls') ),
+    path('', lambda request: redirect('studysite/', permanent=True)),
 ]

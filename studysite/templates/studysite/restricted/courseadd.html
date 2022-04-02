@@ -1,0 +1,30 @@
+{% extends 'studysite/base.html' %}
+{% load socialaccount %}
+
+{% block title %}
+    <title>Add a Class</title>
+{% endblock %}
+
+{% block content %}
+    <div style="padding:20px;">
+        <h6>Don't see your class?</h6>
+        {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
+        <form action="{% url 'course-add' %}" method="POST" style="padding-bottom: 15px;" id="course-add-form">
+            {% csrf_token %}
+            <div class="form-group" style="padding-bottom: 20px;">
+              <label>Course Subject(i.e APMA, CS, etc.): </label>
+              <input name="course_subject" placeholder="i.e APMA, CS, ENGR..." />
+            </div>
+            <div class="form-group" style="padding-bottom: 20px;">
+              <label>Course Number(4 digits: XXXX) </label>
+              <input name="course_number" placeholder="i.e 2120, 3140..." />
+            </div>
+            <div class="form-group" style="padding-bottom: 20px;">
+                <label>Course Name(i.e Partial Differential Equations) </label>
+                <input name="course_name" placeholder="i.e Theory of Computation..." />
+              </div>
+            <br>
+            <input type="submit" class= "btn btn-primary" value="Submit Course">
+          </form>
+    </div>
+{% endblock %}

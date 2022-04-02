@@ -135,3 +135,6 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# Local Hosting Settings #
+local_settings.py
