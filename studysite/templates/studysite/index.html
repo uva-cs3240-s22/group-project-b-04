@@ -3,16 +3,22 @@
 
 {% block title %}
     <title>Home</title>
-    
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/index.css' %}"/>
 {% endblock %}
 
 {% block content %}
-  <div class="splashscreen" style="padding: 20px;">
+  <div class="splashscreen text-center text-light">
     <h1>Study Buddy</h1>
     <p>Make friends, Study More, Stay Organized</p>
   </div>
-  <div class="info-block" style="padding: 20px;">
+</br>
+  <div class="action-block d-flex justify-content-center">
+    <a class="btn btn-outline-light btn-lg" href="{% url 'login' %}">LOGIN</a>
+    <a class="btn btn-outline-light btn-lg" href="{% url 'login' %}">SIGN UP</a>
+  </div>
+  <div class="info-block text-dark bg-white">
     <h4>What is Study Buddy?</h4>
+  </br>
     <p>Study Buddy is a project designed to provide students with a more immersive and interactive study expeirence. We aimed to
       develop a web app that connects students with others in their courses in order to provide a network of resources, material, 
       and management. Sign up, Create a Profile with all you classes, and be matched with other students in the same courses to 
