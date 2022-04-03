@@ -1,0 +1,44 @@
+body {
+    font-family: Lato, Merriweather, monospace !important;
+}
+
+a {
+  color: #2C2735 !important;
+}
+
+footer {
+    width: 100%;
+    bottom:0;
+    background-color: none !important;
+    position: fixed;
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    font-size: 1.5vw;
+    margin-bottom: auto;
+}
+
+.left-nav {
+    margin-left: 2vw;
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .mid-nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .right-nav {
+    margin-right: 2vw;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
