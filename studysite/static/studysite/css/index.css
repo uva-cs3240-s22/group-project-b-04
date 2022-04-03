@@ -1,10 +1,3 @@
-body {
-    width: 100%;
-    height: 100%;
-    background-color: #E6F4FF;
-    overflow: hidden;
-}
-
 .splashscreen p {
     color: #2C2735;
     font-size: 1.75vw;
@@ -47,35 +40,6 @@ body {
     font-size: 4vh;
     border-color: #2C2735;
     border-radius: 45px;
-}
-
-.blob {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-    z-index: -1;
-}
-
-#top-mid-blob {
-    top: 0;
-    left: 37%;
-}
-
-#left-mid-blob {
-    top: 20%;
-    left: 0;
-}
-
-#bottom-mid-blob {
-    bottom: 0;
-    left: 30%;
-}
-
-#right-mid-blob {
-    top: 20%;
-    right: 0;
 }
 
 .hero-image img {

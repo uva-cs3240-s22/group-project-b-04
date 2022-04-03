@@ -1,15 +1,34 @@
 .info-block {
-    margin: 1vh 10vw 1vh 10vw;
-    padding: 3vw;
-    width: 80%;
+    margin: 1vh 10vw 1vh 5vw;
+    padding: 2vw;
+    width: 60%;
     min-width: 30vw;
+    background-color: white;
+    border-radius: 15px;
+    border-width: 4px;
+    border-style: double;
 }
 
 .info-block h4 {
+    font-size: 2vw;
     font-style: bold;
 }
 
 .info-block p {
     line-height: 3.5vh;
-    font-family: Lato;
+    font-family: Merriweather, monospace;
+}
+
+.headshot {
+    width: 13vw;
+    margin: 10px;
+    background-color: white;
+    border-radius: 10px;
+    border-color: white;
+    border-style: outset;
+    border-width: 2px;
+}
+
+#team {
+    margin-left: 6vw;
 }
