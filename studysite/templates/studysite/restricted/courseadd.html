@@ -1,13 +1,15 @@
 {% extends 'studysite/base.html' %}
 {% load socialaccount %}
+{% load static %}
 
 {% block title %}
     <title>Add a Class</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/courseadd.css' %}"/>
 {% endblock %}
 
 {% block content %}
-    <div style="padding:20px;">
-        <h6>Don't see your class?</h6>
+    <div class="add-form">
+        <h3>Add a Class to the Directory</h3>
         {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
         <form action="{% url 'course-add' %}" method="POST" style="padding-bottom: 15px;" id="course-add-form">
             {% csrf_token %}
