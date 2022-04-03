@@ -1,0 +1,15 @@
+.info-block {
+    margin: 1vh 10vw 1vh 10vw;
+    padding: 3vw;
+    width: 80%;
+    min-width: 30vw;
+}
+
+.info-block h4 {
+    font-style: bold;
+}
+
+.info-block p {
+    line-height: 3.5vh;
+    font-family: Lato;
+}

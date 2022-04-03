@@ -1,0 +1,95 @@
+body {
+    width: 100%;
+    height: 100%;
+    background-color: #E6F4FF;
+    overflow: hidden;
+}
+
+.splashscreen p {
+    color: #2C2735;
+    font-size: 1.75vw;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+}
+
+.splashscreen h1 {
+    color: #2C2735;
+    padding-top: 7vh;
+    font-size: 4vw;
+    font-weight: 300;
+    font-family: Lato;
+    letter-spacing: 0.1em;
+    opacity: 1;
+}
+
+.action-block {
+    margin: 1vh;
+    padding: 1vh;
+    color: whitesmoke;
+}
+
+.action-block a {
+    color: whitesmoke !important;
+    margin: 3vh;
+    padding: 2.5vh;
+    font-size: 4vh;
+    background-color: #2C2735;
+    border-color: #2C2735;
+    border-radius: 45px;
+    border-width: 2px;
+}
+
+.action-block a:hover{
+    color: #2C2735 !important;
+    background: none;
+    margin: 3vh;
+    padding: 2.5vh;
+    font-size: 4vh;
+    border-color: #2C2735;
+    border-radius: 45px;
+}
+
+.blob {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+#top-mid-blob {
+    top: 0;
+    left: 37%;
+}
+
+#left-mid-blob {
+    top: 20%;
+    left: 0;
+}
+
+#bottom-mid-blob {
+    bottom: 0;
+    left: 30%;
+}
+
+#right-mid-blob {
+    top: 20%;
+    right: 0;
+}
+
+.hero-image img {
+    width: 70vh;
+    margin: 0 4vw 0 4vw;
+}
+
+.hero-image p {
+    margin: auto;
+    font-size: 0.75vw;
+    color: #2C2735;
+}
+
+.hero-image p a {
+    color: #2C2735;
+    text-decoration: none;
+}
