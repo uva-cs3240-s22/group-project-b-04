@@ -1,0 +1,22 @@
+body {
+    overflow-y: auto !important;
+}
+
+.course-card {
+    background-color: white;
+    border-radius: 15px;
+    border-width: 3px;
+    border-style: outset;
+    border-color: #2C2735;
+}
+
+.course-card h6 {
+    color: #2C2735;
+    font-size: 2vw;
+    font-weight: 300;
+}
+
+.course-card p {
+    color: #2C2735;
+    font-size: 1vw;
+}
