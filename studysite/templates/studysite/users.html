@@ -1,0 +1,26 @@
+{% extends 'studysite/base.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block content %}
+
+<h1>Users:</h1>
+
+    <ul>
+        <div style="padding:20px;">
+
+            {% for user in user_list %}
+                <li class="user">{{ user }} </li>
+                <p>{{ user.name }}</p>
+                <p>{{ user.year }} {{ user.major }}</p>
+                <p>{{ user.email }}</p>
+                {% for course in user.course_list %}
+                    <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+                {% endfor %}
+            {% endfor %}
+        
+        </div>
+
+    </ul>
+
+{% endblock %}

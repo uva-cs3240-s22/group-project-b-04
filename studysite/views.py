@@ -53,6 +53,19 @@ class CoursesView(generic.ListView):
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
+
+class UsersView(generic.ListView):
+    model = User
+    template_name = 'studysite/users.html'
+    context_object_name = 'user_list'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(UsersView, self).get_context_data(**kwargs)
+    #     context['object_list'] = UserProfile.objects.all()
+    #     return context
+    
+    def get_queryset(self):
+        return UserProfile.objects.all()
     
     # def addCourseToUser(request, self.pk, self):
     #     print("test")
