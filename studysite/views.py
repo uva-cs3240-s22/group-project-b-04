@@ -62,7 +62,7 @@ class BuddyView(generic.ListView):
     context_object_name = "user_list"
 
     def get_queryset(self):
-        return User.objects.all()
+        return UserProfile.objects.all()
 
 class NotifView(generic.ListView):
     model=FriendRequest
