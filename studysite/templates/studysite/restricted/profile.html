@@ -15,6 +15,17 @@
         <h6>Username</h6>
         <p>{{ user.username }}<p>
 
+        <h6>Friends: </h6>
+        {% if friends %}
+        <ul class="list-group list-group-flush" >
+            {% for friend in friends %}
+                <li class="list-group-item">{{ friend.first_name }} {{ friend.last_name }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        </br>
+
         <h6>Courses: </h6>
         {% if courses %}
             <ul class="list-group list-group-flush" >

@@ -39,6 +39,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
+        context["friends"] = self.model.objects.get(pk=self.request.user.pk).userprofile.friends.all()
         context["courses"] = self.model.objects.get(pk=self.request.user.pk).course_set.all()
         return context
     
@@ -54,13 +55,25 @@ class CoursesView(generic.ListView):
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
     
-    # def addCourseToUser(request, self.pk, self):
-    #     print("test")
-    #     print(self)
-    #     print(User.first_name)
-    #     # Course.objects.get(pk=self.pk).course_roster.add(User)
-    #     # User.objects.get(pk=User.pk).course_set.add(self)
-    #     # return HttpResponseRedirect(reverse('course-finder'))
+class BuddyView(generic.ListView):
+    model=User
+    template_name = 'studysite/restricted/buddy.html'
+
+    context_object_name = "user_list"
+
+    def get_queryset(self):
+        return User.objects.all()
+
+class NotifView(generic.ListView):
+    model=FriendRequest
+    template_name = "studysite/restricted/notifications.html"
+
+    context_object_name = "request_list"
+
+    def get_queryset(self):
+        return FriendRequest.objects.filter(to_user=self.request.user)
+    
+
 
 
 # limit access to only logged in users, otherwise redirect to login page
@@ -103,3 +116,25 @@ def addCourseToUser(request, pk, pku):
         return render(request, 'studysite/courses.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
+
+def send_friend_request(request, uid):
+    fromu = request.user
+    tou = User.objects.get(id=uid)
+    if  fromu not in tou.userprofile.friends.all():
+        friend_request, created = FriendRequest.objects.get_or_create(from_user=fromu, to_user=tou)
+        if created :
+            return HttpResponse('friend request sent')
+        else :
+            return HttpResponse('you have already requested from this user')
+    else :
+        return HttpResponse('You are already friends with this user')
+
+def accept_friend_request(request, rid):
+    friend_request = FriendRequest.objects.get(id=rid)
+    if friend_request.to_user == request.user:
+        friend_request.to_user.userprofile.friends.add(friend_request.from_user)
+        friend_request.from_user.userprofile.friends.add(friend_request.to_user)
+        friend_request.delete()
+        return HttpResponse('friend request accepted')
+    else :
+        return HttpResponse('friend request not accepted')

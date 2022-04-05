@@ -1,0 +1,33 @@
+{% extends 'studysite/base.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block title %}
+    <title>Find a Buddy</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/buddy.css' %}"/>
+{% endblock %}
+
+{% block content %} 
+    <a href="{% url 'notifications' %}">Friend Requests</a>
+    <div class="row row-cols-1 d-flex justify-content-center align-items-center" style="margin: 25vh 4vw 2vh 4vw;">
+        {% for to_user in user_list %}
+        {% if to_user != request.user  %}
+            <form action="{% url 'send friend request' to_user.id %}" method="POST">
+            {% csrf_token %}
+            <div class="card" style="height: 25vh;">
+                <div class="card-body d-flex justify-content-around align-items-center">
+                  <div class="d-flex justify-content-start flex-column">
+                    <h6 class="card-title">{{ to_user.first_name }} {{ to_user.last_name }}</h6>
+                    <p class="card-text">{{ to_user.userprofile.course_set.all }}</p>
+                </div>
+                {% if to_user not in request.user.friends.all %}
+                    <div class="d-flex justify-content-end">  
+                        <input class="btn" type="submit" value="Add friend" style="font-size: 4.5vw;"/>
+                    </div>
+                {% endif %}
+            </div>
+            </form>   
+        {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
