@@ -25,7 +25,7 @@ class UserProfile(models.Model):
     major = models.CharField(max_length=80, blank=True)
     year = models.CharField(max_length=80, choices=years, blank=True)
     bio = models.TextField(max_length=250, default='', blank=True)
-    # courses_list = models.ManyToManyField(Course, blank=True)
+    friends = models.ManyToManyField(User, related_name="friends", blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -40,3 +40,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     print('profile saved')
     instance.userprofile.save()
+
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name="from_user", on_delete=models.CASCADE )
+    to_user = models.ForeignKey(User, related_name="to_user", on_delete=models.CASCADE )

@@ -37,10 +37,16 @@
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'buddy-finder' %}">Buddy Finder</a>
+                   </li>    
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'course-finder' %}">Find a Class</a>
                    </li>
                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'profile' user.id%}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notifications' %}">notifications</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
