@@ -29,4 +29,5 @@ urlpatterns = [
     path('courses/', views.CoursesView.as_view(), name='course-finder'),
     path('courses/add/', views.addcourse, name="course-add"),
     path('courses/<int:pk>/<int:pku>/', views.addCourseToUser, name='course-add-user'),
+    path('users/', views.UsersView.as_view(), name='user-view')
 ]
