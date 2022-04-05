@@ -11,7 +11,7 @@
 
             {% for user in user_list %}
                 <li class="user">{{ user }} </li>
-                <p>{{ user.name }}</p>
+                <p>{{ user.first_name }} {{ user.last_name }}</p>
                 <p>{{ user.year }} {{ user.major }}</p>
                 <p>{{ user.email }}</p>
                 {% for course in user.course_list %}
