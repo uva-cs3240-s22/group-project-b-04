@@ -59,10 +59,10 @@ class UsersView(generic.ListView):
     template_name = 'studysite/users.html'
     context_object_name = 'user_list'
 
-    def get_context_data(self, **kwargs):
-        context = super(UsersView, self).get_context_data(**kwargs)
-        context['object_list'] = UserProfile.objects.all()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(UsersView, self).get_context_data(**kwargs)
+    #     context['object_list'] = UserProfile.objects.all()
+    #     return context
     
     def get_queryset(self):
         return UserProfile.objects.all()
