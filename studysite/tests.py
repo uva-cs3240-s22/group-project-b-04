@@ -1,5 +1,6 @@
 import unittest
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 from django.test import Client
 from django.urls import reverse
 from studysite.models import Course
@@ -11,13 +12,15 @@ class LoginTest(unittest.TestCase):
   def setUp(self):
     try:
       self.user1 = User.objects.create_user(username='user1', password='1234567')
-    except:
-      self.user1.delete()
+    except IntegrityError:
+      user1 = User.objects.filter(username='user1')[0]
+      user1.delete()
       self.user1 = User.objects.create_user(username='user1', password='1234567')
     try:
       self.user2 = User.objects.create_user(username='user2', password='89101112')
-    except:
-      self.user2.delete()
+    except IntegrityError:
+      user2 = User.objects.filter(username='user2')[0]
+      user2.delete()
       self.user2 = User.objects.create_user(username='user2', password='89101112')
     self.user1.save()
     self.user2.save()
