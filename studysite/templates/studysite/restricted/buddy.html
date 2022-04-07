@@ -18,7 +18,9 @@
                 <div class="card-body d-flex justify-content-around align-items-center">
                   <div class="d-flex justify-content-start flex-column">
                     <h6 class="card-title">{{ to_user.first_name }} {{ to_user.last_name }}</h6>
-                    <p class="card-text">{{ to_user.userprofile.course_set.all }}</p>
+                    {% for course in to_user.course_set.all %}
+                        <p class="card-text">{{ course.course_name }}</p>
+                    {% endfor %}
                 </div>
                 {% if to_user not in request.user.friends.all %}
                     <div class="d-flex justify-content-end">  

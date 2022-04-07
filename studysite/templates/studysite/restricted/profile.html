@@ -29,9 +29,15 @@
         <h6>Courses: </h6>
         {% if courses %}
             <ul class="list-group list-group-flush" >
-            {% for course in courses %}
-                <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
-            {% endfor %}
+                {% for course in courses %}
+                    <form action="{% url 'delete-course' user.id course.pk %}" method="POST" id="delete-course-user-form">
+                        {% csrf_token %}
+                        <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+                        <div class="d-flex justify-content-end">  
+                            <input class="btn" type="submit" value="delete" style="font-size: 4.5vw;"/>
+                        </div>
+                    </form>
+                {% endfor %}
             </ul>
         {% endif %}
         </br>
