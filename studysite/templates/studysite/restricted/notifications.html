@@ -1,4 +1,4 @@
-{% extends 'studysite/base.html' %}
+{% extends 'studysite/restricted/restrictedbase.html' %}
 {% load socialaccount %}
 {% load static %}
 
@@ -8,22 +8,25 @@
 {% endblock %}
 
 {% block content %} 
-{% if request_list %}
-    <ul class="list-group list-group-flush" style="margin-top: 25vh;">
-    {% for req in request_list %}
-        <form action="{% url 'accept friend request' req.id %}" method="POST">
-        {% csrf_token %}
-        <div class="card" style="height: 25vh;">
-            <div class="card-body d-flex justify-content-around align-items-center">
-              <div class="d-flex justify-content-start flex-column">
-                <h6 class="card-title">Friend Request from {{ req.from_user }}</h6>
-            </div>
-            <div class="d-flex justify-content-end">  
-                <input class="btn" type="submit" value="Accept friend request" style="font-size: 4.5vw;"/>
-            </div>
-        </div>
-        </form>
-    {% endfor %}
-    </ul>
-{% endif %}
+    <div>
+        {% if request_list %}
+        <ul class="list-group list-group-flush" style="margin-top: 2vh;">
+        {% for req in request_list %}
+            <form action="{% url 'accept friend request' req.id %}" method="POST">
+                {% csrf_token %}
+                <div class="card" style="height: 25vh;">
+                    <div class="card-body d-flex justify-content-around align-items-center">
+                        <div class="d-flex justify-content-start flex-column">
+                            <h6 class="card-title">Friend Request from {{ req.from_user }}</h6>
+                        </div>
+                        <div class="d-flex justify-content-end">  
+                            <input class="btn" type="submit" value="Accept friend request" style="font-size: 2vw;"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 {% endblock %}

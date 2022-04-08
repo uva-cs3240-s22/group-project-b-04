@@ -18,7 +18,7 @@ class Course(models.Model):
 
     # self expressed as short hand and name i.e APMA 3140: Partial Differential Equations
     def __str__(self):
-        return self.course_name
+        return self.course_subject + self.course_number
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, null=True, blank=True)
@@ -44,3 +44,6 @@ def save_user_profile(sender, instance, **kwargs):
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, related_name="from_user", on_delete=models.CASCADE )
     to_user = models.ForeignKey(User, related_name="to_user", on_delete=models.CASCADE )
+
+    def __str__(self):
+        return f"Request from {self.from_user.username} to {self.to_user.username}"

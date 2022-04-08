@@ -31,6 +31,7 @@ urlpatterns = [
     path('courses/<int:pk>/<int:pku>/', views.addCourseToUser, name='course-add-user'),
     path('send_friend_request/<int:uid>/', views.send_friend_request, name="send friend request"),
     path('accept_friend_request/<int:rid>/', views.accept_friend_request, name="accept friend request"),
-    path('buddies/', views.BuddyView.as_view(), name='buddy-finder'),
+    path('buddies/<str:friend_message>/', views.BuddyView.as_view(), name='buddy-finder'),
     path('notifications/', views.NotifView.as_view(), name='notifications'),
+    path('<str:username>/dashboard/', views.DashView.as_view(), name='dashboard'),
 ]
