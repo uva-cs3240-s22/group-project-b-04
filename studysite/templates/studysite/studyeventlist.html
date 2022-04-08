@@ -5,3 +5,13 @@
 {% block title %}
     <title>Events</title>
 {% endblock %}
+
+{% block content %} 
+        <h5>Don't See Any Events?</h5>
+        {% if event_list %}
+            {% for event in event_list %}
+                {% csrf_token %}
+            
+            {% endfor %}
+        {% endif %}
+{% endblock %}
