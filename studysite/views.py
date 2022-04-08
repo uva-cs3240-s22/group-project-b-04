@@ -64,6 +64,12 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
     
+
+class EventView(generic.ListView):
+    model = StudyEvent
+    template_name = 'studysite/studyeventlist.html'
+    context_object_name = 'event_list'
+
 class BuddyView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
     model=User
@@ -112,6 +118,15 @@ def addcourse(request):
             return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That input is incorrect",})
     else:
         return render(request, 'studysite/restricted/courseadd.html')
+
+def addStudyEvent(request):
+    return
+
+def addUserToCourse(request, pk, pku):
+    return
+
+def deleteUserFromCourse(request, uid, pk):
+    return
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)
