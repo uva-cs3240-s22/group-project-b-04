@@ -1,0 +1,36 @@
+{% extends 'studysite/restricted/restrictedbase.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block title %}
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/dashboard.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    <div class="friends-list">
+        <h6>Friends: </h6>
+        <ul class="list-group list-group-flush" >
+            {% for friend in user.friends.all %}
+                <li class="list-group-item">{{ friend.user.first_name }} {{ friend.user.last_name }}</li>
+            {% endfor %}
+        </ul>
+        <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}"><h5>Find A Buddy</h5></a>
+
+        </br>
+
+        <h6>Courses: </h6>
+        <ul class="list-group list-group-flush" >
+            {% for course in user.course_set.all %}
+                <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+            {% endfor %}
+        </ul>
+        <a class="d-flex justify-content-start" href="{% url 'course-finder' %}"><h5>Add a Course</h5></a>
+
+    </br>
+        <h6>Upcoming Study Event: </h6>
+        <ul class="list-group list-group-flush" >
+            <!--TODO: ADD STUDY EVENTS-->
+        </ul>
+    </div>
+{% endblock %}

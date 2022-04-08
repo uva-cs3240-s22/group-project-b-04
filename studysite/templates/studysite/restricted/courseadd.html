@@ -1,4 +1,4 @@
-{% extends 'studysite/base.html' %}
+{% extends 'studysite/restricted/restrictedbase.html' %}
 {% load socialaccount %}
 {% load static %}
 
@@ -8,21 +8,22 @@
 {% endblock %}
 
 {% block content %}
-    <div class="add-form">
+    <div class="add-form" style="margin: 4vh 4vw 4vh 4vw;">
         <h3>Add a Class to the Directory</h3>
-        {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
-        <form action="{% url 'course-add' %}" method="POST" style="padding-bottom: 15px;" id="course-add-form">
+      </br>
+        {% if error_message %}<p class="text-danger"><strong>{{ error_message }}</strong></p>{% endif %}
+        <form action="{% url 'course-add' %}" method="POST" id="course-add-form">
             {% csrf_token %}
-            <div class="form-group" style="padding-bottom: 20px;">
-              <label>Course Subject(i.e APMA, CS, etc.): </label>
+            <div class="form-group">
+              <label>Course Subject: </label>
               <input name="course_subject" placeholder="i.e APMA, CS, ENGR..." />
             </div>
-            <div class="form-group" style="padding-bottom: 20px;">
-              <label>Course Number(4 digits: XXXX) </label>
+            <div class="form-group">
+              <label>Course Number: </label>
               <input name="course_number" placeholder="i.e 2120, 3140..." />
             </div>
-            <div class="form-group" style="padding-bottom: 20px;">
-                <label>Course Name(i.e Partial Differential Equations) </label>
+            <div class="form-group">
+                <label>Course Name: </label>
                 <input name="course_name" placeholder="i.e Theory of Computation..." />
               </div>
             <br>

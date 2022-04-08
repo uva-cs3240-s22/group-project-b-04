@@ -46,25 +46,39 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
 
+class DashView(LoginRequiredMixin, generic.DetailView):
+    permission_denied_message = "Please login to view this page."
+    model = User
+    template_name = 'studysite/restricted/dashboard.html'
+    
+    def get_object(self):
+        return self.model.objects.get(pk=self.request.user.pk)
 
-class CoursesView(generic.ListView):
+
+class CoursesView(LoginRequiredMixin, generic.ListView):
+    permission_denied_message = "Please login to view this page."
     model = Course
-    template_name = 'studysite/courses.html'
+    template_name = 'studysite/restricted/courses.html'
     context_object_name = 'courses_list'
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
     
-class BuddyView(generic.ListView):
+class BuddyView(LoginRequiredMixin, generic.ListView):
+    permission_denied_message = "Please login to view this page."
     model=User
     template_name = 'studysite/restricted/buddy.html'
 
     context_object_name = "user_list"
 
+    def check_pending(fromu, tou):
+        return fromu.from_user.filter(to_user=tou)
+
     def get_queryset(self):
         return UserProfile.objects.all()
 
-class NotifView(generic.ListView):
+class NotifView(LoginRequiredMixin, generic.ListView):
+    permission_denied_message = "Please login to view this page."
     model=FriendRequest
     template_name = "studysite/restricted/notifications.html"
 
@@ -88,11 +102,14 @@ def validate_user(request):
 def addcourse(request):
     if request.method == "POST" :
         if (len(request.POST['course_subject']) > 0 and len(request.POST['course_name']) > 0 and len(request.POST['course_number']) > 0 ):
-            course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'])
-            course.save()
-            return HttpResponseRedirect(reverse('course-finder'))
+            if (Course.objects.filter(course_subject=request.POST['course_subject'].upper(), course_number=request.POST['course_number']).count() == 0):
+                course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
+                course.save()
+                return HttpResponseRedirect(reverse('course-finder'))
+            else: 
+                return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists",})
         else: 
-            return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists or is incorrect",})
+            return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That input is incorrect",})
     else:
         return render(request, 'studysite/restricted/courseadd.html')
 
@@ -103,7 +120,7 @@ def addCourseToUser(request, pk, pku):
     except (KeyError, Course.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/courses.html', {
+        return render(request, 'studysite/restricted/courses.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
     else:
@@ -113,7 +130,7 @@ def addCourseToUser(request, pk, pku):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/courses.html', {
+        return render(request, 'studysite/restricted/courses.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
 
@@ -143,13 +160,18 @@ def send_friend_request(request, uid):
     fromu = request.user
     tou = User.objects.get(id=uid)
     if  fromu not in tou.userprofile.friends.all():
-        friend_request, created = FriendRequest.objects.get_or_create(from_user=fromu, to_user=tou)
-        if created :
-            return HttpResponse('friend request sent')
-        else :
-            return HttpResponse('you have already requested from this user')
+        # check not already a request from the tou
+        try:
+            friend_request = FriendRequest.objects.get(from_user=tou, to_user=fromu)
+            return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You have a pending request from this user, check your notifications to accept",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "You have a pending request from this user, check your notifications to accept",})
+        except:
+            friend_request, created = FriendRequest.objects.get_or_create(from_user=fromu, to_user=tou)
+            if created :
+                return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "Friend Request Sent",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "Friend Request Sent",})
+            else :
+                return render(request, 'studysite/restricted/buddy.html', {'friend_message': "You already have a pending request to this user"})
     else :
-        return HttpResponse('You are already friends with this user')
+        return render(request, 'studysite/restricted/buddy.html', {'friend_message': "You are already friends with this user",})
 
 def accept_friend_request(request, rid):
     friend_request = FriendRequest.objects.get(id=rid)
