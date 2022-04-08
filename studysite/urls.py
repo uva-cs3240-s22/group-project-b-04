@@ -34,4 +34,5 @@ urlpatterns = [
     path('buddies/', views.BuddyView.as_view(), name='buddy-finder'),
     path('notifications/', views.NotifView.as_view(), name='notifications'),
     path('<str:uid>/profile/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
+    path('events/', views.EventView.as_view(), name='event-finder')
 ]

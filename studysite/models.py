@@ -30,6 +30,12 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
+class StudyEvent(models.Model):
+    course = models.ManyToManyField(Course, blank=True)
+    users = models.ManyToManyField(UserProfile)
+    max_users = models.IntegerField(default=6)
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

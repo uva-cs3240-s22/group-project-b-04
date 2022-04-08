@@ -8,6 +8,9 @@ class CourseAdmin(admin.ModelAdmin):
 class UserProfileAdmin(admin.ModelAdmin):
     filter_horizontal = ('friends',)
 
+class EventAdmin(admin.ModelAdmin):
+    filter_horizontal = ('event_list',)
+
 # Register your models here.
 admin.site.register(Course, CourseAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
