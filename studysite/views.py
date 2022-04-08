@@ -75,7 +75,7 @@ class BuddyView(LoginRequiredMixin, generic.ListView):
         return fromu.from_user.filter(to_user=tou)
 
     def get_queryset(self):
-        return User.objects.all()
+        return UserProfile.objects.all()
 
 class NotifView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
@@ -132,6 +132,28 @@ def addCourseToUser(request, pk, pku):
         # user hits the Back button.
         return render(request, 'studysite/restricted/courses.html', {
             'courses_list': Course.objects.order_by('course_subject'),
+        })
+
+def deleteCourseFromUser(request, uid, pk):
+    course = get_object_or_404(Course, pk=pk)
+    try:
+        selected_course = Course.objects.get(pk=pk)
+    except (KeyError, User.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return render(request, 'studysite/restricted/profile.html', {
+            'courses_list': User.objects.get(id=uid).course_set.all(),
+        })
+    else:
+        selected_course.course_roster.remove(uid)
+        print(selected_course.course_roster.all())
+        #ProfileView.request.user.pk
+        selected_course.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return render(request, 'studysite/restricted/profile.html', {
+            'courses_list': User.objects.get(id=uid).course_set.all(),
         })
 
 def send_friend_request(request, uid):
