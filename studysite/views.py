@@ -75,7 +75,7 @@ class BuddyView(LoginRequiredMixin, generic.ListView):
         return fromu.from_user.filter(to_user=tou)
 
     def get_queryset(self):
-        return UserProfile.objects.all()
+        return User.objects.all()
 
 class NotifView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
