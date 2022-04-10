@@ -1,4 +1,4 @@
-from multiprocessing import context
+from multiprocessing import Event, context
 from re import template
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -120,7 +120,11 @@ def addcourse(request):
         return render(request, 'studysite/restricted/courseadd.html')
 
 def addStudyEvent(request):
-    return
+    if request.method == "POST" :
+        if request.POST['max_users'] > 0:
+            owner = request.user
+            event = Event(owner = owner, )
+    return render(request, 'studysite/restricted/addstudyevent.html')
 
 def addUserToCourse(request, pk, pku):
     return

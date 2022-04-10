@@ -6,3 +6,20 @@
     <title>Add a Study Event</title>
 {% endblock %}
 
+{% block content %}
+    <div class="row d-flex justify-content-center text-center" style="margin-top: 20vh;">
+        <h3>Create a Study Event</h3>
+        {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
+        <form action="{% url 'create-event' %}" method="POST" style="padding-bottom: 15px;" id="create-study-event">
+            {% csrf_token %}
+            <label>Select Course</label>
+            <select name="event_course">
+                {% for course in courses_list %}
+                    <option value={{course}}>{{course.course_subject}} {{course.course_number}}</option>
+                {% endfor %}
+            </select>
+            <label>Event Size</label>
+            <input name="max-users" type="number" placeholder="5" />
+        </form>
+    </div>
+{% endblock %}

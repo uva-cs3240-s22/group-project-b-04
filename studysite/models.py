@@ -31,6 +31,7 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 class StudyEvent(models.Model):
+    owner = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     course = models.ManyToManyField(Course, blank=True)
     users = models.ManyToManyField(UserProfile)
     max_users = models.IntegerField(default=6)
