@@ -26,6 +26,7 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('<str:username>/profile', views.ProfileView.as_view(), name='profile'),
+    path('calendar/', views.calendar, name='calendar'),
     path('courses/', views.CoursesView.as_view(), name='course-finder'),
     path('courses/add/', views.addcourse, name="course-add"),
     path('courses/<int:pk>/<int:pku>/', views.addCourseToUser, name='course-add-user'),

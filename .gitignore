@@ -6,6 +6,10 @@ __pycache__
 db.sqlite3
 media
 
+studybuddy/.env
+.venv
+google-credentials.json
+
 # Backup files # 
 *.bak 
 

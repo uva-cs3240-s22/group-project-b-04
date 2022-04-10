@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
+from .calendar_API import test_calendar
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -103,3 +104,7 @@ def addCourseToUser(request, pk, pku):
         return render(request, 'studysite/courses.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
+def calendar(request):
+    results = test_calendar()
+    context = {"results": results}
+    return render(request, 'studysite/calendar.html', context)
