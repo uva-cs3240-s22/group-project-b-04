@@ -141,7 +141,7 @@ def deleteCourseFromUser(request, uid, pk):
     except (KeyError, User.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/restricted/profile.html', {
+        return render(request, 'studysite/restricted/dashboard.html', {
             'courses_list': User.objects.get(id=uid).course_set.all(),
         })
     else:
@@ -152,7 +152,7 @@ def deleteCourseFromUser(request, uid, pk):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/restricted/profile.html', {
+        return render(request, 'studysite/restricted/dashboard.html', {
             'courses_list': User.objects.get(id=uid).course_set.all(),
         })
 
