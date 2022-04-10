@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import google_auth_oauthlib
 from psycopg2 import Date
 from .models import *
+<<<<<<< HEAD
 from datetime import date, time, datetime, timedelta
 import re
 
@@ -29,6 +30,9 @@ FILTER_TYPES = {
     'FULL'  :   'FULL',
     'ALL'   :   'ALL',
 }
+=======
+from .calendar_API import test_calendar
+>>>>>>> 888d472 (adding calendar changes)
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -217,6 +221,7 @@ def addCourseToUser(request, pk, pku):
         return render(request, 'studysite/restricted/courses.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
+<<<<<<< HEAD
 
 def deleteCourseFromUser(request, uid, pk):
     course = get_object_or_404(Course, pk=pk)
@@ -359,3 +364,9 @@ def classify(term):
     else:
         return FILTER_TYPES['NAME']
 
+=======
+def calendar(request):
+    results = test_calendar()
+    context = {"results": results}
+    return render(request, 'studysite/calendar.html', context)
+>>>>>>> 888d472 (adding calendar changes)
