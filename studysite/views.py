@@ -64,7 +64,6 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
-    
 
 class EventView(generic.ListView):
     model = StudyEvent
