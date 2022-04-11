@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+#from oauth2client.contrib.django_util.models import CredentialsField
 
 # Create your models here.
 
@@ -29,6 +31,14 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+#
+# class CredentialsModel(models.Model):
+#     id = models.ForeignKey(User, primary_key=True, on_delete=models.CASCADE)
+#     credential = CredentialsField()
+#     task = models.CharField(max_length=80, null=True)
+#     updated_time = models.CharField(max_length=80, null=True)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

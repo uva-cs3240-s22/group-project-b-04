@@ -1,12 +1,12 @@
 from decouple import config
 from google.oauth2 import service_account
-import google_auth_oauthlib.flow
+from  google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import googleapiclient.discovery
 import datetime
-from Google import Create_Service
-from pprint import pprint
+# from Google import Create_Service
+# from pprint import pprint
 import os.path
 
 #CAL_ID = 'mv5vc@virginia.edu'
@@ -17,9 +17,8 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 def test_calendar():
     print("RUNNING TEST_CALENDAR()")
-    CLIENT_SECRET_FILE = 'google-credentials.json'
-    service = Create_Service(CLIENT_SECRET_FILE, 'calendar', 'v3', SCOPES)
-    print(dir(service))
+
+    # print(dir(service))
     # credentials = None
     # # The file token.json stores the user's access and refresh tokens, and is
     # # created automatically when the authorization flow completes for the first
@@ -51,27 +50,26 @@ def test_calendar():
     #         credentials = flow.run_console(port=0)
     # with open('token.pickle', 'wb') as token:
     #     pickle.dump(creds, token)
-    #creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
+    creds = None
 
     # flow = InstalledAppFlow.from_client_secrets_file('google-credentials.json', SCOPES)
     # creds = flow.run_local_server(port=8000)
 
-    # if os.path.exists('token1.json'):
-    #      creds = Credentials.from_authorized_user_file('token1.json', SCOPES)
-    #  # If there are no (valid) credentials available, let the user log in.
-    # if not creds or not creds.valid:
-    #     if creds and creds.expired and creds.refresh_token:
-    #         creds.refresh(Request())
-    #     else:
-    #         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-    #             'google-credentials.json', SCOPES)
-    #         creds = flow.run_local_server()
-    #     # Save the credentials for the next run
-    #     with open('token1.json', 'w') as token:
-    #         token.write(creds.to_json())
+    if os.path.exists('token2.json'):
+         creds = Credentials.from_authorized_user_file('token2.json', SCOPES)
+     # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'google-credentials.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token2.json', 'w') as token:
+            token.write(creds.to_json())
+    CLIENT_SECRET_FILE = 'google-credentials.json'
+    service = Create_Service(CLIENT_SECRET_FILE, 'calendar', 'v3', SCOPES)
     #flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file('google-credentials.json', SCOPES)
     #flow.redirect_uri = 'http://127.0.0.1:8000/studysite/accounts/google/login/callback/'
    # service = googleapiclient.discovery.build('calendar', 'v3', credentials=creds)
