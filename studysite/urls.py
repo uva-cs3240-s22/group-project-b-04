@@ -35,4 +35,8 @@ urlpatterns = [
     path('notifications/', views.NotifView.as_view(), name='notifications'),
     path('<str:username>/dashboard/', views.DashView.as_view(), name='dashboard'),
     path('<str:uid>/dashboard/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
+    path('<str:uid>/profile/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
+    path('events/', views.EventView.as_view(), name='event-finder'),
+    path('events/create', views.addStudyEvent, name="create-event"),
+    path('events/<int:pk>/<int:pku>/', views.addUserToEvent, name='event-add-user'),
 ]

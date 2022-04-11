@@ -1,4 +1,4 @@
-from multiprocessing import context
+from multiprocessing import Event, context
 from re import template
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
+from datetime import date, time, datetime
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -51,6 +52,9 @@ class DashView(LoginRequiredMixin, generic.DetailView):
     model = User
     template_name = 'studysite/restricted/dashboard.html'
     
+    def get_context_data(self, **kwargs):
+        return {'current_time': datetime.now().timestamp()}
+
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
 
@@ -63,7 +67,12 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return Course.objects.order_by('course_subject')
-    
+
+class EventView(generic.ListView):
+    model = StudyEvent
+    template_name = 'studysite/studyeventlist.html'
+    context_object_name = 'event_list'
+
 class BuddyView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
     model=User
@@ -112,6 +121,46 @@ def addcourse(request):
             return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That input is incorrect",})
     else:
         return render(request, 'studysite/restricted/courseadd.html')
+
+def addStudyEvent(request):
+    if request.method == "POST" :
+        owner = request.user
+        date_obj = date.fromisoformat(request.POST['meeting_date'])
+        #print(type(time))
+        time_obj = time.fromisoformat(request.POST['start_time'])
+        #print(type(time_obj))
+        #time_obj = time.strptime(request.POST['start_time'],"%H:%M")
+        date_time = datetime.combine(date_obj, time_obj)
+        #print(type(request.POST['event_course']))
+        event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
+        event.save()
+    return render(request, 'studysite/restricted/addstudyevent.html', {
+            'courses_list': Course.objects.order_by('course_subject'),
+        })
+
+def addUserToEvent(request, pk, pku):
+    course = get_object_or_404
+    try:
+        selected_event = StudyEvent.objects.get(pk=pk)
+    except (KeyError, StudyEvent.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return render(request, 'studysite/studyeventlist.html', {
+            'event_list': StudyEvent.objects.order_by('max_users'),
+        })
+    else:
+        selected_event.users.add(User.objects.get(pk=pku))
+        #ProfileView.request.user.pk
+        selected_event.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return render(request, 'studysite/studyeventlist.html', {
+            'event_list': StudyEvent.objects.order_by('max_users'),
+        })
+
+def deleteUserFromEvent(request, uid, pk):
+    return
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)

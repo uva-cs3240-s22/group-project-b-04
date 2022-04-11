@@ -35,8 +35,14 @@
 
     </br>
         <h6>Upcoming Study Event: </h6>
+        {% for event in user.studyevent_set.all %}
         <ul class="list-group list-group-flush" >
             <!--TODO: ADD STUDY EVENTS-->
+            {% if event.time.timestamp > current_time %}
+            {{event.course}} {{event.time}}
+            {% endif %}
         </ul>
+        {% endfor %}
+        <a class="d-flex justify-content-start" href="{% url 'event-finder' %}"><h5>See Event</h5></a>
     </div>
 {% endblock %}

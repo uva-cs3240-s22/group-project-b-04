@@ -1,7 +1,9 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils.timezone import now
 
 # Create your models here.
 
@@ -29,6 +31,15 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+class StudyEvent(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='%(class)s_requests_created')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    users = models.ManyToManyField(User)
+    max_users = models.IntegerField(default=6)
+    time = models.DateTimeField(default=now)
+    description = models.TextField(max_length=250, default='', blank=True)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
