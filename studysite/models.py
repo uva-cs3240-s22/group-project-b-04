@@ -1,7 +1,10 @@
+from asyncio.windows_events import NULL
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils.timezone import now
 
 # Create your models here.
 
@@ -35,6 +38,8 @@ class StudyEvent(models.Model):
     course = models.ManyToManyField(Course, blank=True)
     users = models.ManyToManyField(UserProfile)
     max_users = models.IntegerField(default=6)
+    time = models.DateTimeField(default=now)
+    description = models.TextField(max_length=250, default='', blank=True)
 
 
 @receiver(post_save, sender=User)
