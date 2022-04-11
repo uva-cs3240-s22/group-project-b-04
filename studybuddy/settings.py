@@ -164,7 +164,7 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
             'profile',
-            'email',
+            'email'
             'https://www.googleapis.com/auth/calendar'
         ],
         'AUTH_PARAMS': {

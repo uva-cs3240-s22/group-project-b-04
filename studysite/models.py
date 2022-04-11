@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
+from django.urls import reverse
 from django.db.models.signals import post_save
 #from oauth2client.contrib.django_util.models import CredentialsField
 
@@ -38,7 +39,9 @@ class UserProfile(models.Model):
 #     credential = CredentialsField()
 #     task = models.CharField(max_length=80, null=True)
 #     updated_time = models.CharField(max_length=80, null=True)
-
+#
+# class CredentialsAdmin(admin.ModelAdmin):
+#     pass
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

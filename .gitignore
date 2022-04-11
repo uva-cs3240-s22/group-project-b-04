@@ -9,7 +9,7 @@ media
 studybuddy/.env
 .venv
 google-credentials.json
-
+token2.json
 # Backup files # 
 *.bak 
 
