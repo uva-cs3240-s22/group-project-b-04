@@ -175,8 +175,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 4
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/studysite'
+LOGOUT_REDIRECT_URL = '/studysite'
 
 # Activate Django-Heroku.
 # Use this code to avoid the psycopg2 / django-heroku error!  

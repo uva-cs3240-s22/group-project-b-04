@@ -1,0 +1,56 @@
+{% extends 'studysite/restricted/restrictedbase.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block title %}
+    <title>Events</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/courses.css' %}"/>
+{% endblock %}
+
+{% block content %} 
+    <div class="row d-flex row-cols-2 justify-content-around align-items-center" style="margin: 5vh 4vw 5vh 4vw;">
+        <h1 class="d-flex justify-content-start page-title">STUDY EVENTS</h1>
+        <a class="d-flex justify-content-end" href="{% url 'create-event' %}"><h5>Create New Event</h5></a>
+    </div>
+    <div class="row row-cols-4 d-flex justify-content-start align-items-center" style="margin: 2vh 4vw 2vh 4vw;">
+        {% if event_list %}
+            {% for event in event_list %}
+            {% if event.course in user.course_set.all %}
+            <div class="col">
+                <form action="{% url 'event-add-user' event.pk user.pk %}" method="POST" id="event-add-user-form">
+                    {% csrf_token %}
+                    <div class="card course-card" style="height: 25vh;">
+                        <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
+                          <div class="d-flex justify-content-start flex-column">
+                            <h6 class="card-title">{{event.course}}</h6>
+                            <p class="card-text">Host: {{event.owner}}</p>
+                            <p class="card-text">{{event.time}}</p>
+                            <p class="card-text">Info: {{event.description}}</p>
+                            {% for user in event.users.all %}
+                                <li class="card-text">{{user}}</li>
+                            {% endfor %}
+                            <p class="card-text"><small>{{event.users.count}} / {{event.max_users}} Student(s)</small></p>
+                            </div>
+                            {% if event not in user.studyevent_set.all%}
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                <input class="btn course-btn" type="submit" value="Join Event" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
+                            </div>
+                            {% elif event.users.count >= event.max_users %}
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                <p>Full</p>
+                            </div>
+                            {% else %}
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                <p>Added</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>  
+            </div>
+            {% endif %}
+            {% endfor %}
+        {% endif %}
+        </br>
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'studysite/restricted/restrictedbase.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block title %}
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/dashboard.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    <div class="friends-list">
+        <h6>Friends: </h6>
+        <ul class="list-group list-group-flush" >
+            {% for friend in user.friends.all %}
+                <li class="list-group-item">{{ friend.user.first_name }} {{ friend.user.last_name }}</li>
+            {% endfor %}
+        </ul>
+        <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}"><h5>Find A Buddy</h5></a>
+        <a class="d-flex justify-content-start" href="{% url 'buddy-messanger' %}"><h5>Message a Buddy</h5></a>
+        </br>
+
+        <h6>Courses: </h6>
+        <ul class="list-group list-group-flush" >
+            {% for course in user.course_set.all %}
+                <form action="{% url 'delete-course' user.id course.pk %}" method="POST" id="delete-course-user-form">
+                    {% csrf_token %}
+                    <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
+                    <div class="d-flex justify-content-end">  
+                        <input class="btn" type="submit" value="delete" style="font-size: 4.5vw;"/>
+                    </div>
+                </form>
+            {% endfor %}
+        </ul>
+        <a class="d-flex justify-content-start" href="{% url 'course-finder' %}"><h5>Add a Course</h5></a>
+
+    </br>
+        <h6>Upcoming Study Event: </h6>
+        {% for event in user.studyevent_set.all %}
+        <ul class="list-group list-group-flush" >
+            <!--TODO: ADD STUDY EVENTS-->
+            {% if event.time.timestamp > current_time %}
+            {{event.course}} {{event.time}}
+            {% endif %}
+        </ul>
+        {% endfor %}
+        <a class="d-flex justify-content-start" href="{% url 'event-finder' %}"><h5>See Event</h5></a>
+    </div>
+{% endblock %}

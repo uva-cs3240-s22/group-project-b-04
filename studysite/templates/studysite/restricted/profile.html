@@ -1,29 +1,21 @@
-{% extends 'studysite/base.html' %}
+{% extends 'studysite/restricted/restrictedbase.html' %}
 {% load socialaccount %}
+{% load static %}
 
 {% block title %}
     <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/profile.css' %}"/>
 {% endblock %}
 
 {% block content %}
-    <div style="padding:20px;">
+    <div class="" style="margin: 4vh 4vw 4vh 4vw;">
         <p>Profile of {{ user.username }}</p>
-        <h6>Name: </h6>
+        <h5>Name: </h5>
         <p>{{ user.first_name }} {{ user.last_name }}</p>
-        <h6>Email: </h6>
+        <h5>Email: </h5>
         <p>{{ user.email }}</p>
-        <h6>Username</h6>
+        <h5>Username: </h5>
         <p>{{ user.username }}<p>
-
-        <h6>Courses: </h6>
-        {% if courses %}
-            <ul class="list-group list-group-flush" >
-            {% for course in courses %}
-                <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        </br>
-          <h6><a href="{% url 'course-add' %}">Add a Class</a></h6>
+        <a href="{% url 'notifications' %}"><h6>Notifications</h6></a>
     </div>
 {% endblock %}
