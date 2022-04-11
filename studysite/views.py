@@ -9,8 +9,16 @@ from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+import google_auth_oauthlib
 from .models import *
 from datetime import date, time, datetime
+
+from apiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+import pickle
+
+from datetime import datetime, timedelta
+import datefinder
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -150,6 +158,7 @@ def addStudyEvent(request):
         #print(type(request.POST['event_course']))
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         event.save()
+        create_event(date_time, event.description)
     return render(request, 'studysite/restricted/addstudyevent.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
@@ -257,3 +266,40 @@ def msgBuddy(request, uid):
     return render(request, 'studysite/restricted/messages.html', {
             'user_list': User.objects.all(),
         })
+
+# REFERENCE GOOGLE CALENDAR API INTEGRATION
+# https://gist.github.com/nikhilkumarsingh/8a88be71243afe8d69390749d16c8322
+# Code Version: 2019
+# Date Viewed: 4/11/22
+
+scopes = ['https://www.googleapis.com/auth/calendar']
+flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+credentials = pickle.load(open("token.pkl", "rb"))
+service = build("calendar", "v3", credentials=credentials)
+result = service.calendarList().list().execute()
+calendar_id = result['items'][4]['id']
+
+def create_event(start_time, summary, duration=1, description=None, location=None):
+    end_time = start_time + timedelta(hours=duration)
+    
+    event = {
+        'summary': summary,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': 'America/New_York',
+        },
+        'end': {
+            'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': 'America/New_York',
+        },
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+            ],
+        },
+    }
+    return service.events().insert(calendarId=calendar_id, body=event).execute()
