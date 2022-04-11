@@ -40,6 +40,13 @@ class StudyEvent(models.Model):
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)
 
+class Message(models.Model):
+    from_user = models.ForeignKey(User, related_name="from_user_message", on_delete=models.CASCADE )
+    to_user = models.ForeignKey(User, related_name="to_user_message", on_delete=models.CASCADE )
+    msg_content = models.CharField(max_length = 200, unique = True)
+
+    def str(self):
+        return f"From {self.from_user.username} to {self.to_user.username}: {self.msg_content}"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

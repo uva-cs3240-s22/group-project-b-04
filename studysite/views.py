@@ -86,12 +86,28 @@ class BuddyView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return User.objects.all()
 
+class MessageView(LoginRequiredMixin, generic.ListView):
+    permission_denied_message = "Please login to view this page."
+    model=User
+    template_name = 'studysite/restricted/messages.html'
+
+    context_object_name = "user_list"
+
+    def check_pending(fromu, tou):
+        return fromu.from_user.filter(to_user=tou)
+
+    def get_queryset(self):
+        return User.objects.all()
+
 class NotifView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
     model=FriendRequest
     template_name = "studysite/restricted/notifications.html"
 
     context_object_name = "request_list"
+
+    def get_context_data(self, **kwargs):
+        return {'request_list': FriendRequest.objects.filter(to_user=self.request.user), 'msg_list': Message.objects.filter(to_user=self.request.user)}
 
     def get_queryset(self):
         return FriendRequest.objects.filter(to_user=self.request.user)
@@ -231,3 +247,13 @@ def accept_friend_request(request, rid):
         return HttpResponse('friend request accepted')
     else :
         return HttpResponse('friend request not accepted')
+
+def msgBuddy(request, uid):
+    fromu = request.user
+    tou = User.objects.get(id=uid)
+    if request.method == "POST" :
+        message = Message(from_user = fromu, to_user = tou, msg_content = request.POST['message'])
+        message.save()
+    return render(request, 'studysite/restricted/messages.html', {
+            'user_list': User.objects.all(),
+        })

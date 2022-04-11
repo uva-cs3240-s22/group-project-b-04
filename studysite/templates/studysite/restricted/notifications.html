@@ -28,5 +28,18 @@
         {% endfor %}
         </ul>
         {% endif %}
+        {% if msg_list %}
+        <ul class="list-group list-group-flush" style="margin-top: 2vh;">
+        {% for msg in msg_list %}
+            <div class="card" style="height: 25vh;">
+                <div class="card-body d-flex justify-content-around align-items-center">
+                    <div class="d-flex justify-content-start flex-column">
+                        <h6 class="card-title">{{ msg.from_user }}: {{ msg.msg_content }}</h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 {% endblock %}
