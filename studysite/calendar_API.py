@@ -64,7 +64,9 @@ def test_calendar():
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                 'google-credentials.json', SCOPES)
-            creds = flow.run_local_server()
+            print("before")
+            creds = flow.run_local_server(host="127.0.0.1", port=8080)
+            print("after")
         # Save the credentials for the next run
         with open('token2.json', 'w') as token:
             token.write(creds.to_json())
