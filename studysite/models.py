@@ -1,9 +1,14 @@
 from email.policy import default
 from django.db import models
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+<<<<<<< HEAD
 from django.utils.timezone import now
+=======
+#from oauth2client.contrib.django_util.models import CredentialsField
+>>>>>>> 6db00cf (add requirements.txt)
 
 # Create your models here.
 
@@ -32,6 +37,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
+<<<<<<< HEAD
 class StudyEvent(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='%(class)s_requests_created')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
@@ -47,6 +53,15 @@ class Message(models.Model):
 
     def str(self):
         return f"From {self.from_user.username} to {self.to_user.username}: {self.msg_content}"
+=======
+#
+# class CredentialsModel(models.Model):
+#     id = models.ForeignKey(User, primary_key=True, on_delete=models.CASCADE)
+#     credential = CredentialsField()
+#     task = models.CharField(max_length=80, null=True)
+#     updated_time = models.CharField(max_length=80, null=True)
+
+>>>>>>> 6db00cf (add requirements.txt)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
