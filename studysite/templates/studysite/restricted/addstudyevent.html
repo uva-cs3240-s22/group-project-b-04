@@ -10,16 +10,23 @@
     <div class="row d-flex justify-content-center text-center" style="margin-top: 20vh;">
         <h3>Create a Study Event</h3>
         {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
-        <form action="{% url 'create-event' %}" method="POST" style="padding-bottom: 15px;" id="create-study-event">
+        <form action="{% url 'create-event' %}" method="POST" style="padding-bottom: 15px;" id="create-study-event" required>
             {% csrf_token %}
             <label>Select Course</label>
             <select name="event_course">
                 {% for course in courses_list %}
-                    <option value={{course}}>{{course.course_subject}} {{course.course_number}}</option>
+                    <option value={{course.id}}>{{course.course_subject}} {{course.course_number}}</option>
                 {% endfor %}
             </select>
             <label>Event Size</label>
-            <input name="max-users" type="number" placeholder="5" />
+            <input name="max-users" type="number" placeholder=5 min=2 required />
+            <label>Meeting Date</label>
+            <input type="date" id="event_date" name="meeting_date" required />
+            <label>Meeting Start Time</label>
+            <input type="time" id="event_time" name="start_time" required />
+            <label>Description</label>
+            <input type="text" placeholder="Studying for upcoming quiz, working on HW, etc..."> 
+            <input type="submit" class= "btn btn-primary" value="Create Event">
         </form>
     </div>
 {% endblock %}

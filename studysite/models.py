@@ -35,6 +35,8 @@ class StudyEvent(models.Model):
     course = models.ManyToManyField(Course, blank=True)
     users = models.ManyToManyField(UserProfile)
     max_users = models.IntegerField(default=6)
+    time = models.DateTimeField()
+    description = models.TextField(max_length=250, default='', blank=True)
 
 
 @receiver(post_save, sender=User)
