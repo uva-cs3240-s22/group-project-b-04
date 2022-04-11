@@ -12,6 +12,12 @@ django-heroku
 # django-allauth is needed for Google Authentication
 django-allauth
 
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
+datefinder
+
 # whitenoise is used for heroku
 whitenoise
 
