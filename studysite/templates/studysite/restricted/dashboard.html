@@ -9,40 +9,54 @@
 
 {% block content %}
     <div class="friends-list">
-        <h6>Friends: </h6>
+        <div class="d-flex flex-row justify-content-between">
+            <h6>Friends: </h6>
+            <div class="">
+                <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}">Find A Buddy</a>
+                <a class="d-flex justify-content-start" href="{% url 'buddy-messanger' %}">Message a Buddy</a>
+            </div>
+        </div>
         <ul class="list-group list-group-flush" >
             {% for friend in user.friends.all %}
-                <li class="list-group-item">{{ friend.user.first_name }} {{ friend.user.last_name }}</li>
+                <li class="list-group-item">{{ friend.user.first_name }} {{ friend.user.last_name }} ({{friend.user.username}})</li>
             {% endfor %}
         </ul>
-        <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}"><h5>Find A Buddy</h5></a>
-        <a class="d-flex justify-content-start" href="{% url 'buddy-messanger' %}"><h5>Message a Buddy</h5></a>
         </br>
-
-        <h6>Courses: </h6>
+    </div>
+    <div class="course-list">
+        <div class="d-flex flex-row justify-content-between">
+            <h6>Courses: </h6>
+            <a class="d-flex justify-content-start" href="{% url 'course-finder' %}">Add a Course</a>
+        </div>
         <ul class="list-group list-group-flush" >
             {% for course in user.course_set.all %}
                 <form action="{% url 'delete-course' user.id course.pk %}" method="POST" id="delete-course-user-form">
                     {% csrf_token %}
-                    <li class="list-group-item">{{ course.course_subject }} {{ course.course_number }}</li>
-                    <div class="d-flex justify-content-end">  
-                        <input class="btn" type="submit" value="delete" style="font-size: 4.5vw;"/>
-                    </div>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p>{{ course.course_subject }} {{ course.course_number }}</p>
+                        <input class="btn" type="submit" value="delete"/>
+                    </li>
                 </form>
             {% endfor %}
         </ul>
-        <a class="d-flex justify-content-start" href="{% url 'course-finder' %}"><h5>Add a Course</h5></a>
-
     </br>
-        <h6>Upcoming Study Event: </h6>
+    </div>
+    <div class="event-list">
+        <div class="d-flex flex-row justify-content-between">
+            <h6>Upcoming Study Event: </h6>
+            <a class="d-flex justify-content-start" href="{% url 'event-finder' %}">See Event</a>
+        </div>
         {% for event in user.studyevent_set.all %}
         <ul class="list-group list-group-flush" >
             <!--TODO: ADD STUDY EVENTS-->
             {% if event.time.timestamp > current_time %}
-            {{event.course}} {{event.time}}
+            <li class="list-group-item d-flex justify-content-between">
+                <p>{{event.course}}</p>
+                <p>{{event.time}}</p>
+            </li>
             {% endif %}
         </ul>
         {% endfor %}
-        <a class="d-flex justify-content-start" href="{% url 'event-finder' %}"><h5>See Event</h5></a>
+        
     </div>
 {% endblock %}

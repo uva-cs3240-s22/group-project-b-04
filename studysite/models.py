@@ -20,7 +20,7 @@ class Course(models.Model):
 
     # self expressed as short hand and name i.e APMA 3140: Partial Differential Equations
     def __str__(self):
-        return self.course_subject + self.course_number
+        return f"{self.course_subject} {self.course_number}"
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, null=True, blank=True)
