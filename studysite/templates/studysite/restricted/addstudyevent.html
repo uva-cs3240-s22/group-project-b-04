@@ -15,7 +15,7 @@
             <label>Select Course</label>
             <select name="event_course">
                 {% for course in courses_list %}
-                    <option value={{course}}>{{course.course_subject}} {{course.course_number}}</option>
+                    <option value={{course.id}}>{{course.course_subject}} {{course.course_number}}</option>
                 {% endfor %}
             </select>
             <label>Event Size</label>

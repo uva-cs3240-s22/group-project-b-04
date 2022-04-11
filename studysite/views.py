@@ -104,7 +104,8 @@ def addcourse(request):
 def addStudyEvent(request):
     if request.method == "POST" :
         owner = request.user
-        event = StudyEvent()
+        event = StudyEvent(owner = owner, course = request.POST['event_course'], max_users = request.POST['max-users'], )
+        event.save()
     return render(request, 'studysite/restricted/addstudyevent.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
