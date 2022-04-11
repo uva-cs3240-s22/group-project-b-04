@@ -15,7 +15,6 @@
     <div class="row row-cols-4 d-flex justify-content-start align-items-center" style="margin: 2vh 4vw 2vh 4vw;">
         {% if event_list %}
             {% for event in event_list %}
-            {% if event.course in user.course_set.all %}
             <div class="col">
                 <form action="{% url 'event-add-user' event.pk user.pk %}" method="POST" id="event-add-user-form">
                     {% csrf_token %}
@@ -48,7 +47,6 @@
                     </div>
                 </form>  
             </div>
-            {% endif %}
             {% endfor %}
         {% endif %}
         </br>
