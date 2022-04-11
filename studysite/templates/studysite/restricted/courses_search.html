@@ -1,0 +1,16 @@
+{% extends 'studysite/restricted/restrictedbase.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block content %}
+    {% if searched %}
+        <h1>You searched for {{ searched }}</h1>
+        <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/courses.css' %}"/>
+        <br/>
+        {% for course in courses %}
+            {{ course.course_name }} {{ course.course_subject }} {{ course.course_number }}<br/>
+        {% endfor %}
+    {% else %}
+        <h1>Hey! You forgot to search for a course...</h1>
+    {% endif %}
+{% endblock %}

@@ -40,6 +40,11 @@
             </div>
             {% endfor %}
         {% endif %}
+        <form class="d-flex" method=POST action="{%url 'course-search' %}">
+            {% csrf_token %}
+            <input class="form-control me-2" type="search" placeholder="Search by Subject ex:APMA" area-label="Search" name="searched">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
         </br>
     </div>
 {% endblock %}
