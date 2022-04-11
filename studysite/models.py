@@ -34,9 +34,9 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 class StudyEvent(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='%(class)s_requests_created')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    users = models.ManyToManyField(UserProfile)
+    users = models.ManyToManyField(User)
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)

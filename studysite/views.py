@@ -52,6 +52,9 @@ class DashView(LoginRequiredMixin, generic.DetailView):
     model = User
     template_name = 'studysite/restricted/dashboard.html'
     
+    def get_context_data(self, **kwargs):
+        return {'current_time': datetime.now().timestamp()}
+
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
 
@@ -135,10 +138,28 @@ def addStudyEvent(request):
             'courses_list': Course.objects.order_by('course_subject'),
         })
 
-def addUserToCourse(request, pk, pku):
-    return
+def addUserToEvent(request, pk, pku):
+    course = get_object_or_404
+    try:
+        selected_event = StudyEvent.objects.get(pk=pk)
+    except (KeyError, StudyEvent.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return render(request, 'studysite/studyeventlist.html', {
+            'event_list': StudyEvent.objects.order_by('max_users'),
+        })
+    else:
+        selected_event.users.add(User.objects.get(pk=pku))
+        #ProfileView.request.user.pk
+        selected_event.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return render(request, 'studysite/studyeventlist.html', {
+            'event_list': StudyEvent.objects.order_by('max_users'),
+        })
 
-def deleteUserFromCourse(request, uid, pk):
+def deleteUserFromEvent(request, uid, pk):
     return
 
 def addCourseToUser(request, pk, pku):

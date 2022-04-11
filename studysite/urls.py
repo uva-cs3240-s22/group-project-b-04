@@ -38,4 +38,5 @@ urlpatterns = [
     path('<str:uid>/profile/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
     path('events/', views.EventView.as_view(), name='event-finder'),
     path('events/create', views.addStudyEvent, name="create-event"),
+    path('events/<int:pk>/<int:pku>/', views.addUserToEvent, name='event-add-user'),
 ]
