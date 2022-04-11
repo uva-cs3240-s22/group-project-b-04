@@ -64,18 +64,21 @@ def test_calendar():
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                 'google-credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_local_server()
         # Save the credentials for the next run
         with open('token2.json', 'w') as token:
             token.write(creds.to_json())
-    CLIENT_SECRET_FILE = 'google-credentials.json'
-    service = Create_Service(CLIENT_SECRET_FILE, 'calendar', 'v3', SCOPES)
+    #CLIENT_SECRET_FILE = 'google-credentials.json'
+  #  service = Create_Service(CLIENT_SECRET_FILE, 'calendar', 'v3', SCOPES)
     #flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file('google-credentials.json', SCOPES)
     #flow.redirect_uri = 'http://127.0.0.1:8000/studysite/accounts/google/login/callback/'
-   # service = googleapiclient.discovery.build('calendar', 'v3', credentials=creds)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=creds)
 
     result = service.calendarList().list().execute()
-    CAL_ID = result['items'][0]['id']
+    CAL_ID = 'primary'
+
+    CAL_ID2 = result['items'][0]['id']
+    print(CAL_ID2)
     #result = service.events().list(calendarId=calendar_id).execute()
 
     # CREATE A NEW EVENT
@@ -100,12 +103,15 @@ def test_calendar():
  # GET ALL EXISTING EVENTS
     events_result = service.events().list(calendarId=CAL_ID, maxResults=2500).execute()
     events = events_result.get('items', [])
+    event1 = events[0]
+    hlink = event1['htmlLink']
 
 
 
     # LOG THEM ALL OUT IN DEV TOOLS CONSOLE
     for e in events:
 
+        #print(e['htmlLink'])
         print(e)
 
     #uncomment the following lines to delete each existing item in the calendar
