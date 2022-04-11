@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
+from datetime import date, time, datetime
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -122,7 +123,15 @@ def addcourse(request):
 def addStudyEvent(request):
     if request.method == "POST" :
         owner = request.user
-        event = StudyEvent()
+        date_obj = date.fromisoformat(request.POST['meeting_date'])
+        #print(type(time))
+        time_obj = time.fromisoformat(request.POST['start_time'])
+        #print(type(time_obj))
+        #time_obj = time.strptime(request.POST['start_time'],"%H:%M")
+        date_time = datetime.combine(date_obj, time_obj)
+        #print(type(request.POST['event_course']))
+        event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
+        event.save()
     return render(request, 'studysite/restricted/addstudyevent.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })

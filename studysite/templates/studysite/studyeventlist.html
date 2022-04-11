@@ -14,7 +14,9 @@
         {% if event_list %}
             {% for event in event_list %}
                 {% csrf_token %}
-            
+                <h6>{{event.course}} Event</h6>
+                <p>{{event.time}}</p>
+                <p>{{event.users.count}} / {{event.max_users}}</p>
             {% endfor %}
         {% endif %}
 {% endblock %}
