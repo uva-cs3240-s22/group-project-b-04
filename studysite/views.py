@@ -70,7 +70,7 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
 
 class EventView(generic.ListView):
     model = StudyEvent
-    template_name = 'studysite/studyeventlist.html'
+    template_name = 'studysite/restricted/studyeventlist.html'
     context_object_name = 'event_list'
 
 class BuddyView(LoginRequiredMixin, generic.ListView):
@@ -161,7 +161,7 @@ def addUserToEvent(request, pk, pku):
     except (KeyError, StudyEvent.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/studyeventlist.html', {
+        return render(request, 'studysite/restricted/studyeventlist.html', {
             'event_list': StudyEvent.objects.order_by('max_users'),
         })
     else:
@@ -171,7 +171,7 @@ def addUserToEvent(request, pk, pku):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/studyeventlist.html', {
+        return render(request, 'studysite/restricted/studyeventlist.html', {
             'event_list': StudyEvent.objects.order_by('max_users'),
         })
 
@@ -244,9 +244,9 @@ def accept_friend_request(request, rid):
         friend_request.to_user.userprofile.friends.add(friend_request.from_user)
         friend_request.from_user.userprofile.friends.add(friend_request.to_user)
         friend_request.delete()
-        return HttpResponse('friend request accepted')
+        return HttpResponseRedirect(reverse('notifications'))
     else :
-        return HttpResponse('friend request not accepted')
+        return HttpResponseRedirect(reverse('notifications'))
 
 def msgBuddy(request, uid):
     fromu = request.user

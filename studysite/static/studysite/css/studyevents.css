@@ -1,0 +1,29 @@
+.event-card {
+    background-color: white;
+    border-radius: 15px;
+    border-width: 1px;
+    border-style: outset;
+    border-color: #2C2735;
+    box-shadow: 2px 2px 7px -4px black
+}
+
+.event-card h6 {
+    color: #2C2735;
+    font-size: 2vw;
+    font-weight: bold;
+}
+
+.event-card p {
+    color: #2C2735;
+    font-size: 1vw;
+}
+
+.page-title {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.event-btn {
+    border-color: #2C2735 !important;
+    color: #2C2735 !important;
+}
