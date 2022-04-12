@@ -139,8 +139,9 @@ class CourseTest(unittest.TestCase):
     course.delete()
 
   def test_course_deleted(self):
+    course, created = Course.objects.get_or_create(course_name="Data Structures", course_subject="cs", course_number="2100")
     num_prev = len(Course.objects.all())
-    self.course1.delete()
+    course.delete()
     self.assertEqual(num_prev - 1, len(Course.objects.all()))
 
   def tearDown(self):
