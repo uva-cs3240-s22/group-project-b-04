@@ -35,5 +35,5 @@ urlpatterns = [
     path('notifications/', views.NotifView.as_view(), name='notifications'),
     path('<str:username>/dashboard/', views.DashView.as_view(), name='dashboard'),
     path('<str:uid>/dashboard/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
-    path('courses_search', views.Course_Search, name='course-search'),
+    path('courses/courses_search', views.Course_Search, name='course-search'),
 ]
