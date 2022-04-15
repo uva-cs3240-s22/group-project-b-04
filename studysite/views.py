@@ -184,9 +184,9 @@ def accept_friend_request(request, rid):
         return HttpResponse('friend request not accepted')
 
 def Course_Search(request):
-    if request.method == "POST":
-        searched = request.POST['searched']
+    if request.method == "GET":
+        searched = request.GET.get('searched')
         courses = Course.objects.filter(course_subject=searched)
-        return render(request, 'studysite/restricted/courses/courses_search.html', {'searched':searched}, {'courses':courses})
+        return render(request, 'studysite/restricted/courses_search.html', {'searched':searched}, {'courses':courses})
     else:
-        return render(request, 'studysite/restricted/courses/courses_search.html', {})
+        return render(request, 'studysite/restricted/courses_search.html', {})
