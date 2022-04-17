@@ -5,7 +5,7 @@
 {% block content %}
     {% if searched %}
         <h1>You searched for {{ searched }}</h1>
-        <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/courseadd.css' %}"/></link>
+        <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/courseadd.css' %}"/>
         </br>
         {% for course in courses %}
             <div class="card course-card" style="height: 25vh;">
