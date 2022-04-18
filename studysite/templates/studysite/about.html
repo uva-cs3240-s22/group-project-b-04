@@ -1,21 +1,32 @@
 {% extends 'studysite/base.html' %}
+{% load static %}
 
 {% block title %}
     <title>About Us</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/about.css' %}"/>
 {% endblock %}
 
 {% block content %}
-  <div>
-    <h1>About Us</h1>
-    <p>Studdy Buddy is brought to you by Group B-04 of the Spring 2022 CS 3240 Class.</p>
-  </div>
-  <div class="info-block text-dark bg-white">
-    <h4>What is Study Buddy?</h4>
-  </br>
-    <p>Study Buddy is a project designed to provide students with a more immersive and interactive study expeirence. We aimed to
-      develop a web app that connects students with others in their courses in order to provide a network of resources, material, 
-      and management. Sign up, Create a Profile with all you classes, and be matched with other students in the same courses to 
-      study with. Create study parties for tests and exam, or even chill homework sessions. Study Buddy is here to help you be your best.
-    </p>
+  <div class="d-flex align-items-center justify-content-center" style="height: 75%;">
+    <div class="d-flex justify-content-end" id="team" style="width:100%;">
+      <div class="d-flex flex-wrap justify-content-center align-items-center"> 
+        <img class="headshot" src="{% static 'assets/kavya-pic.png' %}" alt="Kavya's Picture"/>
+        <img class="headshot" src="{% static 'assets/tyler-pic.png' %}" alt="Tyler's Picture"/>
+        <img class="headshot" src="{% static 'assets/bebe-pic.png' %}" alt="Bebe's Picture"/>
+        <img class="headshot" src="{% static 'assets/megan-pic.png' %}" alt="Megan's Picture"/>
+        <img class="headshot" src="{% static 'assets/studbudlogo.svg' %}" alt="Arran's Picture"/>
+      </div>
+    </div>
+    <div class="info-block text-dark">
+      <h4>What is Study Buddy?</h4>
+    </br>
+      <p>Study Buddy is a project designed to provide students with a more immersive and interactive study expeirence. We aimed to
+        develop a web app that connects students with others in their courses in order to provide a network of resources, material, 
+        and management. Sign up, Create a Profile with all you classes, and be matched with other students in the same courses to 
+        study with. Create study parties for exams or even chill homework sessions. Study Buddy is here to help you be your best with others.
+      </p>
+    </br>
+      <p>Studdy Buddy is brought to you by Group B-04 of the Spring 2022 CS 3240 Class.</p>
+    </div>
   </div>
 {% endblock %}

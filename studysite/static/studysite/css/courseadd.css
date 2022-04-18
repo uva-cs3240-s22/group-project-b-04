@@ -1,0 +1,13 @@
+.add-form {
+    margin: 4vh 10vw 4vh 10vw;
+    padding: 2vh;
+}
+
+.form-group {
+    padding-bottom: 3vh !important;
+}
+
+.form-group  label{
+    padding-right: 1vw !important;
+    font-weight: bold;
+}

@@ -11,6 +11,7 @@ dj-database-url==0.5.0
 Django==4.0.3
 django-allauth==0.50.0
 django-bootstrap-v5==1.0.11
+<<<<<<< HEAD
 django-heroku==0.3.1
 google-api-core==2.7.1
 google-api-python-client==2.42.0
@@ -43,3 +44,9 @@ tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.9
 whitenoise==6.0.0
+=======
+# dj-database-url
+dj-database-url
+
+django-messages
+>>>>>>> origin/main

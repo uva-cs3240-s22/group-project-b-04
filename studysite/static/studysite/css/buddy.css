@@ -1,0 +1,40 @@
+.buddy-listing {
+    background-color: white;
+    border-radius: 15px;
+    border-width: 3px;
+    border-style: outset;
+    border-color: #2C2735;
+}
+
+.buddy-listing h4 {
+    color: #2C2735;
+    font-size: 2vw;
+    font-weight: 300;
+}
+
+.buddy-listing h6 {
+    color: #2C2735;
+    font-size: 1vw;
+    font-weight: 100;
+}
+
+.buddy-listing p {
+    color: #2C2735;
+    font-size: 1vw;
+}
+
+.friend-btn a {
+    color: whitesmoke !important;
+    margin: 3vh;
+    padding: 2.5vh;
+    font-size: 4vh;
+    background-color: #2C2735;
+    border-color: #2C2735;
+    border-radius: 15px;
+    border-width: 2px;
+}
+
+.friend-btn a:hover{
+    color: #2C2735 !important;
+    background: none !important;
+}
