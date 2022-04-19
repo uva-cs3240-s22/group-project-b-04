@@ -18,7 +18,6 @@
                     <div class="d-flex justify-content-start flex-column">
                         <h4 class="card-title">{{ to_user.first_name }} {{ to_user.last_name }}</h4>
                         <h6 class="card-text">{{ to_user.username }}</h6>
-                        <p class="card-text"><strong>Bio:</strong> {{ to_user.bio }}</p>
                         <div class="d-flex flex-row">
                             <p><strong>Courses: </strong></p>
                             {% for course in to_user.course_set.all %}
