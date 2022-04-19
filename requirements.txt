@@ -17,6 +17,8 @@ google-auth-httplib2
 google-auth-oauthlib
 
 datefinder
+re
+pickle
 
 # whitenoise is used for heroku
 whitenoise
