@@ -83,11 +83,7 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'courses_list'
 
     def get_queryset(self):
-        filtered = self.kwargs['filtered']
-        if filtered:
-            return filtered
-        else :
-            return Course.objects.order_by('course_subject')
+        return Course.objects.order_by('course_subject')
 
 class EventView(generic.ListView):
     model = StudyEvent
@@ -318,35 +314,3 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
         },
     }
     return service.events().insert(calendarId=calendar_id, body=event).execute()
-
-def course_search(request, filtered):
-    filtered_courses = Course.objects.order_by('course_subject') # filtered list
-    if request.method == "POST":
-        searched = request.POST['searched'].split('\s')# list of search terms of searched terms w/out whitespace
-        search_type = classify(searched[0])
-        if search_type == FILTER_TYPES['SUBJECT']:
-            subject = searched[0].upper()
-            if len(searched) > 1:
-                num = searched[1]
-                if classify(num) == FILTER_TYPES['NUMBER']:
-                    filtered_courses = Course.objects.filter(course_subject=subject, course_number = num)
-            else:
-                filtered_courses = Course.objects.filter(course_subject=subject)
-        elif search_type == FILTER_TYPES['NAME']:
-            filtered_courses = Course.objects.filter(course_name = searched[0])
-    return render(reverse('course-finder', kwargs={'filtered' : filtered_courses}))
-
-def classify(term):
-    subject = re.compile('[A-Z]{2,5}') # 2-5 characters of capital letters
-    number = re.compile('[0-9]{4}') # 4 digits
-    date = list(datefinder.find_dates(term, strict=False, base_date=datetime.datetime(2022,1,1,0,0,0)))
-    if subject.upper().search(term) != None:
-        return FILTER_TYPES['SUBJECT']
-    elif number.search(term) != None:
-        return FILTER_TYPES['NUMBER']
-    elif date:
-        return FILTER_TYPES['DATE']
-    elif term.lower() == "open" or term.lower() == 'available':
-        return FILTER_TYPES['FULL']
-    else:
-        return FILTER_TYPES['NAME']
