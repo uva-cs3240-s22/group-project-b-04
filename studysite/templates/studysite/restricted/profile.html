@@ -16,6 +16,13 @@
         <p>{{ user.email }}</p>
         <h5>Username: </h5>
         <p>{{ user.username }}<p>
+            <h5>Year: </h5>
+            <p>{{ user.userprofile.year }}<p>
+            <h5>Major: </h5>
+            <p>{{ user.userprofile.major }}<p>
+            <h5>Bio: </h5>
+            <p>{{ user.userprofile.bio }}</p>
         <a href="{% url 'notifications' %}"><h6>Notifications</h6></a>
+        <a href="{% url 'edit_profile' user.username%}"><h6>Edit Profile</h6></a>
     </div>
 {% endblock %}

@@ -4,14 +4,21 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.conf import settings
+from django.db.models.signals import post_save
 from django.shortcuts import redirect
 from django.views import generic
+from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
 from .calendar_API import test_calendar
 from datetime import date, time, datetime
+from django.urls import reverse_lazy
+from .forms import UserProfileForm
+import requests
+import json
+
 
 
 # Create your views here.
@@ -33,6 +40,49 @@ class LoginView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+# class EditProfileView(LoginRequiredMixin, TemplateView):
+#     permission_denied_message = "Please login to view this page."
+#    # profile_form = UserProfileForm
+    #model = UserProfile
+   # template_name = 'studysite/userprofile_form.html'
+   #  def post(request):
+   #      if request.method == "POST" :
+   #          year_obj = year.fromisoformat(request.POST['user_year'])
+   #          major_obj = major.fromisoformat(request.POST['user_major'])
+   #          bio_obj = bio.fromisoformat(request.POST['user_bio'])
+   #          profile = UserProfile(year=year_obj, major=major_obj, bio=bio_obj)
+   #          profile.save()
+   #      return render(request, 'studysite/userprofile_form.html', UserProfile.objects.all())
+
+    # def get(self, request, *args, **kwargs):
+    #     return self.post(request, *args, **kwargs)
+    # def previous(request):
+    #     return HttpResponseRedirect(reverse('profile'))
+
+    #template_name = 'studysite/restricted/edit_profile.html'
+    #success_url = reverse_lazy('profile user.username')
+
+def post(request, username):
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('profile', args=(request.user.username,)))
+       # return render(request, 'studysite/userprofile_form.html', {'form': form})
+    else:
+        form = UserProfileForm(instance=profile)
+    return render(request, 'studysite/userprofile_form.html', {'form': form})
+    # if request.method == "POST" :
+    #     form = UserProfileForm(request.POST)
+    #     if form.is_valid():
+    #         profile = UserProfile(user=request.user, year=request.POST['user_year'], major=request.POST['user_major'], bio=request.POST['user_bio'])
+    #         profile.save()
+    # return render(request, 'studysite/userprofile_form.html')
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
@@ -130,7 +180,21 @@ def addcourse(request):
     if request.method == "POST" :
         if (len(request.POST['course_subject']) > 0 and len(request.POST['course_name']) > 0 and len(request.POST['course_number']) > 0 ):
             if (Course.objects.filter(course_subject=request.POST['course_subject'].upper(), course_number=request.POST['course_number']).count() == 0):
+                url = 'https://api.devhub.virginia.edu/v1/courses'
+                data = requests.get(url).json()
+                class_instructor = []
+                class_formal_descript = []
+                course_subject = request.POST['course_subject']
+                course_number = request.POST['course_number']
+                for item in data["class_schedules"]["records"]:
+                    if (item[0] == course_subject) and (item[1] == course_number):
+                        if item[6] not in class_instructor:
+                            class_instructor.append(item[6])
+                        #class_formal_descript = item[5]
+                        #break
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
+                course.class_instructor = class_instructor
+                course.class_formal_descript = class_formal_descript
                 course.save()
                 return HttpResponseRedirect(reverse('course-finder'))
             else: 

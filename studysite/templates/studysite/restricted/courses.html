@@ -23,6 +23,10 @@
                           <div class="d-flex justify-content-start flex-column">
                             <h6 class="card-title">{{ course.course_subject }} {{ course.course_number }}</h6>
                             <p class="card-text">{{ course.course_name }}</p>
+                              {% for instructor in course.class_instructor %}
+                              <p class="card-text">{{ instructor }}</p>
+                              {% endfor %}
+                            <p class="card-text">{{ course.class_formal_descript }}</p>
                             <p class="card-text"><small>{{ course.course_roster.count }} Student(s)</small></p>
                           </div>
                           {% if course not in user.course_set.all%}
