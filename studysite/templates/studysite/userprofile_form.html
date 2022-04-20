@@ -1,0 +1,18 @@
+{% extends 'studysite/restricted/restrictedbase.html' %}
+{% load socialaccount %}
+{% load static %}
+
+{% block title %}
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/profile.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    <div class="" style="margin: 4vh 4vw 4vh 4vw;">
+        <form method="POST" enctype="multipart/form-data" id="update-bio">
+            {% csrf_token %}
+            {{ form }}
+        <input type="submit" value="Update">
+        </form>
+    </div>
+{% endblock %}

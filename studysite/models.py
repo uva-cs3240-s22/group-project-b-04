@@ -23,7 +23,8 @@ class Course(models.Model):
     course_subject = models.CharField(max_length=5) # subject short hand i.e APMA
     course_number = models.CharField(max_length=5) # course level i.e 3140
     course_roster = models.ManyToManyField(User, blank=True) # to access from user profile do the user.course_set.all()
-
+    class_instructor = models.CharField(max_length=15, blank=True, null=True)
+    class_formal_descript = models.CharField(max_length=200, blank=True, null=True)
     # self expressed as short hand and name i.e APMA 3140: Partial Differential Equations
     def __str__(self):
         return f"{self.course_subject} {self.course_number}"
@@ -34,9 +35,10 @@ class UserProfile(models.Model):
     year = models.CharField(max_length=80, choices=years, blank=True)
     bio = models.TextField(max_length=250, default='', blank=True)
     friends = models.ManyToManyField(User, related_name="friends", blank=True)
+    image = models.ImageField(upload_to='photos', verbose_name='Profile Picture')
 
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
+  #  def __str__(self):
+     #   return f"{self.user.username}'s Profile"
 
 <<<<<<< HEAD
 class StudyEvent(models.Model):

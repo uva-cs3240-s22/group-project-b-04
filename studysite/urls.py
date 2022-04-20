@@ -26,13 +26,8 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('<str:username>/profile', views.ProfileView.as_view(), name='profile'),
-<<<<<<< HEAD
     path('courses/<str:filtered>', views.CoursesView.as_view(), name='course-finder'),
     path('courses/filter/', views.course_search, name='course-search'),
-=======
-    path('calendar/', views.calendar, name='calendar'),
-    path('courses/', views.CoursesView.as_view(), name='course-finder'),
->>>>>>> 888d472 (adding calendar changes)
     path('courses/add/', views.addcourse, name="course-add"),
     path('courses/<int:pk>/<int:pku>/', views.addCourseToUser, name='course-add-user'),
     path('send_friend_request/<int:uid>/', views.send_friend_request, name="send friend request"),
