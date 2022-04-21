@@ -11,14 +11,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 import google_auth_oauthlib
 from .models import *
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 import re
 
 from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import pickle
 
-from datetime import datetime, timedelta
 import datefinder
 
 FILTER_TYPES = {
@@ -27,6 +26,7 @@ FILTER_TYPES = {
     'NAME'  :   'NAME',
     'DATE'  :   'DATE',
     'FULL'  :   'FULL',
+    'ALL'   :   'ALL',
 }
 
 # Create your views here.
@@ -83,7 +83,7 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'courses_list'
 
     def get_queryset(self):
-        return Course.objects.order_by('course_subject')
+        return get_filtered_courses(self.kwargs['filtered'])
 
 class EventView(generic.ListView):
     model = StudyEvent
@@ -314,3 +314,46 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
         },
     }
     return service.events().insert(calendarId=calendar_id, body=event).execute()
+
+def course_search(request):
+    if request.method == "POST":
+        if (len(request.POST['searched'])<1):
+            return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all'}))
+        else:
+            return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered' : request.POST['searched']}))
+    return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all'}))
+
+def get_filtered_courses(term):
+    searched = term.split()# list of search terms of searched terms w/out whitespace
+    search_type = classify(searched[0])
+    if search_type == FILTER_TYPES['SUBJECT']:
+        subject = searched[0].upper()
+        if len(searched) > 1:
+            num = searched[1]
+            if classify(num) == FILTER_TYPES['NUMBER']:
+                #print(num)
+                return Course.objects.filter(course_subject=subject, course_number = num)
+        else:
+            return Course.objects.filter(course_subject=subject)
+    elif search_type == FILTER_TYPES['NAME']:
+        return Course.objects.filter(course_name = term)
+    else:
+        return Course.objects.all() #order_by('course_subject')
+
+def classify(term):
+    subject = re.compile('[A-Z]{2,5}') # 2-5 characters of capital letters
+    number = re.compile('[0-9]{4}') # 4 digits
+    date = list(datefinder.find_dates(term, strict=False, base_date=datetime(2022,1,1)))
+    if term.upper() == 'ALL':
+        return FILTER_TYPES['ALL']
+    if subject.search(term.upper()) != None and len(term) < 5:
+        return FILTER_TYPES['SUBJECT']
+    elif number.search(term) != None:
+        return FILTER_TYPES['NUMBER']
+    elif date:
+        return FILTER_TYPES['DATE']
+    elif term.lower() == "open" or term.lower() == 'available':
+        return FILTER_TYPES['FULL']
+    else:
+        return FILTER_TYPES['NAME']
+
