@@ -317,7 +317,10 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
 
 def course_search(request):
     if request.method == "POST":
-        return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered' : request.POST['searched']}))
+        if (len(request.POST['searched'])<1):
+            return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all'}))
+        else:
+            return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered' : request.POST['searched']}))
     return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all'}))
 
 def get_filtered_courses(term):
