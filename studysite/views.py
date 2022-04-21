@@ -11,6 +11,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+import google_auth_oauthlib
 from .models import *
 from .calendar_API import test_calendar
 from datetime import date, time, datetime, timedelta
@@ -18,7 +19,22 @@ from django.urls import reverse_lazy
 from .forms import UserProfileForm
 import requests
 import json
+import re
 
+from apiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+import pickle
+
+import datefinder
+
+FILTER_TYPES = {
+    'SUBJECT'   :   'SUBJECT',
+    'NUMBER'    :   'NUMBER',
+    'NAME'  :   'NAME',
+    'DATE'  :   'DATE',
+    'FULL'  :   'FULL',
+    'ALL'   :   'ALL',
+}
 
 
 # Create your views here.
@@ -118,11 +134,11 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'courses_list'
 
     def get_queryset(self):
-        return Course.objects.order_by('course_subject')
+        return get_filtered_courses(self.kwargs['filtered'])
 
 class EventView(generic.ListView):
     model = StudyEvent
-    template_name = 'studysite/studyeventlist.html'
+    template_name = 'studysite/restricted/studyeventlist.html'
     context_object_name = 'event_list'
 
 class BuddyView(LoginRequiredMixin, generic.ListView):
@@ -218,6 +234,7 @@ def addStudyEvent(request):
         #print(type(request.POST['event_course']))
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         event.save()
+        create_event(date_time, event.description)
     return render(request, 'studysite/restricted/addstudyevent.html', {
             'courses_list': Course.objects.order_by('course_subject'),
         })
@@ -229,7 +246,7 @@ def addUserToEvent(request, pk, pku):
     except (KeyError, StudyEvent.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/studyeventlist.html', {
+        return render(request, 'studysite/restricted/studyeventlist.html', {
             'event_list': StudyEvent.objects.order_by('max_users'),
         })
     else:
@@ -239,7 +256,7 @@ def addUserToEvent(request, pk, pku):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/studyeventlist.html', {
+        return render(request, 'studysite/restricted/studyeventlist.html', {
             'event_list': StudyEvent.objects.order_by('max_users'),
         })
 
@@ -318,9 +335,9 @@ def accept_friend_request(request, rid):
         friend_request.to_user.userprofile.friends.add(friend_request.from_user)
         friend_request.from_user.userprofile.friends.add(friend_request.to_user)
         friend_request.delete()
-        return HttpResponse('friend request accepted')
+        return HttpResponseRedirect(reverse('notifications'))
     else :
-        return HttpResponse('friend request not accepted')
+        return HttpResponseRedirect(reverse('notifications'))
 
 def msgBuddy(request, uid):
     fromu = request.user
@@ -331,4 +348,87 @@ def msgBuddy(request, uid):
     return render(request, 'studysite/restricted/messages.html', {
             'user_list': User.objects.all(),
         })
+
+
+# REFERENCE GOOGLE CALENDAR API INTEGRATION
+# https://gist.github.com/nikhilkumarsingh/8a88be71243afe8d69390749d16c8322
+# Code Version: 2019
+# Date Viewed: 4/11/22
+
+scopes = ['https://www.googleapis.com/auth/calendar']
+flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+#credentials = flow.run_console()
+#pickle.dump(credentials, open("token.pkl", "wb"))
+credentials = pickle.load(open("token.pkl", "rb"))
+service = build("calendar", "v3", credentials=credentials)
+result = service.calendarList().list().execute()
+calendar_id = result['items'][-1]['id']
+
+def create_event(start_time, summary, duration=1, description=None, location=None):
+    end_time = start_time + timedelta(hours=duration)
+    
+    event = {
+        'summary': summary,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': 'America/New_York',
+        },
+        'end': {
+            'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': 'America/New_York',
+        },
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+            ],
+        },
+    }
+    return service.events().insert(calendarId=calendar_id, body=event).execute()
+
+def course_search(request):
+    if request.method == "POST":
+        if (len(request.POST['searched'])<1):
+            return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all'}))
+        else:
+            return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered' : request.POST['searched']}))
+    return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all'}))
+
+def get_filtered_courses(term):
+    searched = term.split()# list of search terms of searched terms w/out whitespace
+    search_type = classify(searched[0])
+    if search_type == FILTER_TYPES['SUBJECT']:
+        subject = searched[0].upper()
+        if len(searched) > 1:
+            num = searched[1]
+            if classify(num) == FILTER_TYPES['NUMBER']:
+                #print(num)
+                return Course.objects.filter(course_subject=subject, course_number = num)
+        else:
+            return Course.objects.filter(course_subject=subject)
+    elif search_type == FILTER_TYPES['NAME']:
+        return Course.objects.filter(course_name = term)
+    else:
+        return Course.objects.all() #order_by('course_subject')
+
+def classify(term):
+    subject = re.compile('[A-Z]{2,5}') # 2-5 characters of capital letters
+    number = re.compile('[0-9]{4}') # 4 digits
+    date = list(datefinder.find_dates(term, strict=False, base_date=datetime(2022,1,1)))
+    if term.upper() == 'ALL':
+        return FILTER_TYPES['ALL']
+    if subject.search(term.upper()) != None and len(term) < 5:
+        return FILTER_TYPES['SUBJECT']
+    elif number.search(term) != None:
+        return FILTER_TYPES['NUMBER']
+    elif date:
+        return FILTER_TYPES['DATE']
+    elif term.lower() == "open" or term.lower() == 'available':
+        return FILTER_TYPES['FULL']
+    else:
+        return FILTER_TYPES['NAME']
+
 

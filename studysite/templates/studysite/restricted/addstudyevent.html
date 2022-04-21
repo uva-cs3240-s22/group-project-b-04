@@ -1,4 +1,4 @@
-{% extends 'studysite/base.html' %}
+{% extends 'studysite/restricted/restrictedbase.html' %}
 {% load socialaccount %}
 {% load static %}
 
@@ -8,6 +8,7 @@
 
 {% block content %}
     <div class="row d-flex justify-content-center text-center" style="margin-top: 20vh;">
+        <a href="{% url 'event-finder' %}"><h6>Return to Study Events</h6></a>
         <h3>Create a Study Event</h3>
         {% if error_message %}<p class="error"><strong>{{ error_message }}</strong></p>{% endif %}
         <form action="{% url 'create-event' %}" method="POST" style="padding-bottom: 15px;" id="create-study-event" required>

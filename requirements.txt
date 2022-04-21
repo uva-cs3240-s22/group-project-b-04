@@ -1,3 +1,4 @@
+
 asgiref==3.5.0
 backports.zoneinfo==0.2.1
 beautifulsoup4==4.10.0
@@ -10,8 +11,35 @@ defusedxml==0.7.1
 dj-database-url==0.5.0
 Django==4.0.3
 django-allauth==0.50.0
+
+# Django is needed to run Django
+Django
+
+# gunicorn is needed by Heroku to launch the web server
+gunicorn
+
+# django-heroku is ONLY needed by Heroku for their internal process
+# if you have errors with psycopg2 or django-heroku, use the code at the bottom of settings.py to avoid the error
+# the outcome of using this bypass is that locally you will need to use either SQLite or connect to Heroku's Postgres DB
+django-heroku
+
+# django-allauth is needed for Google Authentication
+django-allauth
+
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
+datefinder
+
+# whitenoise is used for heroku
+whitenoise
+
+dj-database-url 
+psycopg2
+
 django-bootstrap-v5==1.0.11
-<<<<<<< HEAD
+
 django-heroku==0.3.1
 google-api-core==2.7.1
 google-api-python-client==2.42.0
@@ -44,9 +72,8 @@ tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.9
 whitenoise==6.0.0
-=======
 # dj-database-url
 dj-database-url
 
 django-messages
->>>>>>> origin/main
+
