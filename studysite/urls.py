@@ -44,3 +44,8 @@ urlpatterns = [
     path('events/<int:pk>/<int:pku>/', views.addUserToEvent, name='event-add-user'),
     
 ]
+
+
+
+#if settings.DEBUG:
+#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

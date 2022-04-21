@@ -19,6 +19,8 @@ from studysite import views
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 from django.shortcuts import redirect
+from django.conf.urls.static import static
+from django.conf import settings
 
 import studysite
 
@@ -27,3 +29,4 @@ urlpatterns = [
     path('studysite/', include('studysite.urls') ),
     path('', lambda request: redirect('studysite/', permanent=True)),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

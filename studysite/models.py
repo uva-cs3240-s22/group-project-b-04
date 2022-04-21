@@ -35,7 +35,7 @@ class UserProfile(models.Model):
     year = models.CharField(max_length=80, choices=years, blank=True)
     bio = models.TextField(max_length=250, default='', blank=True)
     friends = models.ManyToManyField(User, related_name="friends", blank=True)
-    image = models.ImageField(upload_to='photos', verbose_name='Profile Picture')
+    image = models.ImageField(default='default.jpg', upload_to='profile')
 
   #  def __str__(self):
      #   return f"{self.user.username}'s Profile"
