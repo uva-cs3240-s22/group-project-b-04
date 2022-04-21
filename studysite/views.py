@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import *
 from .calendar_API import test_calendar
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
 from .forms import UserProfileForm
 import requests
@@ -182,19 +182,21 @@ def addcourse(request):
             if (Course.objects.filter(course_subject=request.POST['course_subject'].upper(), course_number=request.POST['course_number']).count() == 0):
                 url = 'https://api.devhub.virginia.edu/v1/courses'
                 data = requests.get(url).json()
-                class_instructor = []
+                instructor = []
+                class_instructor = ""
                 class_formal_descript = []
                 course_subject = request.POST['course_subject']
                 course_number = request.POST['course_number']
                 for item in data["class_schedules"]["records"]:
                     if (item[0] == course_subject) and (item[1] == course_number):
-                        if item[6] not in class_instructor:
-                            class_instructor.append(item[6])
+                        if item[6] not in instructor:
+                            if item[6] != "":
+                                instructor.append(item[6])
+                                class_instructor = item[6] + " " + item[8] + ": " + item[9] + "-" + item[10] + '\n' + class_instructor
                         #class_formal_descript = item[5]
                         #break
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
                 course.class_instructor = class_instructor
-                course.class_formal_descript = class_formal_descript
                 course.save()
                 return HttpResponseRedirect(reverse('course-finder'))
             else: 
