@@ -41,9 +41,13 @@
         .box-2{
             flex:1;
         }
+        .cont1 p1{
+            font-size: 2vw;
+            font-style: bold;
+        }
     </style>
-    <div class="" style="margin: 4vh 4vw 4vh 4vw;">
-        <p>Profile of {{ user.username }}</p>
+    <div class="cont1" style="margin: 4vh 4vw 4vh 4vw;">
+        <p1>Profile of {{ user.username }}</p1>
         <div class="row">
             <div class="box-1 col-sm">
         <img class="headshot" src="{{ user.userprofile.image.url }}"/>
