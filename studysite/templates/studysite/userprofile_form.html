@@ -11,7 +11,7 @@
     <div class="" style="margin: 4vh 4vw 4vh 4vw;">
         <form method="POST" enctype="multipart/form-data" id="update-bio">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
         <input type="submit" value="Update">
         </form>
     </div>
