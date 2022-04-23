@@ -195,7 +195,7 @@ def validate_user(request):
 def to_time(time):
     first_two = time[0:2]
     to_int = int(first_two)
-    sec_two = time[2:4]
+    sec_two = time[3:5]
     if (to_int < 12 ):
         time1 = str(to_int) + ':' + sec_two + 'AM'
         return time1
