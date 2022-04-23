@@ -32,14 +32,23 @@
             line-height: 3.5vh;
             font-family: Merriweather, monospace;
         }
+        .row{
+            display:flex;
+        }
+        .box-1{
+            flex:1;
+        }
+        .box-2{
+            flex:1;
+        }
     </style>
     <div class="" style="margin: 4vh 4vw 4vh 4vw;">
         <p>Profile of {{ user.username }}</p>
-        <div style="width: 100%; display: table;">
-            <div style="display: table cell">
+        <div class="row">
+            <div class="box-1 col-sm">
         <img class="headshot" src="{{ user.userprofile.image.url }}"/>
         </div>
-            <div style="display:table-cell;">
+            <div class="box-2 col-sm" >
         <div class="info-block text-dark">
             <h5>Name: </h5>
             <p>{{ user.first_name }} {{ user.last_name }}</p>
