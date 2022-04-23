@@ -172,16 +172,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-<<<<<<< HEAD
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SITE_ID = 4
-=======
-SITE_ID = 1
-#
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
->>>>>>> 4fdc55f (profile picture now working but styling is messy)
 
 LOGIN_REDIRECT_URL = '/studysite'
 LOGOUT_REDIRECT_URL = '/studysite'

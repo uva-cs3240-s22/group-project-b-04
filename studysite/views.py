@@ -205,6 +205,21 @@ def validate_user(request):
     else:
         return HttpResponseRedirect(reverse('profile'))
 
+def to_time(time):
+    first_two = time[0:2]
+    to_int = int(first_two)
+    sec_two = time[2:4]
+    if (to_int < 12 ):
+        time1 = str(to_int) + ':' + sec_two + 'AM'
+        return time1
+    elif(to_int == 12):
+        time2 = str(to_int) + ':' + sec_two + 'PM'
+        return time2
+    else:
+        actual = to_int - 12
+        time3 = str(actual) + ':' + sec_two + 'PM'
+        return time3
+
 def addcourse(request):
     if request.method == "POST" :
         if (len(request.POST['course_subject']) > 0 and len(request.POST['course_name']) > 0 and len(request.POST['course_number']) > 0 ):
@@ -213,7 +228,7 @@ def addcourse(request):
                 data = requests.get(url).json()
                 instructor = []
                 class_instructor = ""
-                class_formal_descript = []
+                #class_formal_descript = []
                 course_subject = request.POST['course_subject']
                 course_number = request.POST['course_number']
                 for item in data["class_schedules"]["records"]:
@@ -221,7 +236,7 @@ def addcourse(request):
                         if item[6] not in instructor:
                             if item[6] != "":
                                 instructor.append(item[6])
-                                class_instructor = item[6] + " " + item[8] + ": " + item[9] + "-" + item[10] + '\n' + class_instructor
+                                class_instructor = item[6] + " " + item[8] + ": " + to_time(item[9]) + "-" + to_time(item[10]) + "\n" + class_instructor
                         #class_formal_descript = item[5]
                         #break
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
@@ -366,6 +381,9 @@ for entry in result['items']:
     if entry['summary'] == 'Study Buddy Events':
         calendar_id = entry['id']
         break
+
+
+
 
 
 def create_event(start_time, summary, duration=1, description=None, location=None):

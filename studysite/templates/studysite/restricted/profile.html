@@ -10,7 +10,7 @@
 {% block content %}
     <div class="d-flex flex-row justify-content-between align-items-center" style="height:100%; margin: 6vh 6vw 6vh 6vw;">
         <div class="d-flex justify-content-right align-items-center position-absolute">
-            <!--<img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>-->
+            <img class="headshot" src="{{ user.userprofile.image.url }}"/>
         </div>
         <div class="d-flex flex-column justify-content-left">
             <div class="d-flex mb-5">
