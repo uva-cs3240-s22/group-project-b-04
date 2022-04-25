@@ -65,15 +65,13 @@
             <h6>Upcoming Study Event: </h6>
             <a class="d-flex justify-content-start" href="{% url 'event-finder' %}">See Event</a>
         </div>
-        {% for event in user.studyevent_set.all %}
+        {% for event in event_list %}
         <ul class="list-group list-group-flush" >
             <!--TODO: ADD STUDY EVENTS-->
-            {% if event.time.timestamp > current_time %}
             <li class="list-group-item d-flex justify-content-between">
                 <p>{{event.course}}</p>
                 <p>{{event.time}}</p>
             </li>
-            {% endif %}
         </ul>
         {% endfor %}
         

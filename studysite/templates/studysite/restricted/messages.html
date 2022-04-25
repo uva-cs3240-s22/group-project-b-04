@@ -8,6 +8,9 @@
 {% endblock %}
 
 {% block content %} 
+    <div class="row d-flex row-cols-2 justify-content-left align-items-center" style="margin: 5vh 4vw 5vh 4vw;">
+        <h1 class="d-flex ml-0 page-title">SEND A MESSAGE</h1>
+    </div>
     <div class="row row-cols-1 d-flex justify-content-center align-items-center" style="margin: 4vh 4vw 2vh 4vw;">
         {% for to_user in user_list %}
         {% if to_user in request.user.userprofile.friends.all %}
@@ -18,17 +21,12 @@
                     <div class="d-flex justify-content-start flex-column">
                         <h4 class="card-title">{{ to_user.first_name }} {{ to_user.last_name }}</h4>
                         <h6 class="card-text">{{ to_user.username }}</h6>
-                        <div class="d-flex flex-row">
-                            <p><strong>Courses: </strong></p>
-                            {% for course in to_user.course_set.all %}
-                                <p class="card-text">{{ course.course_subject }} {{ course.course_number }} | </p>
-                            {% endfor %}
-                        </div>
                     </div>
-                    <label>Send Message:</label>
-                    <input type="text" name="message" placeholder=""/>
-                    <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
-                        <input class="friend-btn btn" type="submit" value="Send Message" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
+
+                    <div class="d-flex justify-content-end" style="margin-left: 1vw;"> 
+                        <label style="margin-right: 1vw;">Message: </label>
+                        <input style="margin-right: 1vw;" type="text" name="message" placeholder="Write a Message"/> 
+                        <input class="friend-btn btn btn-outline-dark" type="submit" value="Send" style="margin-left: 0.5vw; width: 5vw; white-space:normal; font-size: 1vw;"/>
                     </div>
                
                 </div>
