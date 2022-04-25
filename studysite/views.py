@@ -288,7 +288,12 @@ flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=sc
 credentials = pickle.load(open("token.pkl", "rb"))
 service = build("calendar", "v3", credentials=credentials)
 result = service.calendarList().list().execute()
-calendar_id = result['items'][-1]['id']
+calendar_id = 0
+for entry in result['items']:
+    if entry['summary'] == 'Study Buddy Events':
+        calendar_id = entry['id']
+        break
+
 
 def create_event(start_time, summary, duration=1, description=None, location=None):
     end_time = start_time + timedelta(hours=duration)
