@@ -68,10 +68,16 @@
         {% for event in event_list %}
         <ul class="list-group list-group-flush" >
             <!--TODO: ADD STUDY EVENTS-->
-            <li class="list-group-item d-flex justify-content-between">
-                <p>{{event.course}}</p>
-                <p>{{event.time}}</p>
-            </li>
+            {% if event.time.timestamp > current_time %}
+            <form action="{% url 'delete-course' user.id event.pk %}" method="POST" id="delete-event-user-form">
+                    {% csrf_token %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <p>{{event.course}}</p>
+                    <p>{{event.time}}</p>
+                    <input class="btn" type="submit" name="delete_event" value="delete"/>
+                </li>
+            </form>
+            {% endif %}
         </ul>
         {% endfor %}
         
