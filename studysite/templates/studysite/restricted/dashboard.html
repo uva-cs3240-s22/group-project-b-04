@@ -34,7 +34,7 @@
                     {% csrf_token %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <p>{{ course.course_subject }} {{ course.course_number }}</p>
-                        <input class="btn" type="submit" value="delete"/>
+                        <input class="btn" type="submit" name="delete_course" value="delete"/>
                     </li>
                 </form>
             {% endfor %}
@@ -50,10 +50,14 @@
         <ul class="list-group list-group-flush" >
             <!--TODO: ADD STUDY EVENTS-->
             {% if event.time.timestamp > current_time %}
-            <li class="list-group-item d-flex justify-content-between">
-                <p>{{event.course}}</p>
-                <p>{{event.time}}</p>
-            </li>
+            <form action="{% url 'delete-course' user.id event.pk %}" method="POST" id="delete-event-user-form">
+                    {% csrf_token %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <p>{{event.course}}</p>
+                    <p>{{event.time}}</p>
+                    <input class="btn" type="submit" name="delete_event" value="delete"/>
+                </li>
+            </form>
             {% endif %}
         </ul>
         {% endfor %}
