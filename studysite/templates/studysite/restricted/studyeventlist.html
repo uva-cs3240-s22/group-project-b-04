@@ -30,7 +30,7 @@
                             {% endfor %}
                             <p class="card-text"><small>{{event.users.count}} / {{event.max_users}} Student(s)</small></p>
                             </div>
-                            {% if event not in user.studyevent_set.all%}
+                            {% if event not in user.events.all%}
                             <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
                                 <input class="btn event-btn" type="submit" value="Join Event" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
                             </div>

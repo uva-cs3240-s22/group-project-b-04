@@ -8,14 +8,16 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="row d-flex row-cols-2 justify-content-around align-items-center" style="margin: 5vh 4vw 5vh 4vw;">
-        <h1 class="d-flex justify-content-start page-title">FIND COURSES</h1>
-        <form class="d-flex justify-content-center" method="POST" action="{% url 'course-search' %}">
-            {% csrf_token %}
-            <input class="form-control me-2" type="search" placeholder="Search by Subject ex:APMA or Search by Course ex:APMA 3100" area-label="Search" name="searched"/>
-            <input type="submit" class= "btn btn-primary" value="Search">
-        </form>
-        <a class="d-flex justify-content-end" href="{% url 'course-add' %}"><h5>Don't see your Class?</h5></a>
+    <div class="row d-flex row-cols-2 justify-content-betweem align-items-center" style="margin: 5vh 4vw 5vh 4vw;">
+        <h1 class="d-flex ml-0 page-title">FIND COURSES</h1>
+        <div class="d-flex flex-column mr-0">
+            <form class="d-flex " method="POST" action="{% url 'course-search' %}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search by Subject ex:APMA or Search by Course ex:APMA 3100" area-label="Search" name="searched"/>
+                <input type="submit" class= "btn btn-primary" value="Search">
+            </form>
+            <a class="d-flex justify-content-end" href="{% url 'course-add' %}"><h5>Don't see your Class?</h5></a>
+        </div>
     </div>
     <div class="row row-cols-4 d-flex justify-content-start align-items-center" style="margin: 2vh 4vw 2vh 4vw;">
         {% if courses_list %}

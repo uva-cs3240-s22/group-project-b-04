@@ -35,7 +35,7 @@ class UserProfile(models.Model):
 class StudyEvent(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='%(class)s_requests_created')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(User, related_name="events")
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)

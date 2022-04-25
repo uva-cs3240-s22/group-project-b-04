@@ -11,50 +11,67 @@
     <div class="friends-list">
         <div class="d-flex flex-row justify-content-between">
             <h6>Friends: </h6>
-            <div class="">
-                <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}">Find A Buddy</a>
-                <a class="d-flex justify-content-start" href="{% url 'buddy-messanger' %}">Message a Buddy</a>
-            </div>
+            <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}">Find A Buddy</a>
         </div>
-        <ul class="list-group list-group-flush" >
+        <div class="row row-cols-4 d-flex justify-content-start align-items-center">
             {% for friend in user.friends.all %}
-                <li class="list-group-item">{{ friend.user.first_name }} {{ friend.user.last_name }} ({{friend.user.username}})</li>
-            {% endfor %}
-        </ul>
+                <div class="col">
+                    <div class="card course-card" style="height: 15vh;">
+                        <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
+                          <div class="d-flex justify-content-start flex-column">
+                            <h6 class="card-title">{{ friend.user.first_name }} {{ friend.user.last_name }}</h6>
+                            <p class="card-text"> ({{friend.user.username}})</p>
+                          </div>
+                          <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                            <a class="btn btn-outline-dark" href="{% url 'buddy-messanger' %}">Message</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </br>
+        </div>
         </br>
     </div>
     <div class="course-list">
-        <div class="d-flex flex-row justify-content-between">
-            <h6>Courses: </h6>
-            <a class="d-flex justify-content-start" href="{% url 'course-finder' 'all'%}">Add a Course</a>
+        <div class="d-flex flex-row justify-content-between align-items-center" >
+            <h6 class="d-flex justify-content-left">Courses: </h6>
+            <a class="d-flex justify-content-right" href="{% url 'course-finder' 'all'%}">Add a Course</a>
         </div>
-        <ul class="list-group list-group-flush" >
+        <div class="row row-cols-4 d-flex justify-content-start align-items-center">
             {% for course in user.course_set.all %}
-                <form action="{% url 'delete-course' user.id course.pk %}" method="POST" id="delete-course-user-form">
-                    {% csrf_token %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <p>{{ course.course_subject }} {{ course.course_number }}</p>
-                        <input class="btn" type="submit" value="delete"/>
-                    </li>
-                </form>
-            {% endfor %}
-        </ul>
-    </br>
+                <div class="col">
+                    <form action="{% url 'delete-course' user.id course.pk %}" method="POST" id="delete-course-user-form">
+                        {% csrf_token %}
+                        <div class="card course-card" style="height: 15vh;">
+                            <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
+                              <div class="d-flex justify-content-start flex-column">
+                                <h6 class="card-title">{{ course.course_subject }} {{ course.course_number }}</h6>
+                                <p class="card-text">{{ course.course_name }}</p>
+                              </div>
+                              <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                <input class="btn btn-outline-dark" type="submit" value="delete"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </br>
+        </div>
     </div>
     <div class="event-list">
         <div class="d-flex flex-row justify-content-between">
             <h6>Upcoming Study Event: </h6>
             <a class="d-flex justify-content-start" href="{% url 'event-finder' %}">See Event</a>
         </div>
-        {% for event in user.studyevent_set.all %}
+        {% for event in event_list %}
         <ul class="list-group list-group-flush" >
             <!--TODO: ADD STUDY EVENTS-->
-            {% if event.time.timestamp > current_time %}
             <li class="list-group-item d-flex justify-content-between">
                 <p>{{event.course}}</p>
                 <p>{{event.time}}</p>
             </li>
-            {% endif %}
         </ul>
         {% endfor %}
         
