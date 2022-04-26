@@ -1,3 +1,12 @@
 .login-box {
-    margin: 20vh 20vw 5vh 20vw;
+    width: 35%;
+    height: 100%;
+    margin: 2vh 2vw 2vh 2vw;
+    padding: 0.5vh 0.5vw 0.5vh 0.5vw;
+    background-color: white;
+    border-radius: 20px;
+    border-width: 1px;
+    border-style: outset;
+    border-color: #2C2735;
+    box-shadow: 2px 2px 7px -4px black
 }
