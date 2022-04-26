@@ -21,7 +21,7 @@
     </div>
     <div class="row row-cols-4 d-flex justify-content-start align-items-center" style="margin: 2vh 4vw 2vh 4vw;">
         {% if courses_list %}
-            {% for course in courses_list %}
+            {% for course in page_obj %}
             <div class="col">
                 <!--<form action="{% url 'course-add-user' course.pk user.pk %}" method="POST" id="course-add-user-form">
                     {% csrf_token %}-->
@@ -49,5 +49,23 @@
             {% endfor %}
         {% endif %}
         </br>
+    </div>
+<!--    pagination based on https://docs.djangoproject.com/en/4.0/topics/pagination/-->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
 {% endblock %}
