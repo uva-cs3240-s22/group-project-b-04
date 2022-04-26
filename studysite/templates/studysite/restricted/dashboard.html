@@ -46,21 +46,21 @@
             <h6>Upcoming Study Event: </h6>
             <a class="d-flex justify-content-start" href="{% url 'event-finder' %}">See Event</a>
         </div>
-        {% for event in user.studyevent_set.all %}
         <ul class="list-group list-group-flush" >
-            <!--TODO: ADD STUDY EVENTS-->
-            {% if event.time.timestamp > current_time %}
-            <form action="{% url 'delete-course' user.id event.pk %}" method="POST" id="delete-event-user-form">
-                    {% csrf_token %}
-                <li class="list-group-item d-flex justify-content-between">
-                    <p>{{event.course}}</p>
-                    <p>{{event.time}}</p>
-                    <input class="btn" type="submit" name="delete_event" value="delete"/>
-                </li>
-            </form>
-            {% endif %}
-        </ul>
-        {% endfor %}
+            {% for event in user.studyevent_set.all %}
+                <!--TODO: ADD STUDY EVENTS-->
+                {% if event.time.timestamp > current_time %}
+                <form action="{% url 'delete-event' user.id event.pk %}" method="POST" id="delete-event-user-form">
+                        {% csrf_token %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <p>{{event.course}}</p>
+                        <p>{{event.time}}</p>
+                        <input class="btn" type="submit" name="delete_event" value="delete"/>
+                    </li>
+                </form>
+                {% endif %}
+            {% endfor %}
+            </ul>
         
     </div>
 {% endblock %}

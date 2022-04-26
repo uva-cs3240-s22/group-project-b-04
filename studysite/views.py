@@ -13,7 +13,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 import google_auth_oauthlib
 from .models import *
-from .calendar_API import test_calendar
 from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
 from .forms import UserProfileForm
@@ -56,29 +55,7 @@ class LoginView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
-# class EditProfileView(LoginRequiredMixin, TemplateView):
-#     permission_denied_message = "Please login to view this page."
-#    # profile_form = UserProfileForm
-    #model = UserProfile
-   # template_name = 'studysite/userprofile_form.html'
-   #  def post(request):
-   #      if request.method == "POST" :
-   #          year_obj = year.fromisoformat(request.POST['user_year'])
-   #          major_obj = major.fromisoformat(request.POST['user_major'])
-   #          bio_obj = bio.fromisoformat(request.POST['user_bio'])
-   #          profile = UserProfile(year=year_obj, major=major_obj, bio=bio_obj)
-   #          profile.save()
-   #      return render(request, 'studysite/userprofile_form.html', UserProfile.objects.all())
-
-    # def get(self, request, *args, **kwargs):
-    #     return self.post(request, *args, **kwargs)
-    # def previous(request):
-    #     return HttpResponseRedirect(reverse('profile'))
-
-    #template_name = 'studysite/restricted/edit_profile.html'
-    #success_url = reverse_lazy('profile user.username')
-
-def post(request, username):
+def postprofile(request, username):
     try:
         profile = request.user.userprofile
     except UserProfile.DoesNotExist:
@@ -93,12 +70,6 @@ def post(request, username):
     else:
         form = UserProfileForm(instance=profile)
     return render(request, 'studysite/userprofile_form.html', {'form': form})
-    # if request.method == "POST" :
-    #     form = UserProfileForm(request.POST)
-    #     if form.is_valid():
-    #         profile = UserProfile(user=request.user, year=request.POST['user_year'], major=request.POST['user_major'], bio=request.POST['user_bio'])
-    #         profile.save()
-    # return render(request, 'studysite/userprofile_form.html')
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
@@ -127,14 +98,34 @@ class DashView(LoginRequiredMixin, generic.DetailView):
         return self.model.objects.get(pk=self.request.user.pk)
 
 
+def showcourse():
+    try:
+        Course.objects.count()
+    except (KeyError, Course.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+    else:
+        url = 'https://api.devhub.virginia.edu/v1/courses'
+        data = requests.get(url).json()
+        class_list = []
+        if Course.objects.count() == 0:
+            for item in data["class_schedules"]["records"]:
+                classCourse = str(item[1]) + str(item[0])
+                if classCourse not in class_list:
+                    class_list.append(classCourse)
+                    course = Course(course_number=item[1], course_subject=item[0], course_name=item[4])
+                    course.save()
+
 class CoursesView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
     model = Course
     template_name = 'studysite/restricted/courses.html'
     context_object_name = 'courses_list'
+    showcourse()
 
     def get_queryset(self):
         return get_filtered_courses(self.kwargs['filtered'])
+
 
 class EventView(generic.ListView):
     model = StudyEvent
@@ -254,6 +245,9 @@ def addStudyEvent(request):
             'courses_list': Course.objects.order_by('course_subject'),
         })
 
+#def deleteUserOrCourse(request, pk, pku):
+
+
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
     try:
@@ -269,6 +263,7 @@ def addUserToEvent(request, pk, pku):
         print(User.objects.all())
         print(selected_event)
         print(pku)
+        print(StudyEvent.objects.all())
         #ProfileView.request.user.pk
         selected_event.save()
         # Always return an HttpResponseRedirect after successfully dealing
@@ -279,26 +274,35 @@ def addUserToEvent(request, pk, pku):
         })
 
 def deleteUserFromEvent(request, uid, pk):
-        studyevent = get_object_or_404(StudyEvent, pk=pk)
-        try:
-            selected_event = StudyEvent.objects.get(pk=pk)
-        except (KeyError, StudyEvent.DoesNotExist):
-            # Redisplay the question voting form.
-            print("Website doesn't exist")
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'event_list': User.objects.get(id=uid).studyevent_set.all(),
-            })
-        else:
-            selected_event.users.remove(uid)
-            print(selected_event.users.all())
-            #ProfileView.request.user.pk
-            selected_event.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'event_list': User.objects.get(id=uid).studyevent_set.all(),
-            })
+    print("deleteUserFromEvent")
+    studyevent = get_object_or_404(StudyEvent, pk=pk)
+    try:
+        selected_event = StudyEvent.objects.get(pk=pk)
+    except (KeyError, StudyEvent.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return render(request, 'studysite/restricted/dashboard.html', {
+            'event_list': User.objects.get(id=uid).studyevent_set.all(),
+        })
+    else:
+        print(User.objects.get(id=uid).studyevent_set.all())
+        print(selected_event.users.all())
+        selected_event.users.remove(uid)
+        print(selected_event.users.all())
+        print('hello')
+        print(User.objects.get(id=uid).studyevent_set.all())
+        # ProfileView.request.user.pk
+        print(uid)
+        print(User.objects.get(id=uid))
+        print(selected_event)
+        # ProfileView.request.user.pk
+        selected_event.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return render(request, 'studysite/restricted/dashboard.html', {
+            'event_list': User.objects.get(id=uid).studyevent_set.all(),
+        })
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)
@@ -321,12 +325,6 @@ def addCourseToUser(request, pk, pku):
             'courses_list': Course.objects.order_by('course_subject'),
         })
 
-def calendar(request):
-    results = test_calendar()
-    context = {"results": results}
-    return render(request, 'studysite/calendar.html', context)
-
-
 def deleteCourseFromUser(request, uid, pk):
     if 'delete_course' in request.POST:
         course = get_object_or_404(Course, pk=pk)
@@ -339,8 +337,12 @@ def deleteCourseFromUser(request, uid, pk):
                 'courses_list': User.objects.get(id=uid).course_set.all(),
             })
         else:
+            print(selected_course.course_roster.all())
+            print(User.objects.get(id=uid).course_set.all())
             selected_course.course_roster.remove(uid)
             print(uid)
+            print('hello')
+            print(User.objects.get(id=uid).course_set.all())
             print(selected_course.course_roster.all())
             print(User.objects.get(id=uid))
             print(selected_course)
@@ -353,30 +355,7 @@ def deleteCourseFromUser(request, uid, pk):
                 'courses_list': User.objects.get(id=uid).course_set.all(),
             })
     elif 'delete_event' in request.POST:
-        studyevent = get_object_or_404(StudyEvent, pk=pk)
-        try:
-            selected_event = StudyEvent.objects.get(pk=pk)
-        except (KeyError, StudyEvent.DoesNotExist):
-            # Redisplay the question voting form.
-            print("Website doesn't exist")
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'event_list': User.objects.get(id=uid).studyevent_set.all(),
-            })
-        else:
-            selected_event.users.remove(uid)
-            print(selected_event.users.all())
-            # ProfileView.request.user.pk
-            print(uid)
-            print(User.objects.get(id=uid))
-            print(selected_event)
-            # ProfileView.request.user.pk
-            selected_event.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'event_list': User.objects.get(id=uid).studyevent_set.all(),
-            })
+        return deleteUserFromEvent(request, uid, pk)
 
 def send_friend_request(request, uid):
     fromu = request.user
