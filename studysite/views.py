@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 import google_auth_oauthlib
+from psycopg2 import Date
 from .models import *
 from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
@@ -92,7 +93,7 @@ class DashView(LoginRequiredMixin, generic.DetailView):
     template_name = 'studysite/restricted/dashboard.html'
     
     def get_context_data(self, **kwargs):
-        return {'current_time': datetime.now().timestamp()}
+        return {'event_list': self.model.objects.get(pk=self.request.user.pk).events.filter(time__gte = datetime.today())}
 
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
@@ -131,6 +132,10 @@ class EventView(generic.ListView):
     model = StudyEvent
     template_name = 'studysite/restricted/studyeventlist.html'
     context_object_name = 'event_list'
+
+    def get_queryset(self):
+        return self.model.objects.filter(time__gte = datetime.today())
+    
 
 class BuddyView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
@@ -255,9 +260,7 @@ def addUserToEvent(request, pk, pku):
     except (KeyError, StudyEvent.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/restricted/studyeventlist.html', {
-            'event_list': StudyEvent.objects.order_by('max_users'),
-        })
+        return HttpResponseRedirect(reverse('event-finder'))
     else:
         selected_event.users.add(User.objects.get(pk=pku))
         print(User.objects.all())
@@ -269,9 +272,7 @@ def addUserToEvent(request, pk, pku):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/restricted/studyeventlist.html', {
-            'event_list': StudyEvent.objects.order_by('max_users'),
-        })
+        return HttpResponseRedirect(reverse('event-finder'))
 
 def deleteUserFromEvent(request, uid, pk):
     print("deleteUserFromEvent")
@@ -326,36 +327,22 @@ def addCourseToUser(request, pk, pku):
         })
 
 def deleteCourseFromUser(request, uid, pk):
-    if 'delete_course' in request.POST:
-        course = get_object_or_404(Course, pk=pk)
-        try:
-            selected_course = Course.objects.get(pk=pk)
-        except (KeyError, User.DoesNotExist):
-            # Redisplay the question voting form.
-            print("Website doesn't exist")
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'courses_list': User.objects.get(id=uid).course_set.all(),
-            })
-        else:
-            print(selected_course.course_roster.all())
-            print(User.objects.get(id=uid).course_set.all())
-            selected_course.course_roster.remove(uid)
-            print(uid)
-            print('hello')
-            print(User.objects.get(id=uid).course_set.all())
-            print(selected_course.course_roster.all())
-            print(User.objects.get(id=uid))
-            print(selected_course)
-            #ProfileView.request.user.pk
-            selected_course.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'courses_list': User.objects.get(id=uid).course_set.all(),
-            })
-    elif 'delete_event' in request.POST:
-        return deleteUserFromEvent(request, uid, pk)
+    course = get_object_or_404(Course, pk=pk)
+    try:
+        selected_course = Course.objects.get(pk=pk)
+    except (KeyError, User.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
+    else:
+        selected_course.course_roster.remove(uid)
+        print(selected_course.course_roster.all())
+        #ProfileView.request.user.pk
+        selected_course.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
 
 def send_friend_request(request, uid):
     fromu = request.user
@@ -407,7 +394,12 @@ flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=sc
 credentials = pickle.load(open("token.pkl", "rb"))
 service = build("calendar", "v3", credentials=credentials)
 result = service.calendarList().list().execute()
-calendar_id = result['items'][-1]['id']
+calendar_id = 0
+for entry in result['items']:
+    if entry['summary'] == 'Study Buddy Events':
+        calendar_id = entry['id']
+        break
+
 
 
 
