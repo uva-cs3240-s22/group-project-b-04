@@ -172,6 +172,14 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+<<<<<<< HEAD
+=======
+
+SITE_ID = 4
+#
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+>>>>>>> 63fc455 (updated class api took out calendar code)
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SITE_ID = 4

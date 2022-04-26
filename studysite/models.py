@@ -19,7 +19,7 @@ years = (('Undergraduate', 'Undergraduate'), ('Masters', 'Masters'), ('PhD', 'Ph
     #from django.contrib.auth import get_user_model
     #User = get_user_model()
 class Course(models.Model):
-    course_name = models.CharField(max_length = 200, unique = True) # course long name i.e Partial Differential Equations
+    course_name = models.CharField(max_length = 200) # course long name i.e Partial Differential Equations
     course_subject = models.CharField(max_length=5) # subject short hand i.e APMA
     course_number = models.CharField(max_length=5) # course level i.e 3140
     course_roster = models.ManyToManyField(User, blank=True) # to access from user profile do the user.course_set.all()
@@ -44,7 +44,11 @@ class UserProfile(models.Model):
 class StudyEvent(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='%(class)s_requests_created')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+<<<<<<< HEAD
     users = models.ManyToManyField(User, related_name="events")
+=======
+    users = models.ManyToManyField(User, blank=True)
+>>>>>>> 63fc455 (updated class api took out calendar code)
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)
