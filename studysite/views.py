@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 import google_auth_oauthlib
+from django.core.paginator import Paginator
 from psycopg2 import Date
 from .models import *
 <<<<<<< HEAD
@@ -128,6 +129,15 @@ def showcourse():
                     class_list.append(classCourse)
                     course = Course(course_number=item[1], course_subject=item[0], course_name=item[4])
                     course.save()
+    # courses = Course.objects.all()
+    # p = Paginator(courses, 25)
+    # page_number = request.GET.get('page')
+    # try:
+    #     page_obj = p.get_page(page_number)
+    # except PageNotAnInteger:
+    #     page_obj = p.page(1)
+    # except EmptyPage:
+    #     page_obj = p.page(p.num_pages)
 
 class CoursesView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
@@ -135,6 +145,7 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
     template_name = 'studysite/restricted/courses.html'
     context_object_name = 'courses_list'
     showcourse()
+    paginate_by = 25
 
     def get_queryset(self):
         return get_filtered_courses(self.kwargs['filtered'])
