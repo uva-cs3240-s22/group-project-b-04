@@ -9,15 +9,15 @@
 
 
 {% block content %}
-  <div class="d-flex justify-content-center align-items-center w-100 h-25 mt-5">
-    <div class="login-box d-flex flex-column justify-content-center align-items-center">
+  <div class="d-flex justify-content-center align-items-center w-100 mt-5">
+    <div class="login-box d-flex flex-column justify-content-center align-items-center mt-3 pt-4">
       <h1>Login</h1>
       {% if user.is_authenticated %}
         <p>Welcome, You are logged in as {{ user.username }}</p>
-        <a href="{% url 'profile' user.id%}">Profile</a>
+        <a href="{% url 'profile' user.id %}">Profile</a>
         <a href="{% url 'logout' %}">Logout</a>
       {% else %}
-        <a class="btn btn-outline-dark" href="{% provider_login_url 'google' %}">
+        <a class="btn btn-outline-dark login-button" href="{% provider_login_url 'google' %}">
           <?xml version="1.0" encoding="utf-8"?>
               <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
                 <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
@@ -30,6 +30,7 @@
           Continue With Google
         </a>
       {% endif %}
+      <a class="mb-4" href="{% url 'index' %}" >Return to Home</a>
     </div>
   </div>
 {% endblock %}

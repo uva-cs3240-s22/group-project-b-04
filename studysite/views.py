@@ -173,9 +173,10 @@ def addStudyEvent(request):
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         event.save()
         create_event(date_time, event.description)
-    return render(request, 'studysite/restricted/addstudyevent.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
+        return addUserToEvent(request, event.pk, owner.pk)
+    else:
+            return render(request, 'studysite/restricted/addstudyevent.html', {
+            'courses_list': Course.objects.order_by('course_subject'),})
 
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404

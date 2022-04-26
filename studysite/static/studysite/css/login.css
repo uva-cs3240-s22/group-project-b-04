@@ -10,3 +10,16 @@
     border-color: #2C2735;
     box-shadow: 2px 2px 7px -4px black
 }
+
+.login-button:hover {
+    background-color: #2C2735 !important;
+    color: white !important;
+}
+
+.login-box a {
+    margin: 5vh 1vw 0 1vw;
+}
+
+a svg {
+    margin: 5px 10px 5px 5px;
+}
