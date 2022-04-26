@@ -36,4 +36,8 @@ boto3
 
 #for profile page
 pillow
+<<<<<<< HEAD
 decouple
+=======
+decouple
+>>>>>>> 127d9c3 (fixed styling added requirements)
