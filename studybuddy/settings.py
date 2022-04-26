@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'bootstrap5',
+    'storages',
     'whitenoise.runserver_nostatic',
 ]
 
@@ -171,6 +172,15 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+#instructions from https://www.youtube.com/watch?v=inQyZ7zFMHM
+
+AWS_ACCESS_KEY_ID = 'AKIA4BMRTQ4IOAT5R4RQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'meganprofilebucket'
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 SITE_ID = 4
