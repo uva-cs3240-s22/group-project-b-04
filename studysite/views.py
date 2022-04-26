@@ -152,7 +152,7 @@ def addcourse(request):
             if (Course.objects.filter(course_subject=request.POST['course_subject'].upper(), course_number=request.POST['course_number']).count() == 0):
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
                 course.save()
-                return HttpResponseRedirect(reverse('course-finder'))
+                return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
             else: 
                 return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists",})
         else: 
