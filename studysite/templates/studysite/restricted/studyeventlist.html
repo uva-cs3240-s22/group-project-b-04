@@ -25,9 +25,6 @@
                             <p class="card-text">Host: {{event.owner}}</p>
                             <p class="card-text">{{event.time}}</p>
                             <p class="card-text">Info: {{event.description}}</p>
-                            {% for user in event.users.all %}
-                                <li class="card-text">{{user}}</li>
-                            {% endfor %}
                             <p class="card-text"><small>{{event.users.count}} / {{event.max_users}} Student(s)</small></p>
                             </div>
                             {% if event not in user.events.all%}

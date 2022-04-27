@@ -15,22 +15,13 @@ import google_auth_oauthlib
 from django.core.paginator import Paginator
 from psycopg2 import Date
 from .models import *
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 from datetime import date, time, datetime, timedelta
 import re
-=======
-from .calendar_API import test_calendar
-=======
->>>>>>> 63fc455 (updated class api took out calendar code)
 from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
 from .forms import UserProfileForm
 import requests
 import json
-
->>>>>>> 178fb8d (applied class api and created form to edit profile)
 
 from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -46,9 +37,6 @@ FILTER_TYPES = {
     'FULL'  :   'FULL',
     'ALL'   :   'ALL',
 }
-=======
-from .calendar_API import test_calendar
->>>>>>> 888d472 (adding calendar changes)
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -167,9 +155,6 @@ class BuddyView(LoginRequiredMixin, generic.ListView):
 
     context_object_name = "user_list"
 
-    def check_pending(fromu, tou):
-        return fromu.from_user.filter(to_user=tou)
-
     def get_queryset(self):
         return User.objects.all()
 
@@ -179,9 +164,6 @@ class MessageView(LoginRequiredMixin, generic.ListView):
     template_name = 'studysite/restricted/messages.html'
 
     context_object_name = "user_list"
-
-    def check_pending(fromu, tou):
-        return fromu.from_user.filter(to_user=tou)
 
     def get_queryset(self):
         return User.objects.all()
@@ -198,9 +180,6 @@ class NotifView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return FriendRequest.objects.filter(to_user=self.request.user)
-    
-
-
 
 # limit access to only logged in users, otherwise redirect to login page
 def validate_user(request):
@@ -248,7 +227,7 @@ def addcourse(request):
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
                 course.class_instructor = class_instructor
                 course.save()
-                return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
+                return addCourseToUser(request, course.pk, request.user.pk)
             else: 
                 return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists",})
         else: 
@@ -269,9 +248,10 @@ def addStudyEvent(request):
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         event.save()
         create_event(date_time, event.description)
-    return render(request, 'studysite/restricted/addstudyevent.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
+        return addUserToEvent(request, event.pk, owner.pk)
+    else:
+            return render(request, 'studysite/restricted/addstudyevent.html', {
+            'courses_list': Course.objects.order_by('course_subject'),})
 
 #def deleteUserOrCourse(request, pk, pku):
 
@@ -335,9 +315,7 @@ def addCourseToUser(request, pk, pku):
     except (KeyError, Course.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/restricted/courses.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
+        return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
     else:
         selected_course.course_roster.add(User.objects.get(pk=pku))
         #ProfileView.request.user.pk
@@ -345,16 +323,9 @@ def addCourseToUser(request, pk, pku):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/restricted/courses.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 63fc455 (updated class api took out calendar code)
+        return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
 
 def deleteCourseFromUser(request, uid, pk):
-<<<<<<< HEAD
     course = get_object_or_404(Course, pk=pk)
     try:
         selected_course = Course.objects.get(pk=pk)
@@ -371,65 +342,6 @@ def deleteCourseFromUser(request, uid, pk):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
-=======
-    if 'delete_course' in request.POST:
-        course = get_object_or_404(Course, pk=pk)
-        try:
-            selected_course = Course.objects.get(pk=pk)
-        except (KeyError, User.DoesNotExist):
-            # Redisplay the question voting form.
-            print("Website doesn't exist")
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'courses_list': User.objects.get(id=uid).course_set.all(),
-            })
-        else:
-            print(selected_course.course_roster.all())
-            print(User.objects.get(id=uid).course_set.all())
-            selected_course.course_roster.remove(uid)
-            print(uid)
-            print('hello')
-            print(User.objects.get(id=uid).course_set.all())
-            print(selected_course.course_roster.all())
-            print(User.objects.get(id=uid))
-            print(selected_course)
-            #ProfileView.request.user.pk
-            selected_course.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'courses_list': User.objects.get(id=uid).course_set.all(),
-            })
-    elif 'delete_event' in request.POST:
-<<<<<<< HEAD
-        studyevent = get_object_or_404(StudyEvent, pk=pk)
-        try:
-            selected_event = StudyEvent.objects.get(pk=pk)
-        except (KeyError, StudyEvent.DoesNotExist):
-            # Redisplay the question voting form.
-            print("Website doesn't exist")
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'event_list': User.objects.get(id=uid).studyevent_set.all(),
-            })
-        else:
-            selected_event.users.remove(uid)
-            print(selected_event.users.all())
-            # ProfileView.request.user.pk
-            print(uid)
-            print(User.objects.get(id=uid))
-            print(selected_event)
-            # ProfileView.request.user.pk
-            selected_event.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            return render(request, 'studysite/restricted/dashboard.html', {
-                'event_list': User.objects.get(id=uid).studyevent_set.all(),
-            })
->>>>>>> b3ab636 (fixed requirements.txt)
-=======
-        return deleteUserFromEvent(request, uid, pk)
->>>>>>> 63fc455 (updated class api took out calendar code)
 
 def send_friend_request(request, uid):
     fromu = request.user
@@ -438,25 +350,26 @@ def send_friend_request(request, uid):
         # check not already a request from the tou
         try:
             friend_request = FriendRequest.objects.get(from_user=tou, to_user=fromu)
-            return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You have a pending request from this user, check your notifications to accept",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "You have a pending request from this user, check your notifications to accept",})
         except:
             friend_request, created = FriendRequest.objects.get_or_create(from_user=fromu, to_user=tou)
             if created :
                 return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "Friend Request Sent",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "Friend Request Sent",})
             else :
-                return render(request, 'studysite/restricted/buddy.html', {'friend_message': "You already have a pending request to this user"})
+                return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You already have a pending request to this user",}))
+        else:
+            return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You have a pending request from this user, check your notifications to accept",}))
     else :
-        return render(request, 'studysite/restricted/buddy.html', {'friend_message': "You are already friends with this user",})
+        return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You are already friends with this user!",}))
 
 def accept_friend_request(request, rid):
     friend_request = FriendRequest.objects.get(id=rid)
-    if friend_request.to_user == request.user:
+    if request.POST['action'] == "Deny":
+        friend_request.delete()
+    elif friend_request.to_user == request.user:
         friend_request.to_user.userprofile.friends.add(friend_request.from_user)
         friend_request.from_user.userprofile.friends.add(friend_request.to_user)
         friend_request.delete()
-        return HttpResponseRedirect(reverse('notifications'))
-    else :
-        return HttpResponseRedirect(reverse('notifications'))
+    return HttpResponseRedirect(reverse('notifications'))
 
 def msgBuddy(request, uid):
     fromu = request.user
@@ -467,6 +380,20 @@ def msgBuddy(request, uid):
     return render(request, 'studysite/restricted/messages.html', {
             'user_list': User.objects.all(),
         })
+
+def deleteMsg(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+    try:
+        msg = Message.objects.get(pk=pk)
+    except (KeyError, User.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return HttpResponseRedirect(reverse('notifications'))
+    else:
+        msg.delete()
+        return HttpResponseRedirect(reverse('notifications'))
+
+
 
 # REFERENCE GOOGLE CALENDAR API INTEGRATION
 # https://gist.github.com/nikhilkumarsingh/8a88be71243afe8d69390749d16c8322
@@ -485,9 +412,6 @@ for entry in result['items']:
     if entry['summary'] == 'Study Buddy Events':
         calendar_id = entry['id']
         break
-
-
-
 
 
 def create_event(start_time, summary, duration=1, description=None, location=None):
@@ -556,10 +480,3 @@ def classify(term):
         return FILTER_TYPES['FULL']
     else:
         return FILTER_TYPES['NAME']
-
-=======
-def calendar(request):
-    results = test_calendar()
-    context = {"results": results}
-    return render(request, 'studysite/calendar.html', context)
->>>>>>> 888d472 (adding calendar changes)

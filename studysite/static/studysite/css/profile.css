@@ -14,4 +14,29 @@
     border-color: white;
     border-style: outset;
     border-width: 2px;
+    width: 15vw;
+    height: 15vw;
+}
+
+.container {
+    height:60%;
+    width:100%;
+    margin: 5vh 5vw 5vh 5vw;
+    padding: 6vh 10vw 6vh 10vw;
+}
+
+.container h5 {
+    padding-right: 10px;
+}
+
+.left-content {
+    width: 40%;
+    margin-right: 5vw;
+    justify-content: center;
+}
+
+.right-content {
+    margin-left: 5vw;
+    width: 40%;
+    overflow-y: auto;
 }
