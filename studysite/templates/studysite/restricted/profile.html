@@ -8,11 +8,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-row justify-content-between align-items-center" style="height:100%; margin: 6vh 6vw 6vh 6vw;">
-        <div class="d-flex justify-content-right align-items-center position-absolute">
-            <!--<img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>-->
+    <div class="container d-flex justify-content-center align-items-center w-100">
+        <div class="left-content d-flex justify-content-center align-items-center">
+            <img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
         </div>
-        <div class="d-flex flex-column justify-content-left">
+        <div class="right-content d-flex flex-column justify-content-center">
             <div class="d-flex mb-5">
                 <h1>{{ user.username }}</h1>
             </div>
