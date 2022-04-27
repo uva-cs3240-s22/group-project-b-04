@@ -286,35 +286,21 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
 
 def deleteUserFromEvent(request, uid, pk):
-    print("deleteUserFromEvent")
     studyevent = get_object_or_404(StudyEvent, pk=pk)
     try:
         selected_event = StudyEvent.objects.get(pk=pk)
     except (KeyError, StudyEvent.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/restricted/dashboard.html', {
-            'event_list': User.objects.get(id=uid).studyevent_set.all(),
-        })
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
     else:
-        print(User.objects.get(id=uid).studyevent_set.all())
-        print(selected_event.users.all())
-        selected_event.users.remove(uid)
-        print(selected_event.users.all())
-        print('hello')
-        print(User.objects.get(id=uid).studyevent_set.all())
-        # ProfileView.request.user.pk
-        print(uid)
-        print(User.objects.get(id=uid))
-        print(selected_event)
+        selected_event.users.remove(id=uid)
         # ProfileView.request.user.pk
         selected_event.save()
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/restricted/dashboard.html', {
-            'event_list': User.objects.get(id=uid).studyevent_set.all(),
-        })
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)

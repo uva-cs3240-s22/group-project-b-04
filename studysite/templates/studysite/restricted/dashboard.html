@@ -61,25 +61,31 @@
         </div>
     </div>
     <div class="event-list">
-        <div class="d-flex flex-row justify-content-between">
-            <h6>Upcoming Study Event: </h6>
-            <a class="d-flex justify-content-start" href="{% url 'event-finder' %}">See Event</a>
+        <div class="d-flex flex-row justify-content-between align-items-center" >
+            <h6 class="d-flex justify-content-left">Study Events: </h6>
+            <a class="d-flex justify-content-right" href="{% url 'event-finder' %}">See Event</a>
         </div>
-        <ul class="list-group list-group-flush" >
-            {% for event in user.studyevent_set.all %}
-                <!--TODO: ADD STUDY EVENTS-->
-                {% if event.time.timestamp > current_time %}
-                <form action="{% url 'delete-event' user.id event.pk %}" method="POST" id="delete-event-user-form">
+        <div class="row row-cols-4 d-flex justify-content-start align-items-center">
+            {% for event in event_list %}
+                <div class="col">
+                    <form action="{% url 'delete-event' user.id event.pk %}" method="POST" id="delete-event-user-form">
                         {% csrf_token %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <p>{{event.course}}</p>
-                        <p>{{event.time}}</p>
-                        <input class="btn" type="submit" name="delete_event" value="delete"/>
-                    </li>
-                </form>
-                {% endif %}
-            {% endfor %}
-            </ul>
-        
+                        <div class="card course-card" style="height: 15vh;">
+                            <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
+                              <div class="d-flex justify-content-start flex-column">
+                                <h6 class="card-title">{{ event.description }}</h6>
+                                <p class="card-text">{{ event.course }}</p>
+                                <p class="card-text">{{ event.time }}</p>
+                              </div>
+                              <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                <input class="btn btn-outline-dark" type="submit" name="delete_event" value="delete"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </br>
+        </div>
     </div>
 {% endblock %}
