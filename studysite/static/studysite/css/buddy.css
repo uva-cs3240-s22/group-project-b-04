@@ -38,3 +38,8 @@
     color: #2C2735 !important;
     background: none !important;
 }
+
+.friend-btn:hover {
+    background-color: #2C2735 !important;
+    color: white !important;
+}

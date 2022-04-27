@@ -8,8 +8,16 @@
 {% endblock %}
 
 {% block content %} 
+    <div class="row d-flex row-cols-2 justify-content-betweem align-items-center" style="margin: 5vh 10vw 5vh 10vw;">
+        <div class="d-flex flex-column justify-content-start align-items-start">
+            <h1 class="page-title">FIND BUDDIES</h1>
+            <p><strong>{{ view.kwargs.friend_message }}</strong></p>
+        </div>
+        <div class="d-flex justify-content-end align-items-center mr-0">
+            <a href="{% url 'notifications' %}"><h5>Notifications</h5></a>
+        </div>
+    </div>
     <div class="row row-cols-1 d-flex justify-content-center align-items-center" style="margin: 4vh 4vw 2vh 4vw;">
-        <p class="mx-auto" ><strong>{{ view.kwargs.friend_message }}</strong></p>
         {% for to_user in user_list %}
         {% if to_user != request.user  %}
             <form action="{% url 'send friend request' to_user.id %}" method="POST">
@@ -33,7 +41,7 @@
                         </div>
                     {% else %}
                         <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
-                            <input class="friend-btn btn" type="submit" value="Add Friend" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
+                            <input class="friend-btn btn btn-outline-dark" type="submit" value="Add Friend" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
                         </div>
                     {% endif %}
                 </div>

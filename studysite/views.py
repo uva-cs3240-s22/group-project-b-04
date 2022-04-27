@@ -102,9 +102,6 @@ class BuddyView(LoginRequiredMixin, generic.ListView):
 
     context_object_name = "user_list"
 
-    def get_context_data(self):
-        return {'pending': FriendRequest.objects.filter(from_user=self.request.user),}
-
     def get_queryset(self):
         return User.objects.all()
 

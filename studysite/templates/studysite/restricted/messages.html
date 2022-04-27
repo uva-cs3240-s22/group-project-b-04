@@ -8,8 +8,11 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="row d-flex row-cols-2 justify-content-left align-items-center" style="margin: 5vh 4vw 5vh 4vw;">
+    <div class="row d-flex row-cols-2 justify-content-between align-items-center" style="margin: 5vh 10vw 5vh 10vw;">
         <h1 class="d-flex ml-0 page-title">SEND A MESSAGE</h1>
+        <div class="d-flex justify-content-end align-items-center mr-0">
+            <a href="{% url 'notifications' %}"><h5>Notifications</h5></a>
+        </div>
     </div>
     <div class="row row-cols-1 d-flex justify-content-center align-items-center" style="margin: 4vh 4vw 2vh 4vw;">
         {% for to_user in user_list %}
@@ -25,7 +28,7 @@
 
                     <div class="d-flex justify-content-end" style="margin-left: 1vw;"> 
                         <label style="margin-right: 1vw;">Message: </label>
-                        <input style="margin-right: 1vw;" type="text" name="message" placeholder="Write a Message"/> 
+                        <input style="margin-right: 1vw; width: 15vw;" type="text" name="message" placeholder="Write a Message"/> 
                         <input class="friend-btn btn btn-outline-dark" type="submit" value="Send" style="margin-left: 0.5vw; width: 5vw; white-space:normal; font-size: 1vw;"/>
                     </div>
                
