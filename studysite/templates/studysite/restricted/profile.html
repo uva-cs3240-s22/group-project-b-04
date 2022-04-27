@@ -10,7 +10,7 @@
 {% block content %}
     <div class="container d-flex justify-content-center align-items-center w-100">
         <div class="left-content d-flex justify-content-center align-items-center">
-            <img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
+            <img class="headshot" src="{{ user.userprofile.image.url }}" alt="Profile Picture"/>
         </div>
         <div class="right-content d-flex flex-column justify-content-center">
             <div class="d-flex mb-5">
@@ -37,6 +37,9 @@
                 <p>{{ user.userprofile.bio }}</p>
             </div>
             <a href="{% url 'notifications' %}"><h6>Notifications</h6></a>
+            <a href="{% url 'edit_profile' user.username%}"><h6>Edit Profile</h6></a>
         </div>
+            </div>
+        </div>        
     </div>
 {% endblock %}

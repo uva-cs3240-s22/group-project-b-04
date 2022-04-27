@@ -18,6 +18,8 @@ from django.urls import path, include
 from studysite import views
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
@@ -26,6 +28,7 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('<str:username>/profile', views.ProfileView.as_view(), name='profile'),
+    path('<str:username>/profile/edit_profile', views.postprofile, name='edit_profile'),
     path('courses/<str:filtered>', views.CoursesView.as_view(), name='course-finder'),
     path('courses/filter/', views.course_search, name='course-search'),
     path('courses/add/', views.addcourse, name="course-add"),
@@ -40,8 +43,15 @@ urlpatterns = [
     path('<str:username>/dashboard/', views.DashView.as_view(), name='dashboard'),
     path('<str:uid>/dashboard/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
     path('<str:uid>/profile/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
+    path('<str:uid>/dashboard/<int:pk>', views.deleteUserFromEvent, name='delete-event'),
+    path('<str:uid>/profile/<int:pk>', views.deleteUserFromEvent, name='delete-event'),
     path('events/', views.EventView.as_view(), name='event-finder'),
     path('events/create', views.addStudyEvent, name="create-event"),
     path('events/<int:pk>/<int:pku>/', views.addUserToEvent, name='event-add-user'),
     
 ]
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -27,6 +27,7 @@ class LoginTest(unittest.TestCase):
     self.user2.save()
     self.client = Client()
 
+
   def test_true(self):
     self.assertTrue(True)
 

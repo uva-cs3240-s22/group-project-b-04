@@ -4,16 +4,28 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.conf import settings
+from django.db.models.signals import post_save
 from django.shortcuts import redirect
 from django.views import generic
+from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 import google_auth_oauthlib
+from django.core.paginator import Paginator
 from psycopg2 import Date
 from .models import *
 from datetime import date, time, datetime, timedelta
+from django.urls import reverse_lazy
+from .forms import UserProfileForm
+import requests
+import json
 import re
+from datetime import date, time, datetime, timedelta
+from django.urls import reverse_lazy
+from .forms import UserProfileForm
+import requests
+import json
 
 from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -29,6 +41,7 @@ FILTER_TYPES = {
     'FULL'  :   'FULL',
     'ALL'   :   'ALL',
 }
+
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -49,6 +62,21 @@ class LoginView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+def postprofile(request, username):
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('profile', args=(request.user.username,)))
+       # return render(request, 'studysite/userprofile_form.html', {'form': form})
+    else:
+        form = UserProfileForm(instance=profile)
+    return render(request, 'studysite/userprofile_form.html', {'form': form})
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
@@ -77,14 +105,44 @@ class DashView(LoginRequiredMixin, generic.DetailView):
         return self.model.objects.get(pk=self.request.user.pk)
 
 
+def showcourse():
+    try:
+        Course.objects.count()
+    except (KeyError, Course.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+    else:
+        url = 'https://api.devhub.virginia.edu/v1/courses'
+        data = requests.get(url).json()
+        class_list = []
+        if Course.objects.count() == 0:
+            for item in data["class_schedules"]["records"]:
+                classCourse = str(item[1]) + str(item[0])
+                if classCourse not in class_list:
+                    class_list.append(classCourse)
+                    course = Course(course_number=item[1], course_subject=item[0], course_name=item[4])
+                    course.save()
+    # courses = Course.objects.all()
+    # p = Paginator(courses, 25)
+    # page_number = request.GET.get('page')
+    # try:
+    #     page_obj = p.get_page(page_number)
+    # except PageNotAnInteger:
+    #     page_obj = p.page(1)
+    # except EmptyPage:
+    #     page_obj = p.page(p.num_pages)
+
 class CoursesView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
     model = Course
     template_name = 'studysite/restricted/courses.html'
     context_object_name = 'courses_list'
+    showcourse()
+    paginate_by = 25
 
     def get_queryset(self):
         return get_filtered_courses(self.kwargs['filtered'])
+
 
 class EventView(generic.ListView):
     model = StudyEvent
@@ -127,9 +185,6 @@ class NotifView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return FriendRequest.objects.filter(to_user=self.request.user)
-    
-
-
 
 # limit access to only logged in users, otherwise redirect to login page
 def validate_user(request):
@@ -140,11 +195,42 @@ def validate_user(request):
     else:
         return HttpResponseRedirect(reverse('profile'))
 
+def to_time(time):
+    first_two = time[0:2]
+    to_int = int(first_two)
+    sec_two = time[3:5]
+    if (to_int < 12 ):
+        time1 = str(to_int) + ':' + sec_two + 'AM'
+        return time1
+    elif(to_int == 12):
+        time2 = str(to_int) + ':' + sec_two + 'PM'
+        return time2
+    else:
+        actual = to_int - 12
+        time3 = str(actual) + ':' + sec_two + 'PM'
+        return time3
+
 def addcourse(request):
     if request.method == "POST" :
         if (len(request.POST['course_subject']) > 0 and len(request.POST['course_name']) > 0 and len(request.POST['course_number']) > 0 ):
             if (Course.objects.filter(course_subject=request.POST['course_subject'].upper(), course_number=request.POST['course_number']).count() == 0):
+                url = 'https://api.devhub.virginia.edu/v1/courses'
+                data = requests.get(url).json()
+                instructor = []
+                class_instructor = ""
+                #class_formal_descript = []
+                course_subject = request.POST['course_subject']
+                course_number = request.POST['course_number']
+                for item in data["class_schedules"]["records"]:
+                    if (item[0] == course_subject) and (item[1] == course_number):
+                        if item[6] not in instructor:
+                            if item[6] != "":
+                                instructor.append(item[6])
+                                class_instructor = item[6] + " " + item[8] + ": " + to_time(item[9]) + "-" + to_time(item[10]) + "\n" + class_instructor
+                        #class_formal_descript = item[5]
+                        #break
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
+                course.class_instructor = class_instructor
                 course.save()
                 return addCourseToUser(request, course.pk, request.user.pk)
             else: 
@@ -172,6 +258,12 @@ def addStudyEvent(request):
             return render(request, 'studysite/restricted/addstudyevent.html', {
             'courses_list': Course.objects.order_by('course_subject'),})
 
+#def deleteUserOrCourse(request, pk, pku):
+
+
+#def deleteUserOrCourse(request, pk, pku):
+
+
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
     try:
@@ -182,6 +274,10 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
     else:
         selected_event.users.add(User.objects.get(pk=pku))
+        print(User.objects.all())
+        print(selected_event)
+        print(pku)
+        print(StudyEvent.objects.all())
         #ProfileView.request.user.pk
         selected_event.save()
         # Always return an HttpResponseRedirect after successfully dealing
@@ -190,7 +286,21 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
 
 def deleteUserFromEvent(request, uid, pk):
-    return
+    studyevent = get_object_or_404(StudyEvent, pk=pk)
+    try:
+        selected_event = StudyEvent.objects.get(pk=pk)
+    except (KeyError, StudyEvent.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
+    else:
+        selected_event.users.remove(id=uid)
+        # ProfileView.request.user.pk
+        selected_event.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)
@@ -298,6 +408,9 @@ for entry in result['items']:
         break
 
 
+
+
+
 def create_event(start_time, summary, duration=1, description=None, location=None):
     end_time = start_time + timedelta(hours=duration)
     
@@ -364,4 +477,3 @@ def classify(term):
         return FILTER_TYPES['FULL']
     else:
         return FILTER_TYPES['NAME']
-
