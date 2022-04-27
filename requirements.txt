@@ -21,7 +21,7 @@ datefinder
 # whitenoise is used for heroku
 whitenoise
 
-dj-database-url 
+dj-database-url
 psycopg2
 
 django-bootstrap-v5==1.0.11

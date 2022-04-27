@@ -16,6 +16,10 @@ from django.core.paginator import Paginator
 from psycopg2 import Date
 from .models import *
 from datetime import date, time, datetime, timedelta
+from django.urls import reverse_lazy
+from .forms import UserProfileForm
+import requests
+import json
 import re
 from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
@@ -37,6 +41,7 @@ FILTER_TYPES = {
     'FULL'  :   'FULL',
     'ALL'   :   'ALL',
 }
+
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -256,6 +261,9 @@ def addStudyEvent(request):
 #def deleteUserOrCourse(request, pk, pku):
 
 
+#def deleteUserOrCourse(request, pk, pku):
+
+
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
     try:
@@ -412,6 +420,9 @@ for entry in result['items']:
     if entry['summary'] == 'Study Buddy Events':
         calendar_id = entry['id']
         break
+
+
+
 
 
 def create_event(start_time, summary, duration=1, description=None, location=None):
