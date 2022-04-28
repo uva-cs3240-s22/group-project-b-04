@@ -46,7 +46,11 @@
         <p>Profile of {{ user.username }}</p>
         <div class="row">
             <div class="box-1 col-sm">
-        <img class="headshot" src="{{ user.userprofile.image.url }}"/>
+                {% if user.userprofile.image == "default.jpg" %}
+                <img class="headshot" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
+                {% else %}
+                <img class="headshot" src="{{ user.userprofile.image.url }}"/>
+                {% endif %}
         </div>
             <div class="box-2 col-sm" >
         <div class="info-block text-dark">
