@@ -15,7 +15,7 @@
             {% csrf_token %}
             <label>Select Course</label>
             <select name="event_course">
-                {% for course in courses_list %}
+                {% for course in user.course_set.all %}
                     <option value={{course.id}}>{{course.course_subject}} {{course.course_number}}</option>
                 {% endfor %}
             </select>

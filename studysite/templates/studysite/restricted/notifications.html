@@ -4,42 +4,63 @@
 
 {% block title %}
     <title>Find a Buddy</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/notif.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/notifications.css' %}"/>
 {% endblock %}
 
 {% block content %} 
-    <div>
+    <div style="margin: 8vh 5vw 5vh 8vw;">
+        <h1 class="d-flex ml-0">NOTIFICATIONS</h1>
+    </div>
+    <div class="d-flex justify-content-center w-100 mt-3">
         {% if request_list %}
-        <ul class="list-group list-group-flush" style="margin-top: 2vh;">
-        {% for req in request_list %}
+        <div class="d-flex flex-column">
+            {% for req in request_list %}
             <form action="{% url 'accept friend request' req.id %}" method="POST">
                 {% csrf_token %}
-                <div class="card" style="height: 25vh;">
-                    <div class="card-body d-flex justify-content-around align-items-center">
-                        <div class="d-flex justify-content-start flex-column">
-                            <h6 class="card-title">Friend Request from {{ req.from_user }}</h6>
+                <div class="card">
+                    <div class="card-body d-flex justify-content-center flex-column">
+                        <div class="d-flex justify-content-center flex-row align-items-center">
+                            <img id="pfp" class="headshot" src="{{ req.from_user.userprofile.image.url }}" alt="profile picture"/>
+                            <div class="d-flex flex-column justify-content-start">
+                                <h6 class="card-title">{{ req.from_user.username }}</h6>
+                                <p class="card-text">Sent a Friend Request</p>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-end">  
-                            <input class="btn" type="submit" value="Accept friend request" style="font-size: 2vw;"/>
+                        <br>
+                        <div class="d-flex flex-row justify-content-around align-items-center">  
+                            <input class="btn btn-outline-dark px-4" type="submit" name="action" value="Accept"/>
+                            <input class="btn btn-outline-dark px-4" type="submit" name="action" value="Deny"/>
                         </div>
                     </div>
                 </div>
             </form>
         {% endfor %}
-        </ul>
+        </div>
         {% endif %}
         {% if msg_list %}
-        <ul class="list-group list-group-flush" style="margin-top: 2vh;">
         {% for msg in msg_list %}
-            <div class="card" style="height: 25vh;">
-                <div class="card-body d-flex justify-content-around align-items-center">
-                    <div class="d-flex justify-content-start flex-column">
-                        <h6 class="card-title">Message from: {{ msg.from_user }}: {{ msg.msg_content }}</h6>
+        <form action="{% url 'delete-message' msg.pk %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body d-flex justify-content-center flex-column">
+                    <div class="d-flex justify-content-center flex-row align-items-center">
+                        <img id="pfp" src="{{ req.from_user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
+                        <div class="d-flex flex-column justify-content-start">
+                            <h6 class="card-title">{{ req.from_user.username }}</h6>
+                            <p class="card-text">Sent a Message</p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="d-flex justify-content-center">
+                        <p class="card-text">{{ msg.msg_content }}</p>
+                    </div>
+                    <div class="d-flex flex-row justify-content-around align-items-center">
+                        <input class="btn btn-outline-dark px-4" type="submit" value="Delete"/>
                     </div>
                 </div>
             </div>
+        </form>
         {% endfor %}
-        </ul>
         {% endif %}
     </div>
 {% endblock %}

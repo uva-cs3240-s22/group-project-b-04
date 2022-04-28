@@ -21,6 +21,11 @@ from .forms import UserProfileForm
 import requests
 import json
 import re
+from datetime import date, time, datetime, timedelta
+from django.urls import reverse_lazy
+from .forms import UserProfileForm
+import requests
+import json
 
 from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -155,9 +160,6 @@ class BuddyView(LoginRequiredMixin, generic.ListView):
 
     context_object_name = "user_list"
 
-    def check_pending(fromu, tou):
-        return fromu.from_user.filter(to_user=tou)
-
     def get_queryset(self):
         return User.objects.all()
 
@@ -167,9 +169,6 @@ class MessageView(LoginRequiredMixin, generic.ListView):
     template_name = 'studysite/restricted/messages.html'
 
     context_object_name = "user_list"
-
-    def check_pending(fromu, tou):
-        return fromu.from_user.filter(to_user=tou)
 
     def get_queryset(self):
         return User.objects.all()
@@ -186,9 +185,6 @@ class NotifView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return FriendRequest.objects.filter(to_user=self.request.user)
-    
-
-
 
 # limit access to only logged in users, otherwise redirect to login page
 def validate_user(request):
@@ -236,7 +232,7 @@ def addcourse(request):
                 course = Course(course_name = request.POST['course_name'], course_number = request.POST['course_number'], course_subject = request.POST['course_subject'].upper())
                 course.class_instructor = class_instructor
                 course.save()
-                return HttpResponseRedirect(reverse('course-finder'))
+                return addCourseToUser(request, course.pk, request.user.pk)
             else: 
                 return render(request, 'studysite/restricted/courseadd.html', {'error_message': "That class already exists",})
         else: 
@@ -257,9 +253,13 @@ def addStudyEvent(request):
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         event.save()
         create_event(date_time, event.description)
-    return render(request, 'studysite/restricted/addstudyevent.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
+        return addUserToEvent(request, event.pk, owner.pk)
+    else:
+            return render(request, 'studysite/restricted/addstudyevent.html', {
+            'courses_list': Course.objects.order_by('course_subject'),})
+
+#def deleteUserOrCourse(request, pk, pku):
+
 
 #def deleteUserOrCourse(request, pk, pku):
 
@@ -286,35 +286,21 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
 
 def deleteUserFromEvent(request, uid, pk):
-    print("deleteUserFromEvent")
     studyevent = get_object_or_404(StudyEvent, pk=pk)
     try:
         selected_event = StudyEvent.objects.get(pk=pk)
     except (KeyError, StudyEvent.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/restricted/dashboard.html', {
-            'event_list': User.objects.get(id=uid).studyevent_set.all(),
-        })
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
     else:
-        print(User.objects.get(id=uid).studyevent_set.all())
-        print(selected_event.users.all())
-        selected_event.users.remove(uid)
-        print(selected_event.users.all())
-        print('hello')
-        print(User.objects.get(id=uid).studyevent_set.all())
-        # ProfileView.request.user.pk
-        print(uid)
-        print(User.objects.get(id=uid))
-        print(selected_event)
+        selected_event.users.remove(id=uid)
         # ProfileView.request.user.pk
         selected_event.save()
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/restricted/dashboard.html', {
-            'event_list': User.objects.get(id=uid).studyevent_set.all(),
-        })
+        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)
@@ -323,9 +309,7 @@ def addCourseToUser(request, pk, pku):
     except (KeyError, Course.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return render(request, 'studysite/restricted/courses.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
+        return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
     else:
         selected_course.course_roster.add(User.objects.get(pk=pku))
         #ProfileView.request.user.pk
@@ -333,9 +317,7 @@ def addCourseToUser(request, pk, pku):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'studysite/restricted/courses.html', {
-            'courses_list': Course.objects.order_by('course_subject'),
-        })
+        return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
 
 def deleteCourseFromUser(request, uid, pk):
     course = get_object_or_404(Course, pk=pk)
@@ -362,25 +344,26 @@ def send_friend_request(request, uid):
         # check not already a request from the tou
         try:
             friend_request = FriendRequest.objects.get(from_user=tou, to_user=fromu)
-            return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You have a pending request from this user, check your notifications to accept",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "You have a pending request from this user, check your notifications to accept",})
         except:
             friend_request, created = FriendRequest.objects.get_or_create(from_user=fromu, to_user=tou)
             if created :
                 return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "Friend Request Sent",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "Friend Request Sent",})
             else :
-                return render(request, 'studysite/restricted/buddy.html', {'friend_message': "You already have a pending request to this user"})
+                return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You already have a pending request to this user",}))
+        else:
+            return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You have a pending request from this user, check your notifications to accept",}))
     else :
-        return render(request, 'studysite/restricted/buddy.html', {'friend_message': "You are already friends with this user",})
+        return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You are already friends with this user!",}))
 
 def accept_friend_request(request, rid):
     friend_request = FriendRequest.objects.get(id=rid)
-    if friend_request.to_user == request.user:
+    if request.POST['action'] == "Deny":
+        friend_request.delete()
+    elif friend_request.to_user == request.user:
         friend_request.to_user.userprofile.friends.add(friend_request.from_user)
         friend_request.from_user.userprofile.friends.add(friend_request.to_user)
         friend_request.delete()
-        return HttpResponseRedirect(reverse('notifications'))
-    else :
-        return HttpResponseRedirect(reverse('notifications'))
+    return HttpResponseRedirect(reverse('notifications'))
 
 def msgBuddy(request, uid):
     fromu = request.user
@@ -391,6 +374,19 @@ def msgBuddy(request, uid):
     return render(request, 'studysite/restricted/messages.html', {
             'user_list': User.objects.all(),
         })
+
+def deleteMsg(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+    try:
+        msg = Message.objects.get(pk=pk)
+    except (KeyError, User.DoesNotExist):
+        # Redisplay the question voting form.
+        print("Website doesn't exist")
+        return HttpResponseRedirect(reverse('notifications'))
+    else:
+        msg.delete()
+        return HttpResponseRedirect(reverse('notifications'))
+
 
 
 # REFERENCE GOOGLE CALENDAR API INTEGRATION
@@ -481,5 +477,3 @@ def classify(term):
         return FILTER_TYPES['FULL']
     else:
         return FILTER_TYPES['NAME']
-
-

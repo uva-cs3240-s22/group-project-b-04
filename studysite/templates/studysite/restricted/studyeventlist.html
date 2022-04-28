@@ -15,38 +15,37 @@
     <div class="row row-cols-4 d-flex justify-content-start align-items-center" style="margin: 2vh 4vw 2vh 4vw;">
         {% if event_list %}
             {% for event in event_list %}
-            <div class="col">
-                <form action="{% url 'event-add-user' event.pk user.pk %}" method="POST" id="event-add-user-form">
-                    {% csrf_token %}
-                    <div class="card event-card" style="height: 30vh;">
-                        <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
-                          <div class="d-flex justify-content-start flex-column">
-                            <h6 class="card-title">{{event.course}}</h6>
-                            <p class="card-text">Host: {{event.owner}}</p>
-                            <p class="card-text">{{event.time}}</p>
-                            <p class="card-text">Info: {{event.description}}</p>
-                            {% for user in event.users.all %}
-                                <li class="card-text">{{user}}</li>
-                            {% endfor %}
-                            <p class="card-text"><small>{{event.users.count}} / {{event.max_users}} Student(s)</small></p>
+                {% if event.course in user.course_set.all %}
+                    <div class="col">
+                        <form action="{% url 'event-add-user' event.pk user.pk %}" method="POST" id="event-add-user-form">
+                            {% csrf_token %}
+                            <div class="card event-card" style="height: 30vh;">
+                                <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
+                                    <div class="d-flex justify-content-start flex-column">
+                                    <h6 class="card-title">{{event.course}}</h6>
+                                    <p class="card-text">Host: {{event.owner}}</p>
+                                    <p class="card-text">{{event.time}}</p>
+                                    <p class="card-text">Info: {{event.description}}</p>
+                                    <p class="card-text"><small>{{event.users.count}} / {{event.max_users}} Student(s)</small></p>
+                                    </div>
+                                    {% if event not in user.events.all%}
+                                    <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                        <input class="btn event-btn" type="submit" value="Join Event" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
+                                    </div>
+                                    {% elif event.users.count >= event.max_users %}
+                                    <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                        <p>Full</p>
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
+                                        <p>Added</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            {% if event not in user.events.all%}
-                            <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
-                                <input class="btn event-btn" type="submit" value="Join Event" style="width: 5vw; white-space:normal; font-size: 1vw;"/>
-                            </div>
-                            {% elif event.users.count >= event.max_users %}
-                            <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
-                                <p>Full</p>
-                            </div>
-                            {% else %}
-                            <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  
-                                <p>Added</p>
-                            </div>
-                            {% endif %}
-                        </div>
+                        </form>  
                     </div>
-                </form>  
-            </div>
+                {% endif %}
             {% endfor %}
         {% endif %}
         </br>

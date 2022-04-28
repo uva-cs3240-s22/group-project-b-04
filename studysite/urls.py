@@ -39,6 +39,7 @@ urlpatterns = [
     path('notifications/', views.NotifView.as_view(), name='notifications'),
     path('messages/', views.MessageView.as_view(), name='buddy-messanger'),
     path('messages/<int:uid>/', views.msgBuddy, name='message-buddy'),
+    path('notifications/delete/<int:pk>', views.deleteMsg, name='delete-message'),
     path('<str:username>/dashboard/', views.DashView.as_view(), name='dashboard'),
     path('<str:uid>/dashboard/<int:pk>', views.deleteCourseFromUser, name='delete-course'),
     path('<str:uid>/profile/<int:pk>', views.deleteCourseFromUser, name='delete-course'),

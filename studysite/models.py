@@ -33,24 +33,13 @@ class UserProfile(models.Model):
     friends = models.ManyToManyField(User, related_name="friends", blank=True)
     image = models.ImageField(default='default.jpg', upload_to='profile')
 
-  #  def __str__(self):
-     #   return f"{self.user.username}'s Profile"
-
-
-#
-# class CredentialsModel(models.Model):
-#     id = models.ForeignKey(User, primary_key=True, on_delete=models.CASCADE)
-#     credential = CredentialsField()
-#     task = models.CharField(max_length=80, null=True)
-#     updated_time = models.CharField(max_length=80, null=True)
-#
-# class CredentialsAdmin(admin.ModelAdmin):
-#     pass
+    def __str__(self):
+       return f"{self.user.username}'s Profile"
 
 class StudyEvent(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='%(class)s_requests_created')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    users = models.ManyToManyField(User, related_name="events")
+    users = models.ManyToManyField(User, related_name="events", blank=True)
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)

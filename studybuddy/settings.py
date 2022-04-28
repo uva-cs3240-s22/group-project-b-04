@@ -191,6 +191,9 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 LOGIN_REDIRECT_URL = '/studysite'
 LOGOUT_REDIRECT_URL = '/studysite'
 

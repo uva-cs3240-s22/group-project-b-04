@@ -38,3 +38,24 @@
     color: #2C2735 !important;
     background: none !important;
 }
+
+.friend-btn:hover {
+    background-color: #2C2735 !important;
+    color: white !important;
+}
+
+.courses {
+    margin-left: 1vw;
+}
+
+.profile-sec {
+    margin-right: 1vw;
+}
+
+#pfp {
+    margin: 1vh 3vw 1vh 1vw;
+    border-radius: 100%;
+    border-style: outset;
+    width: 8vw;
+    height: 8vw;
+}

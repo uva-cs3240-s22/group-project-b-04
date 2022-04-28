@@ -8,68 +8,42 @@
 {% endblock %}
 
 {% block content %}
-    <style>
-        .headshot {
-            width: 26vw;
-            margin: 10px;
-            border-radius: 10px;
-        }
-        .info-block {
-            padding: 2vw;
-            width: 60%;
-            min-width: 30vw;
-            background-color: white;
-            border-radius: 15px;
-            border-width: 4px;
-            border-style: double;
-
-        }
-        .info-block h4 {
-            font-size: 2vw;
-            font-style: bold;
-        }
-        .info-block p {
-            line-height: 3.5vh;
-            font-family: Merriweather, monospace;
-        }
-        .row{
-            display:flex;
-        }
-        .box-1{
-            flex:1;
-        }
-        .box-2{
-            flex:1;
-        }
-    </style>
-    <div class="" style="margin: 4vh 4vw 4vh 4vw;">
-        <p>Profile of {{ user.username }}</p>
-        <div class="row">
-            <div class="box-1 col-sm">
-                {% if user.userprofile.image == "default.jpg" %}
+    <div class="container d-flex justify-content-center align-items-center w-100">
+        <div class="left-content d-flex justify-content-center align-items-center">
+            {% if user.userprofile.image == "default.jpg" %}
                 <img class="headshot" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
                 {% else %}
                 <img class="headshot" src="{{ user.userprofile.image.url }}"/>
                 {% endif %}
         </div>
-            <div class="box-2 col-sm" >
-        <div class="info-block text-dark">
-            <h5>Name: </h5>
-            <p>{{ user.first_name }} {{ user.last_name }}</p>
-            <h5>Email: </h5>
-            <p>{{ user.email }}</p>
-             <h5>Username: </h5>
-            <p>{{ user.username }}<p>
-            <h5>Year: </h5>
-            <p>{{ user.userprofile.year }}<p>
-            <h5>Major: </h5>
-            <p>{{ user.userprofile.major }}<p>
-            <h5>Bio: </h5>
-            <p>{{ user.userprofile.bio }}</p>
+        <div class="right-content d-flex flex-column justify-content-center">
+            <div class="d-flex mb-5">
+                <h1>{{ user.username }}</h1>
+            </div>
+            <div class="d-flex flex-row">
+                <h5>Name: </h5>
+                <p>{{ user.first_name }} {{ user.last_name }}<p>
+            </div>
+            <div class="d-flex flex-row">
+                <h5>Email: </h5>
+                <p>{{ user.email }}</p>
+            </div>
+            <div class="d-flex flex-row">
+                <h5>Major: </h5>
+                <p>{{ user.userprofile.major }}</p>
+            </div>
+            <div class="d-flex flex-row">
+                <h5>Year: </h5>
+                <p>{{ user.userprofile.year }}</p>
+            </div>
+            <div class="d-flex flex-row">
+                <h5>Bio: </h5>
+                <p>{{ user.userprofile.bio }}</p>
+            </div>
+            <a href="{% url 'notifications' %}"><h6>Notifications</h6></a>
+            <a href="{% url 'edit_profile' user.username%}"><h6>Edit Profile</h6></a>
         </div>
             </div>
-        </div>
-        <a href="{% url 'notifications' %}"><h6>Notifications</h6></a>
-        <a href="{% url 'edit_profile' user.username%}"><h6>Edit Profile</h6></a>
+        </div>        
     </div>
 {% endblock %}
