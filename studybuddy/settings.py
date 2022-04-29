@@ -189,6 +189,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+SECURE_SSL_REDIRECT = True
+
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
