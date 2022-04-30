@@ -189,7 +189,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-SECURE_SSL_REDIRECT = True
+#SECURE_SSL_REDIRECT = True
 
 
 
@@ -214,5 +214,6 @@ try:
     print('imported local settings')
     print(STATIC_URL)
 except ImportError:
+    SECURE_SSL_REDIRECT = True
     print('fail no local')
     pass
