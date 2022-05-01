@@ -1,5 +1,5 @@
 .course-card {
-    background-color: yellow;
+    background-color: white;
     border-radius: 15px;
     border-width: 1px;
     border-style: outset;
@@ -28,6 +28,7 @@
     color: #2C2735 !important;
 }
 
+/*
 .pagination {
     display: inline-block !important;
 }
@@ -38,4 +39,4 @@
     padding: 8px 16px !important;
     text-decoration: none !important;
 
-}
+}*/
