@@ -142,6 +142,7 @@ USE_I18N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -172,6 +173,12 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#https://ordinarycoders.com/blog/article/django-amazon-ses-emails
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
 #instructions from https://www.youtube.com/watch?v=inQyZ7zFMHM
 
 AWS_ACCESS_KEY_ID = 'AKIA4BMRTQ4IOAT5R4RQ'

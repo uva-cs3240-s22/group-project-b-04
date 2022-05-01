@@ -11,13 +11,14 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import BadHeaderError, send_mail
 import google_auth_oauthlib
 from django.core.paginator import Paginator
 from psycopg2 import Date
 from .models import *
 from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
-from .forms import UserProfileForm
+from .forms import UserProfileForm, ContactUsForm
 import requests
 import json
 import re
@@ -55,6 +56,12 @@ class AboutView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
+
+class ThanksView(generic.TemplateView):
+    template_name = 'contactus_form/thanks.html'
+
+    # def get_context_data(self, **kwargs):
+    #     return super().get_context_data(**kwargs)
 
 class LoginView(generic.TemplateView):
     template_name = 'studysite/registration/login.html'
@@ -263,6 +270,24 @@ def addStudyEvent(request):
 
 #def deleteUserOrCourse(request, pk, pku):
 
+def contactus(request):
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            subject = "Study Buddy Question"
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            question = "First name: " + first_name + "\n" + "Last name: " + last_name + "\n" + "Email: " + email + "\n" + "Question: " + form.cleaned_data['question']
+        try:
+            send_mail(subject, question, 'megan2022stuff@gmail.com', ['megan2020stuff@gmail.com'])
+        except BadHeaderError:
+            return HttpResponse('Invalid header')
+        return HttpResponseRedirect(reverse('about'))
+    form = ContactUsForm()
+    return render(request, "studysite/contactus_form.html", {'form':form})
+    # form = ContactUsForm()
+    # return render(request, 'studysite/contactus_form.html', {'form': form})
 
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
