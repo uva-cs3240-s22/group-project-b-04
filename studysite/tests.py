@@ -6,6 +6,7 @@ from django.test import Client
 from django.urls import reverse
 from studysite.models import Course
 
+
 #https://docs.djangoproject.com/en/4.0/topics/testing/tools/#:~:text=Some%20of%20the%20things%20you%20can%20do%20with,with%20a%20template%20context%20that%20contains%20certain%20values.
 
 class LoginTest(unittest.TestCase):
@@ -32,14 +33,13 @@ class LoginTest(unittest.TestCase):
     self.assertTrue(True)
 
   def test_login_valid(self):
-    response = self.client.get('/studysite/accounts/google/login/')
+    response = self.client.get('/studysite/accounts/google/login/', secure=True)
     self.client.login(username='user1', password='1234567')
     self.assertEqual(response.status_code, 302)
-    #self.assertEqual(str(response.context['user']), 'user1') # context does not exist, only context_data which doesnt have a user field. something flucky about this
 
-  def test_course_form(self):
-    response = self.client.get(reverse('course-add'))
-    self.assertEqual(response.status_code, 200)
+  def test_course_list(self):
+    response = self.client.get(reverse('course-finder', kwargs={'filtered':'all',}), secure=True)
+    self.assertEqual(response.status_code, 302)
 
   def tearDown(self):
     self.user1.delete()
@@ -67,31 +67,31 @@ class URLTest(unittest.TestCase):
     self.client = Client()
 
   def test_about_url(self):
-    response = self.client.get('/studysite/about')
-    self.assertEqual(response.status_code, 301)
+    response = self.client.get(reverse('about'), secure=True)
+    self.assertEqual(response.status_code, 200)
 
   def test_base_url(self):
-    response = self.client.get('/studysite/')
+    response = self.client.get(reverse('index'), secure=True)
     self.assertEqual(response.status_code, 200)
 
   def test_auth_profile_url(self):
-    self.client.get('/studysite/accounts/google/login/')
+    self.client.get('/studysite/accounts/google/login/', secure=True)
     self.client.login(username='user1', password='1234567')
-    response = self.client.get(reverse('profile', kwargs={'username': 'user1'}))
+    response = self.client.get(reverse('profile', kwargs={'username': 'user1'}), secure=True)
     self.assertEqual(response.status_code, 200)
 
   def test_unauth_profile_url(self):
-    response = self.client.get(reverse('profile', kwargs={'username': 'wronguser'}))
+    response = self.client.get(reverse('profile', kwargs={'username': 'wronguser'}), secure=True)
     self.assertEqual(response.status_code, 302)
 
   def test_auth_dashboard_url(self):
-    self.client.get('/studysite/accounts/google/login/')
+    self.client.get('/studysite/accounts/google/login/', secure=True)
     self.client.login(username='user1', password='1234567')
-    response = self.client.get(reverse('dashboard', kwargs={'username': 'user1'}))
+    response = self.client.get(reverse('dashboard', kwargs={'username': 'user1'}), secure=True)
     self.assertEqual(response.status_code, 200)
 
   def test_unauth_dashboard_url(self):
-    response = self.client.get(reverse('dashboard', kwargs={'username': 'wronguser'}))
+    response = self.client.get(reverse('dashboard', kwargs={'username': 'wronguser'}), secure=True)
     self.assertEqual(response.status_code, 302)
     
   def tearDown(self):
@@ -118,7 +118,7 @@ class CourseTest(unittest.TestCase):
 
     self.course1 = Course(course_name = "Algorithms", course_subject="CS", course_number="4102")
     if self.course1 in Course.objects.all():
-      coursedel = Course.objects.get(course_subject="CS", course_number="4102")
+      coursedel = Course.objects.get(course_subject="CS", course_number="4102", secure=True)
       coursedel.delete()
       self.course1.save()
 
