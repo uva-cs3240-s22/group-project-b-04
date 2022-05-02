@@ -34,12 +34,11 @@ class LoginTest(unittest.TestCase):
   def test_login_valid(self):
     response = self.client.get('/studysite/accounts/google/login/')
     self.client.login(username='user1', password='1234567')
-    self.assertEqual(response.status_code, 302)
-    #self.assertEqual(str(response.context['user']), 'user1') # context does not exist, only context_data which doesnt have a user field. something flucky about this
+    self.assertEqual(response.status_code, 301)
 
-  def test_course_form(self):
-    response = self.client.get(reverse('course-add'))
-    self.assertEqual(response.status_code, 200)
+  def test_course_list(self):
+    response = self.client.get(reverse('course-finder', kwargs={'filtered':'all',}))
+    self.assertEqual(response.status_code, 301)
 
   def tearDown(self):
     self.user1.delete()
@@ -68,31 +67,31 @@ class URLTest(unittest.TestCase):
 
   def test_about_url(self):
     response = self.client.get(reverse('about'))
-    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.status_code, 301)
 
   def test_base_url(self):
     response = self.client.get(reverse('index'))
-    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.status_code, 301)
 
   def test_auth_profile_url(self):
     self.client.get('/studysite/accounts/google/login/')
     self.client.login(username='user1', password='1234567')
     response = self.client.get(reverse('profile', kwargs={'username': 'user1'}))
-    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.status_code, 301)
 
   def test_unauth_profile_url(self):
     response = self.client.get(reverse('profile', kwargs={'username': 'wronguser'}))
-    self.assertEqual(response.status_code, 302)
+    self.assertEqual(response.status_code, 301)
 
   def test_auth_dashboard_url(self):
     self.client.get('/studysite/accounts/google/login/')
     self.client.login(username='user1', password='1234567')
     response = self.client.get(reverse('dashboard', kwargs={'username': 'user1'}))
-    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.status_code, 301)
 
   def test_unauth_dashboard_url(self):
     response = self.client.get(reverse('dashboard', kwargs={'username': 'wronguser'}))
-    self.assertEqual(response.status_code, 302)
+    self.assertEqual(response.status_code, 301)
     
   def tearDown(self):
     self.user1.delete()
