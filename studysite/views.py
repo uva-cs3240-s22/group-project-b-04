@@ -259,7 +259,10 @@ def addStudyEvent(request):
         #print(type(request.POST['event_course']))
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         event.save()
-        create_event(date_time, event.description)
+        coursename = event.course.course_subject + " " + event.course.course_number
+        email = request.user.email
+        eventId = event.course.course_number
+        create_event(date_time, coursename, event.description, email, eventId)
         return addUserToEvent(request, event.pk, owner.pk)
     else:
             return render(request, 'studysite/restricted/addstudyevent.html', {
@@ -299,6 +302,8 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
     else:
         selected_event.users.add(User.objects.get(pk=pku))
+        print(selected_event.course.course_number)
+        update_event(User.objects.get(pk=pku).email, selected_event.course.course_number)
         print(User.objects.all())
         print(selected_event)
         print(pku)
@@ -425,8 +430,8 @@ def deleteMsg(request, pk):
 
 scopes = ['https://www.googleapis.com/auth/calendar']
 flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-#credentials = flow.run_console()
-#pickle.dump(credentials, open("token.pkl", "wb"))
+# credentials = flow.run_console()
+# pickle.dump(credentials, open("token.pkl", "wb"))
 credentials = pickle.load(open("token.pkl", "rb"))
 service = build("calendar", "v3", credentials=credentials)
 result = service.calendarList().list().execute()
@@ -440,7 +445,7 @@ for entry in result['items']:
 
 
 
-def create_event(start_time, summary, duration=1, description=None, location=None):
+def create_event(start_time, summary, description, email, eventId, duration=1, location=None, ):
     end_time = start_time + timedelta(hours=duration)
     
     event = {
@@ -455,6 +460,9 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
             'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
             'timeZone': 'America/New_York',
         },
+        'attendees' : [
+            {'email': email },
+        ],
         'reminders': {
             'useDefault': False,
             'overrides': [
@@ -463,7 +471,13 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
             ],
         },
     }
-    return service.events().insert(calendarId=calendar_id, body=event).execute()
+    return service.events().insert(calendarId=calendar_id, id=eventId, body=event, sendUpdates='all').execute()
+
+def update_event(email, eventId):
+    print("hi")
+    # event = service.events().get(calendarId=calendar_id, eventId=eventId).execute()
+    # event['attendees'].append(email)
+    # return service.events().update(calendarId=calender_id, eventId=event['id'], body=event).execute()
 
 def course_search(request):
     if request.method == "POST":
