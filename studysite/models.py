@@ -43,6 +43,7 @@ class StudyEvent(models.Model):
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)
+    event_id = models.TextField(max_length=250, default='', blank=True)
 
 class ContactUs(models.Model):
     first_name = models.CharField(max_length=50)

@@ -258,11 +258,14 @@ def addStudyEvent(request):
         date_time = datetime.combine(date_obj, time_obj)
         #print(type(request.POST['event_course']))
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
-        event.save()
         coursename = event.course.course_subject + " " + event.course.course_number
         email = request.user.email
         eventId = event.course.course_number
-        create_event(date_time, coursename, event.description, email, eventId)
+        created_event = create_event(date_time, coursename, event.description, email)
+        event.event_id = created_event['id']
+        print("the event id")
+        print(event.event_id)
+        event.save()
         return addUserToEvent(request, event.pk, owner.pk)
     else:
             return render(request, 'studysite/restricted/addstudyevent.html', {
@@ -303,7 +306,10 @@ def addUserToEvent(request, pk, pku):
     else:
         selected_event.users.add(User.objects.get(pk=pku))
         print(selected_event.course.course_number)
-        update_event(User.objects.get(pk=pku).email, selected_event.course.course_number)
+        print("event id: ")
+        print(selected_event.event_id)
+        print(selected_event.description)
+        update_event(User.objects.get(pk=pku).email, selected_event.event_id)
         print(User.objects.all())
         print(selected_event)
         print(pku)
@@ -430,8 +436,8 @@ def deleteMsg(request, pk):
 
 scopes = ['https://www.googleapis.com/auth/calendar']
 flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-# credentials = flow.run_console()
-# pickle.dump(credentials, open("token.pkl", "wb"))
+#credentials = flow.run_console()
+#pickle.dump(credentials, open("token.pkl", "wb"))
 credentials = pickle.load(open("token.pkl", "rb"))
 service = build("calendar", "v3", credentials=credentials)
 result = service.calendarList().list().execute()
@@ -445,7 +451,7 @@ for entry in result['items']:
 
 
 
-def create_event(start_time, summary, description, email, eventId, duration=1, location=None, ):
+def create_event(start_time, summary, description, email, duration=1, location=None, ):
     end_time = start_time + timedelta(hours=duration)
     
     event = {
@@ -471,11 +477,18 @@ def create_event(start_time, summary, description, email, eventId, duration=1, l
             ],
         },
     }
-    return service.events().insert(calendarId=calendar_id, id=eventId, body=event, sendUpdates='all').execute()
+    event = service.events().insert(calendarId=calendar_id, body=event, sendUpdates='all').execute()
+    print(event['id'])
+    return event
 
-def update_event(email, eventId):
-    print("hi")
-    # event = service.events().get(calendarId=calendar_id, eventId=eventId).execute()
+def update_event(email, event_id):
+    event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+    current_email = event['attendees'][0]['email']
+    event['attendees']['email'] = 'megan2022stuff@gmail.com'
+    # for emails in current_email:
+    #     if email != emails:
+    #         event['attendees']['email'] = email
+    print(event['attendees'][0])
     # event['attendees'].append(email)
     # return service.events().update(calendarId=calender_id, eventId=event['id'], body=event).execute()
 
