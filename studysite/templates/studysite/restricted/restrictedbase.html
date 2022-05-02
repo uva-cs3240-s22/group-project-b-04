@@ -33,24 +33,39 @@
                 </li>
             </ul>
         </div>
-        <div class="navbar nav right-nav mr-auto">
-            <ul class="nav navbar-nav">
-                {% if user.is_authenticated %}
+        <div class="navbar nav right-nav mr-auto container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse justify-content-end mr-auto" id="navbarNavDropdown">
+                <ul class="nav navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{% url 'dashboard' user.username %}" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dashboard
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <li><a class="dropdown-item" href="{% url 'event-finder' %}">Find Events</a></li>
+                          <li><a class="dropdown-item" href="{% url 'buddy-finder' 'finding-buddies' %}">Find Buddies</a></li>
+                          <li><a class="dropdown-item" href="{% url 'course-finder' 'all'%}">Find Courses</a></li>
+                        </ul>
+                    </li>                    
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' user.username %}">Dashboard</a>
-                   </li>    
-                   <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' user.username %}">Account</a>
+                        <a class="nav-link" href="{% url 'notifications' %}">Inbox</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Login</a>
-                </li>
-                {% endif %}
-            </ul>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+              </div>
         </div>
     </nav>
     </head>

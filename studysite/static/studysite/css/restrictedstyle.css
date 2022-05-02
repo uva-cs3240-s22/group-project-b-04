@@ -7,7 +7,7 @@ body {
     overflow-y: auto !important;
 }
 
-nav a {
+nav a{
   color: white !important;
 }
 
@@ -51,3 +51,9 @@ nav {
     align-items: center;
   }
 
+  .fa-1x {
+    font-size: 1.5rem;
+  }
+  .navbar-toggler.toggler-example {
+    cursor: pointer;
+  }
