@@ -304,7 +304,7 @@ def deleteUserFromEvent(request, uid, pk):
         print("Website doesn't exist")
         return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
     else:
-        selected_event.users.remove(id=uid)
+        selected_event.users.remove(uid)
         # ProfileView.request.user.pk
         selected_event.save()
         # Always return an HttpResponseRedirect after successfully dealing
@@ -330,22 +330,26 @@ def addCourseToUser(request, pk, pku):
         return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
 
 def deleteCourseFromUser(request, uid, pk):
-    course = get_object_or_404(Course, pk=pk)
-    try:
-        selected_course = Course.objects.get(pk=pk)
-    except (KeyError, User.DoesNotExist):
-        # Redisplay the question voting form.
-        print("Website doesn't exist")
-        return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
-    else:
-        selected_course.course_roster.remove(uid)
-        print(selected_course.course_roster.all())
-        #ProfileView.request.user.pk
-        selected_course.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
+    if 'delete_course' in request.POST :
+        print("hello")
+        course = get_object_or_404(Course, pk=pk)
+        try:
+            selected_course = Course.objects.get(pk=pk)
+        except (KeyError, User.DoesNotExist):
+            # Redisplay the question voting form.
+            print("Website doesn't exist")
+            return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
+        else:
+            selected_course.course_roster.remove(uid)
+            print(selected_course.course_roster.all())
+            #ProfileView.request.user.pk
+            selected_course.save()
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button.
+            return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
+    else :
+        return deleteUserFromEvent(request=request, uid=uid, pk=pk)
 
 def send_friend_request(request, uid):
     fromu = request.user
