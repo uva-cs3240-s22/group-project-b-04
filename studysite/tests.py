@@ -67,11 +67,11 @@ class URLTest(unittest.TestCase):
     self.client = Client()
 
   def test_about_url(self):
-    response = self.client.get('/studysite/about')
-    self.assertEqual(response.status_code, 301)
+    response = self.client.get(reverse('about'))
+    self.assertEqual(response.status_code, 200)
 
   def test_base_url(self):
-    response = self.client.get('/studysite/')
+    response = self.client.get(reverse('index'))
     self.assertEqual(response.status_code, 200)
 
   def test_auth_profile_url(self):
