@@ -40,3 +40,17 @@
     width: 40%;
     overflow-y: auto;
 }
+
+.edit-btn:hover {
+    background-color: #E6F4FF !important;
+    color: #2C2735 !important;
+}
+
+.edit-btn {
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+    background-color: #2C2735 !important;
+    color: white !important;
+
+}

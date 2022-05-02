@@ -32,6 +32,7 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=250, default='', blank=True)
     friends = models.ManyToManyField(User, related_name="friends", blank=True)
     image = models.ImageField(default='default.jpg', upload_to='profile')
+    num_alerts = models.IntegerField(default=0)
 
     def __str__(self):
        return f"{self.user.username}'s Profile"
@@ -47,7 +48,7 @@ class StudyEvent(models.Model):
 class Message(models.Model):
     from_user = models.ForeignKey(User, related_name="from_user_message", on_delete=models.CASCADE )
     to_user = models.ForeignKey(User, related_name="to_user_message", on_delete=models.CASCADE )
-    msg_content = models.CharField(max_length = 200, unique = True)
+    msg_content = models.CharField(max_length = 1000, unique = False)
 
     def str(self):
         return f"From {self.from_user.username} to {self.to_user.username}: {self.msg_content}"

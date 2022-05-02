@@ -1,0 +1,25 @@
+#pfp {
+    margin: 1vh 1vw 1vh 1vw;
+    border-radius: 100%;
+    border-style: none;
+    width: 3.75vw;
+    height: 3.75vw;
+}
+
+.user-card {
+    min-height: 10vh;
+    min-width: 15vw;
+    background-color: white;
+    border-radius: 15px;
+    border-width: 1px;
+    border-style: outset;
+    border-color: #2C2735;
+    box-shadow: 2px 2px 7px -4px black
+}
+
+.container {
+    border-style: solid;
+    border-radius: 1.5vw;
+    border-width: 2px;
+    padding: 2vw;
+}
