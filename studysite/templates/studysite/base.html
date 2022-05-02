@@ -33,24 +33,43 @@
                 </li>
             </ul>
         </div>
-        <div class="navbar nav right-nav mr-auto">
-            <ul class="nav navbar-nav">
-                {% if user.is_authenticated %}
+        
+        <div class="navbar nav right-nav mr-auto container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end mr-auto" id="navbarNavDropdown">
+                <ul class="nav navbar-nav">
+                    {% if user.is_authenticated %}   
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard' user.username %}">Dashboard</a>
-                   </li>    
-                   <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' user.username %}">Account</a>
                     </li>
+                    {% if user.userprofile.num_alerts > 0 %}               
+                    <li class="nav-item" style="margin-right:1vw;">
+                        <a class="nav-link position-relative" href="{% url 'notifications' %}">Inbox
+                                <span class="position-absolute top-25 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:2vh;">{{ user.userprofile.num_alerts }}</span>
+                        </a>
+                    </li>
+                    {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        <a class="nav-link position-relative" href="{% url 'notifications' %}">Inbox</a>
                     </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Login</a>
-                </li>
-                {% endif %}
-            </ul>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{% url 'profile' user.username %}" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            My Account
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <li><a class="dropdown-item"  href="{% url 'profile' user.username %}">Profile</a></li>
+                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>  
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
         </div>
     </nav>
     </head>
