@@ -57,11 +57,11 @@ class AboutView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
-class ThanksView(generic.TemplateView):
-    template_name = 'contactus_form/thanks.html'
+class StudySpacesView(generic.TemplateView):
+    template_name = 'studysite/studySpaces.html'
 
-    # def get_context_data(self, **kwargs):
-    #     return super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 class LoginView(generic.TemplateView):
     template_name = 'studysite/registration/login.html'
