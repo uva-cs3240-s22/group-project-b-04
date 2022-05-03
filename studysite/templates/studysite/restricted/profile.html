@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container d-flex justify-content-center align-items-center w-100">
+    <div class="container d-flex justify-content-center align-it dgems-center w-100">
         <div class="left-content d-flex justify-content-center align-items-center">
             {% if user.email == '' and user.userprofile.image == "default.jpg" %}
                 <img class="pfp" src="{% static 'assets/def.jpg' %}" alt="Pfp" width="10" height="10"/>
