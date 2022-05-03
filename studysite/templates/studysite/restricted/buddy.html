@@ -11,13 +11,12 @@
     </style>
 
 {% block content %} 
-    <div class="row d-flex row-cols-2 justify-content-betweem align-items-center" style="margin: 5vh 10vw 5vh 10vw;">
+    <div class="d-flex justify-content-start align-items-start flex-column" style="margin: 5vh 10vw 5vh 10vw;">
         <div class="d-flex flex-column justify-content-start align-items-start">
             <h1 class="page-title">FIND BUDDIES</h1>
-            <p><strong>{{ view.kwargs.friend_message }}</strong></p>
-        </div>
-        <div class="d-flex justify-content-end align-items-center mr-0">
-            <a href="{% url 'notifications' %}"><h5>Notifications</h5></a>
+            {% if view.kwargs.friend_message != 'finding-buddies' %}
+                <h5 class="mt-4" style="color: crimson;"><strong>{{ view.kwargs.friend_message }}</strong></h5>
+            {% endif %}
         </div>
     </div>
     <div class="row row-cols-1 d-flex justify-content-center align-items-center" style="margin: 4vh 4vw 2vh 4vw;">
@@ -34,7 +33,7 @@
                         <img img id="pfp" src="{{ to_user.userprofile.image.url }}"/>
                         {% endif %}
                     </div>
-                    <div class="con2 d-flex flex-column">
+                    <div class="con2 d-flex flex-column" style="width:72%;">
                         <h4 class="d-flex card-title">{{ to_user.first_name }} {{ to_user.last_name }}</h4>
                         <h6 class="d-flex card-text">{{ to_user.username }}</h6>
                         <p class="d-flex card-text"><strong class="profile-sec">Year:</strong> {{ to_user.userprofile.year }}</p>

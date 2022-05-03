@@ -11,7 +11,8 @@
     <div style="margin: 8vh 5vw 5vh 8vw;">
         <h1 class="d-flex ml-0">NOTIFICATIONS</h1>
     </div>
-    <div class="d-flex justify-content-center w-100 mt-3">
+    {% if request_list or msg_list %}
+    <div class="d-flex justify-content-center align-items-center flex-column w-100 mt-3">
         {% if request_list %}
         <div class="d-flex flex-column">
             {% for req in request_list %}
@@ -20,14 +21,14 @@
                 <div class="card">
                     <div class="card-body d-flex justify-content-center flex-column">
                         <div class="d-flex justify-content-center flex-row align-items-center">
-                            <img id="pfp" class="headshot" src="{{ req.from_user.userprofile.image.url }}" alt="profile picture"/>
+                            <img id="pfp" src="{{ req.from_user.userprofile.image.url }}" alt="profile picture"/>
                             <div class="d-flex flex-column justify-content-start">
+                                <h6 class="card-title">{{ req.from_user.firstname}} {{req.from_user.lastname}}</h6>
                                 <h6 class="card-title">{{ req.from_user.username }}</h6>
                                 <p class="card-text">Sent a Friend Request</p>
                             </div>
                         </div>
-                        <br>
-                        <div class="d-flex flex-row justify-content-around align-items-center">  
+                        <div class="d-flex flex-row justify-content-around align-items-center mt-4">  
                             <input class="btn btn-outline-dark px-4" type="submit" name="action" value="Accept"/>
                             <input class="btn btn-outline-dark px-4" type="submit" name="action" value="Deny"/>
                         </div>
@@ -38,15 +39,17 @@
         </div>
         {% endif %}
         {% if msg_list %}
-        {% for msg in msg_list %}
+        <div class="d-flex flex-column justify-content-center">
+            {% for msg in msg_list %}
         <form action="{% url 'delete-message' msg.pk %}" method="POST">
             {% csrf_token %}
             <div class="card">
                 <div class="card-body d-flex justify-content-center flex-column">
                     <div class="d-flex justify-content-center flex-row align-items-center">
-                        <img id="pfp" src="{{ req.from_user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
+                        <img id="pfp" src="{{ msg.from_user.userprofile.image.url }}" alt="profile picture"/>
                         <div class="d-flex flex-column justify-content-start">
-                            <h6 class="card-title">{{ req.from_user.username }}</h6>
+                            <h6 class="card-title">{{ msg.from_user.firstname}} {{msg.from_user.lastname}}</h6>
+                            <h6 class="card-title">{{ msg.from_user.username }}</h6>
                             <p class="card-text">Sent a Message</p>
                         </div>
                     </div>
@@ -54,13 +57,22 @@
                     <div class="d-flex justify-content-center">
                         <p class="card-text">{{ msg.msg_content }}</p>
                     </div>
-                    <div class="d-flex flex-row justify-content-around align-items-center">
+                    <div class="d-flex flex-row justify-content-around align-items-center mt-4">
                         <input class="btn btn-outline-dark px-4" type="submit" value="Delete"/>
                     </div>
                 </div>
             </div>
         </form>
         {% endfor %}
+        </div>
+        {% endif %}
+
+        {% else %}
+            <div class="d-flex justify-content-center align-items-center w-100 mt-4">
+                <div class="empty-msg d-flex flex-column justify-content-center align-items-center">
+                    <p>You do not have any Notifications</p>
+                </div>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

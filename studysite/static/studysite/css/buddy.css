@@ -59,3 +59,7 @@
     width: 8vw;
     height: 8vw;
 }
+
+.warning {
+    color: crimson !important;
+}

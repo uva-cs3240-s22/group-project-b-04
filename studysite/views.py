@@ -83,7 +83,7 @@ def postprofile(request, username):
        # return render(request, 'studysite/userprofile_form.html', {'form': form})
     else:
         form = UserProfileForm(instance=profile)
-    return render(request, 'studysite/userprofile_form.html', {'form': form})
+    return render(request, 'studysite/restricted/userprofile_form.html', {'form': form})
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     permission_denied_message = "Please login to view this page."
@@ -160,12 +160,24 @@ class EventView(generic.ListView):
         return self.model.objects.filter(time__gte = datetime.today())
 
 
+class DetailEventView(generic.DetailView):
+    model = StudyEvent
+    template_name = 'studysite/restricted/studyevent.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['participants'] = self.get_object().users.all
+        return context
+    
+
+
 class BuddyView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
     model=User
     template_name = 'studysite/restricted/buddy.html'
 
     context_object_name = "user_list"
+
 
     def get_queryset(self):
         return User.objects.all()
@@ -388,6 +400,8 @@ def send_friend_request(request, uid):
         except:
             friend_request, created = FriendRequest.objects.get_or_create(from_user=fromu, to_user=tou)
             if created :
+                tou.userprofile.num_alerts = tou.userprofile.num_alerts + 1
+                tou.save()
                 return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "Friend Request Sent",}))#render(request, 'studysite/restricted/buddy.html', {'friend_message': "Friend Request Sent",})
             else :
                 return HttpResponseRedirect(reverse('buddy-finder', kwargs={'friend_message': "You already have a pending request to this user",}))
@@ -404,6 +418,9 @@ def accept_friend_request(request, rid):
         friend_request.to_user.userprofile.friends.add(friend_request.from_user)
         friend_request.from_user.userprofile.friends.add(friend_request.to_user)
         friend_request.delete()
+    if request.user.userprofile.num_alerts > 0:
+        request.user.userprofile.num_alerts = request.user.userprofile.num_alerts - 1
+    request.user.save()
     return HttpResponseRedirect(reverse('notifications'))
 
 def msgBuddy(request, uid):
@@ -411,6 +428,8 @@ def msgBuddy(request, uid):
     tou = User.objects.get(id=uid)
     if request.method == "POST" :
         message = Message(from_user = fromu, to_user = tou, msg_content = request.POST['message'])
+        tou.userprofile.num_alerts = tou.userprofile.num_alerts + 1
+        tou.save()
         message.save()
     return render(request, 'studysite/restricted/messages.html', {
             'user_list': User.objects.all(),
@@ -426,6 +445,9 @@ def deleteMsg(request, pk):
         return HttpResponseRedirect(reverse('notifications'))
     else:
         msg.delete()
+        if request.user.userprofile.num_alerts > 0:
+            request.user.userprofile.num_alerts = request.user.userprofile.num_alerts - 1
+        request.user.save()
         return HttpResponseRedirect(reverse('notifications'))
 
 
@@ -556,3 +578,5 @@ def classify(term):
         return FILTER_TYPES['FULL']
     else:
         return FILTER_TYPES['NAME']
+
+

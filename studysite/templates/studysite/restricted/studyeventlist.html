@@ -27,6 +27,7 @@
                                     <p class="card-text">{{event.time}}</p>
                                     <p class="card-text">Info: {{event.description}}</p>
                                     <p class="card-text"><small>{{event.users.count}} / {{event.max_users}} Student(s)</small></p>
+                                    <a href="{% url 'event-detail' event.pk %}">Event Detail</a>
                                     </div>
                                     {% if event not in user.events.all%}
                                     <div class="d-flex justify-content-end align-items-center" style="margin-left: 1vw;">  

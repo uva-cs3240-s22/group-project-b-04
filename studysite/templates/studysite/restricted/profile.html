@@ -40,8 +40,8 @@
                 <h5>Bio: </h5>
                 <p>{{ user.userprofile.bio }}</p>
             </div>
-            <a href="{% url 'notifications' %}"><h6>Notifications</h6></a>
-            <a href="{% url 'edit_profile' user.username%}"><h6>Edit Profile</h6></a>
+        </br>
+            <a class="btn edit-btn btn-dark align-items-center" href="{% url 'edit_profile' user.username%}"><h6>Edit Profile</h6></a>
         </div>
             </div>
         </div>        

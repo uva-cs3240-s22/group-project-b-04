@@ -1,0 +1,43 @@
+.edit-form, .heading-text{
+    margin: 3vh 10vw 1vh 10vw;
+    padding: 0 2vh 1vh 2vh;
+}
+
+.edit-form p {
+    display: flex;
+    padding-bottom: 2vh !important;
+    align-items: center !important;
+    justify-content: space-between;
+    min-width: 40vw;
+    word-wrap: normal;
+}
+
+input, textarea, select{
+    margin-left: 2vw;
+    padding: 0.25vw;
+    width: 65%;
+}
+
+textarea {
+    height: 20vh;
+}
+
+label {
+    font-size: 2.5vh;
+    margin-right: 1vw;
+    font-weight: bold;
+}
+
+.edit-button {
+    width: 35vw;
+    margin-left: 0;
+}
+
+.edit-button:hover {
+    background-color: #2C2735 !important;
+    color: white !important;
+}
+
+strong {
+    color: crimson;
+}

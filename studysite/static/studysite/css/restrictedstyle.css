@@ -7,7 +7,12 @@ body {
     overflow-y: auto !important;
 }
 
-nav a {
+
+.dropdown-item {
+  color:#2C2735 !important;
+}
+
+.nav-link{
   color: white !important;
 }
 
@@ -20,6 +25,7 @@ footer {
 a {
   color: #2C2735;
 }
+
 
 nav {
     width: 100%;
@@ -51,3 +57,21 @@ nav {
     align-items: center;
   }
 
+  .fa-1x {
+    font-size: 1.5rem;
+  }
+  .navbar-toggler.toggler-example {
+    cursor: pointer;
+  }
+
+  .empty-msg {
+    font-size: 2.5vh;
+    width: 80%;
+    height: 15vh;
+    background-color: rgba(44, 39, 53, 0.2);
+    color:#2C2735;
+    border-radius: 4vh;
+    border-style: dashed;
+    border-width: 4px;
+    border-color: #2C2735;
+}

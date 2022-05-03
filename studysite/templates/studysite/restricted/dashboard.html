@@ -8,11 +8,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="friends-list">
+    <div class="friends-list mt-5">
         <div class="d-flex flex-row justify-content-between">
             <h6>Friends: </h6>
             <a class="d-flex justify-content-start" href="{% url 'buddy-finder' 'finding-buddies' %}">Find A Buddy</a>
         </div>
+        {% if user.friends.all %}
         <div class="row row-cols-4 d-flex justify-content-start align-items-center">
             {% for friend in user.friends.all %}
                 <div class="col">
@@ -31,6 +32,14 @@
                 {% endfor %}
             </br>
         </div>
+        {% else %}
+            <div class="d-flex justify-content-center align-items-center w-100 mt-4">
+                <div class="empty-msg d-flex flex-column justify-content-center align-items-center">
+                    <p>You do not have any Buddies</p>
+                    <p><a href="{% url 'buddy-finder' 'finding-buddies' %}">Browse Buddies</a></p>
+                </div>
+            </div>
+        {% endif %}
         </br>
     </div>
     <div class="course-list">
@@ -38,6 +47,7 @@
             <h6 class="d-flex justify-content-left">Courses: </h6>
             <a class="d-flex justify-content-right" href="{% url 'course-finder' 'all'%}">Add a Course</a>
         </div>
+        {% if user.course_set.all %}
         <div class="row row-cols-4 d-flex justify-content-start align-items-center">
             {% for course in user.course_set.all %}
                 <div class="col">
@@ -59,18 +69,27 @@
                 {% endfor %}
             </br>
         </div>
+        {% else %}
+            <div class="d-flex justify-content-center align-items-center w-100 mt-4">
+                <div class="empty-msg d-flex flex-column justify-content-center align-items-center">
+                    <p>You do not have any Courses</p>
+                    <p><a href="{% url 'course-finder' 'all' %}">Browse Courses</a></p>
+                </div>
+            </div>
+        {% endif %}
     </div>
     <div class="event-list">
         <div class="d-flex flex-row justify-content-between align-items-center" >
             <h6 class="d-flex justify-content-left">Study Events: </h6>
             <a class="d-flex justify-content-right" href="{% url 'event-finder' %}">See Event</a>
         </div>
+        {% if event_list %}
         <div class="row row-cols-4 d-flex justify-content-start align-items-center">
             {% for event in event_list %}
                 <div class="col">
                     <form action="{% url 'delete-event' user.id event.pk %}" method="POST" id="delete-event-user-form">
                         {% csrf_token %}
-                        <div class="card course-card" style="height: 15vh;">
+                        <div class="card" style="height: 15vh;">
                             <div class="card-body d-flex justify-content-between align-items-center" style="padding: 1vh 1.5vw 1vh 1.5vw;">
                               <div class="d-flex justify-content-start flex-column">
                                 <h6 class="card-title">{{ event.description }}</h6>
@@ -84,8 +103,16 @@
                         </div>
                     </form>
                 </div>
-                {% endfor %}
+            {% endfor %}
             </br>
         </div>
+        {% else %}
+            <div class="d-flex justify-content-center align-items-center w-100 mt-4">
+                <div class="empty-msg d-flex flex-column justify-content-center align-items-center">
+                    <p>You do not have any upcoming Study Events</p>
+                    <p><a href="{% url 'event-finder' %}">Browse Events</a></p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
