@@ -517,6 +517,24 @@ def update_event(email, event_id):
             exists1 = True
     if exists1 == False :
         event['attendees'].append(email)
+    return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
+
+# def delete_event_fromUser(email, event_id):
+#     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+#     # current_email = event['attendees'][0]['email']
+#     # print(event['attendees'][0])
+#     # email = {'email': email, 'responseStatus': 'needsAction'}
+#     # print(email)
+#     # email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
+#     # exists1 = False
+#     new_email_list =
+#     for index in range(len(event['attendees'])):
+#         if email == event['attendees'][index]:
+#             exists1 = True
+#     if exists1 == False:
+#         event['attendees'].append(email)
+#     return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
+
     # exists = False
     # for index in range(len(event['attendees'])):
     #     print(event['attendees'][index])
@@ -535,7 +553,7 @@ def update_event(email, event_id):
     #         event['attendees']['email'] = email
     #print(event['attendees'])
     # event['attendees'].append(email)
-    return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
+
 
 def course_search(request):
     if request.method == "POST":
