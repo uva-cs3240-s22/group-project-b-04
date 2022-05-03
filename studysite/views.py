@@ -154,6 +154,7 @@ class CoursesView(LoginRequiredMixin, generic.ListView):
 class EventView(generic.ListView):
     model = StudyEvent
     template_name = 'studysite/restricted/studyeventlist.html'
+    template_name = 'studysite/restricted/studyeventlist.html'
     context_object_name = 'event_list'
 
     def get_queryset(self):
@@ -344,8 +345,11 @@ def deleteUserFromEvent(request, uid, pk):
         return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
     else:
         selected_event.users.remove(uid)
+        if request.user.email != '':
+            delete_event_fromUser(request.user.email, selected_event.event_id)
         # ProfileView.request.user.pk
         selected_event.save()
+
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
@@ -508,7 +512,7 @@ def update_event(email, event_id):
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
     #current_email = event['attendees'][0]['email']
     #print(event['attendees'][0])
-    email = {'email': email, 'responseStatus': 'needsAction'}
+    email = {'email': email, 'responseStatus': 'accepted'}
     #print(email)
     #email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
     exists1 = False
@@ -517,23 +521,35 @@ def update_event(email, event_id):
             exists1 = True
     if exists1 == False :
         event['attendees'].append(email)
+    print(event['attendees'])
     return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
 
-# def delete_event_fromUser(email, event_id):
-#     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+def delete_event_fromUser(email, event_id):
+    event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
 #     # current_email = event['attendees'][0]['email']
 #     # print(event['attendees'][0])
-#     # email = {'email': email, 'responseStatus': 'needsAction'}
+    email = {'email': email, 'responseStatus': 'accepted'}
+    # email1 = {'email': 'megan2020stuff@gmail.com', 'responseStatus': 'needsAction'}
+    # email2 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
+    # email3 = {'email': 'megan2022stuff@gmail.com', 'responseStatus': 'needsAction'}
+    # event['attendees'].append(email1)
+    # event['attendees'].append(email2)
+    # event['attendees'].append(email3)
 #     # print(email)
 #     # email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
 #     # exists1 = False
-#     new_email_list =
-#     for index in range(len(event['attendees'])):
-#         if email == event['attendees'][index]:
-#             exists1 = True
-#     if exists1 == False:
-#         event['attendees'].append(email)
-#     return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
+    new_email_list = []
+    for index in range(len(event['attendees'])):
+        spec_email = event['attendees'][index]
+        if email != spec_email:
+            # spec_e = spec_email['email']
+            # new_email = {'email': spec_e}
+            new_email_list.append(spec_email)
+    email3 = {'email': 'megan2022stuff@gmail.com', 'responseStatus': 'needsAction'}
+    new_email_list.append(email3)
+    event['attendees'] = new_email_list
+    print(new_email_list)
+    return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
 
     # exists = False
     # for index in range(len(event['attendees'])):
