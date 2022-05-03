@@ -28,7 +28,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between" style="margin: 0.5vh 1.5vw 0.5vh 1.5vw;">
                     <div class="con1 d-flex">
                         {% if to_user.email == '' and to_user.userprofile.image == "default.jpg" %}
-                            <img class="pfp" src="{% static 'assets/def.jpg' %}" alt="Pfp"/>
+                            <img class="pfp" src="{% static 'assets/def.jpg' %}" alt="Pfp", style="margin: 1vh 3vw 1vh 1vw; border-radius: 100%; border-style: outset; width: 8vw; height: 8vw;"/>
                         {% elif to_user.userprofile.image == "default.jpg" %}
                             <img img id="pfp" src="{{ to_user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
                         {% else %}

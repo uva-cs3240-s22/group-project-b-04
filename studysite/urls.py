@@ -40,7 +40,6 @@ urlpatterns = [
     path('notifications/', views.NotifView.as_view(), name='notifications'),
     path('messages/', views.MessageView.as_view(), name='buddy-messanger'),
     path('contact/', views.contactus, name='contact-us'),
-    # path('contact/thanks/', views.ThanksView.as_view(), name='thanks'),
     path('messages/<int:uid>/', views.msgBuddy, name='message-buddy'),
     path('notifications/delete/<int:pk>', views.deleteMsg, name='delete-message'),
     path('<str:username>/dashboard/', views.DashView.as_view(), name='dashboard'),
@@ -55,7 +54,7 @@ urlpatterns = [
     
 ]
 
-
+#Figured out formatting for urlpatterns from https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
