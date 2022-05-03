@@ -32,7 +32,7 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=250, default='', blank=True)
     friends = models.ManyToManyField(User, related_name="friends", blank=True)
     image = models.ImageField(default='default.jpg', upload_to='profile')
-    num_alerts = models.IntegerField(default=0)
+    num_alerts = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):
        return f"{self.user.username}'s Profile"
@@ -44,7 +44,7 @@ class StudyEvent(models.Model):
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)
-    event_id = models.TextField(max_length=250, default='', blank=True)
+    event_id = models.TextField(max_length=250, default='', blank=True, null=True)
 
 class ContactUs(models.Model):
     first_name = models.CharField(max_length=50)

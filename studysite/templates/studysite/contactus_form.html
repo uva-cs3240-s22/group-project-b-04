@@ -11,7 +11,9 @@
         <form method="POST" enctype="multipart/form-data" id="contact-us">
             <p>Enter Your Information Here!</p>
             {% csrf_token %}
+            <div class="form-group">
             {{ form.as_p }}
+            </div>
         <input type="submit" value="Update">
         </form>
     </div>
