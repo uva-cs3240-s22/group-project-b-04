@@ -309,7 +309,8 @@ def addUserToEvent(request, pk, pku):
         print("event id: ")
         print(selected_event.event_id)
         print(selected_event.description)
-        update_event(User.objects.get(pk=pku).email, selected_event.event_id)
+        if User.objects.get(pk=pku).email != '':
+            update_event(User.objects.get(pk=pku).email, selected_event.event_id)
         print(User.objects.all())
         print(selected_event)
         print(pku)
@@ -483,14 +484,36 @@ def create_event(start_time, summary, description, email, duration=1, location=N
 
 def update_event(email, event_id):
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
-    current_email = event['attendees'][0]['email']
-    event['attendees']['email'] = 'megan2022stuff@gmail.com'
+    #current_email = event['attendees'][0]['email']
+    #print(event['attendees'][0])
+    email = {'email': email, 'responseStatus': 'needsAction'}
+    #print(email)
+    #email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
+    exists1 = False
+    for index in range(len(event['attendees'])):
+        if email == event['attendees'][index]:
+            exists1 = True
+    if exists1 == False :
+        event['attendees'].append(email)
+    # exists = False
+    # for index in range(len(event['attendees'])):
+    #     print(event['attendees'][index])
+    #     if email1 == event['attendees'][index]:
+    #         exists = True
+    # if exists == False :
+    #     event['attendees'].append(email1)
+    # email = 'megan2022stuff@gmail.com'
+    # email1 = 'mv5vc@virginia.edu'
+    # event['attendees'][0]['email'] = 'megan2022stuff@gmail.com'
+    # event['attendees'][0]['email'] = 'mv5vc@virginia.edu'
+    # event['attendees'].append(email)
+    # event['attendees'].append(email1)
     # for emails in current_email:
     #     if email != emails:
     #         event['attendees']['email'] = email
-    print(event['attendees'][0])
+    #print(event['attendees'])
     # event['attendees'].append(email)
-    # return service.events().update(calendarId=calender_id, eventId=event['id'], body=event).execute()
+    return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
 
 def course_search(request):
     if request.method == "POST":
