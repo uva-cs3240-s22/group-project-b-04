@@ -57,12 +57,6 @@ class AboutView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
-class ThanksView(generic.TemplateView):
-    template_name = 'contactus_form/thanks.html'
-
-    # def get_context_data(self, **kwargs):
-    #     return super().get_context_data(**kwargs)
-
 class LoginView(generic.TemplateView):
     template_name = 'studysite/registration/login.html'
 
@@ -112,7 +106,7 @@ class DashView(LoginRequiredMixin, generic.DetailView):
     def get_object(self):
         return self.model.objects.get(pk=self.request.user.pk)
 
-
+# course api url and startup code from https://devhub.virginia.edu/API
 def showcourse():
     try:
         Course.objects.count()
@@ -271,11 +265,7 @@ def addStudyEvent(request):
             return render(request, 'studysite/restricted/addstudyevent.html', {
             'courses_list': Course.objects.order_by('course_subject'),})
 
-#def deleteUserOrCourse(request, pk, pku):
-
-
-#def deleteUserOrCourse(request, pk, pku):
-
+#Contactus based on https://docs.djangoproject.com/en/4.0/topics/email/
 def contactus(request):
     if request.method == 'POST':
         form = ContactUsForm(request.POST)
@@ -476,6 +466,8 @@ def create_event(start_time, summary, description, email, duration=1, location=N
     event = service.events().insert(calendarId=calendar_id, body=event, sendUpdates='all').execute()
     print(event['id'])
     return event
+
+#Properties and methods of the google API calender found in https://developers.google.com/calendar/api/v3/reference/events
 
 def update_event(email, event_id):
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()

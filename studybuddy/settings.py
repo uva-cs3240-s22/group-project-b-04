@@ -176,10 +176,15 @@ SOCIALACCOUNT_PROVIDERS = {
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-#https://ordinarycoders.com/blog/article/django-amazon-ses-emails
+
+
+
+
+#Tutorial for implementing email backend https://ordinarycoders.com/blog/article/django-amazon-ses-emails
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
-#instructions from https://www.youtube.com/watch?v=inQyZ7zFMHM
+
+#instructions for implementing AWS S3 storage api from https://www.youtube.com/watch?v=inQyZ7zFMHM
 
 AWS_ACCESS_KEY_ID = 'AKIA4BMRTQ4IOAT5R4RQ'
 AWS_SECRET_ACCESS_KEY = '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'
