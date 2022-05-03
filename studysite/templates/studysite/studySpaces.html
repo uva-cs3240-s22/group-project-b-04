@@ -1,0 +1,19 @@
+{% extends 'studysite/base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Our Favorite Study Spaces</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'studysite/css/studySpaces.css' %}"/>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-center" style="height: 75%;">
+    <div class="info-block text-dark">
+      <h4>What are our favorite study spaces?</h4>
+    </br>
+      <p>Rice Hall -- 85 Engineer's Way, Charlottesville, VA 22903</p>
+    </br>
+      <p>Clemons Library -- 164 McCormick Rd, Charlottesville, VA 22903</p>
+    </div>
+  </div>
+{% endblock %}
