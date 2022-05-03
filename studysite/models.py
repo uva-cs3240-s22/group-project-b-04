@@ -44,6 +44,13 @@ class StudyEvent(models.Model):
     max_users = models.IntegerField(default=6)
     time = models.DateTimeField(default=now)
     description = models.TextField(max_length=250, default='', blank=True)
+    event_id = models.TextField(max_length=250, default='', blank=True)
+
+class ContactUs(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+    question = models.CharField(max_length=250)
 
 class Message(models.Model):
     from_user = models.ForeignKey(User, related_name="from_user_message", on_delete=models.CASCADE )

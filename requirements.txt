@@ -31,9 +31,13 @@ dj-database-url
 django-messages
 
 #for the aws3 api
+#for photo storage
 django-storages
 boto3
+#for the email for contact us
+django-ses
 
 #for profile page
 pillow
 decouple
+

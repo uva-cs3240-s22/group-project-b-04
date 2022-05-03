@@ -11,13 +11,14 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import BadHeaderError, send_mail
 import google_auth_oauthlib
 from django.core.paginator import Paginator
 from psycopg2 import Date
 from .models import *
 from datetime import date, time, datetime, timedelta
 from django.urls import reverse_lazy
-from .forms import UserProfileForm
+from .forms import UserProfileForm, ContactUsForm
 import requests
 import json
 import re
@@ -55,6 +56,12 @@ class AboutView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
+
+class ThanksView(generic.TemplateView):
+    template_name = 'contactus_form/thanks.html'
+
+    # def get_context_data(self, **kwargs):
+    #     return super().get_context_data(**kwargs)
 
 class LoginView(generic.TemplateView):
     template_name = 'studysite/registration/login.html'
@@ -152,6 +159,7 @@ class EventView(generic.ListView):
     def get_queryset(self):
         return self.model.objects.filter(time__gte = datetime.today())
 
+
 class DetailEventView(generic.DetailView):
     model = StudyEvent
     template_name = 'studysite/restricted/studyevent.html'
@@ -161,6 +169,7 @@ class DetailEventView(generic.DetailView):
         context['participants'] = self.get_object().users.all
         return context
     
+
 
 class BuddyView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
@@ -261,8 +270,14 @@ def addStudyEvent(request):
         date_time = datetime.combine(date_obj, time_obj)
         #print(type(request.POST['event_course']))
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
+        coursename = event.course.course_subject + " " + event.course.course_number
+        email = request.user.email
+        eventId = event.course.course_number
+        created_event = create_event(date_time, coursename, event.description, email)
+        event.event_id = created_event['id']
+        print("the event id")
+        print(event.event_id)
         event.save()
-        create_event(date_time, event.description)
         return addUserToEvent(request, event.pk, owner.pk)
     else:
             return render(request, 'studysite/restricted/addstudyevent.html', {
@@ -273,6 +288,24 @@ def addStudyEvent(request):
 
 #def deleteUserOrCourse(request, pk, pku):
 
+def contactus(request):
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            subject = "Study Buddy Question"
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            question = "First name: " + first_name + "\n" + "Last name: " + last_name + "\n" + "Email: " + email + "\n" + "Question: " + form.cleaned_data['question']
+        try:
+            send_mail(subject, question, 'megan2022stuff@gmail.com', ['megan2020stuff@gmail.com'])
+        except BadHeaderError:
+            return HttpResponse('Invalid header')
+        return HttpResponseRedirect(reverse('about'))
+    form = ContactUsForm()
+    return render(request, "studysite/contactus_form.html", {'form':form})
+    # form = ContactUsForm()
+    # return render(request, 'studysite/contactus_form.html', {'form': form})
 
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
@@ -284,6 +317,12 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
     else:
         selected_event.users.add(User.objects.get(pk=pku))
+        print(selected_event.course.course_number)
+        print("event id: ")
+        print(selected_event.event_id)
+        print(selected_event.description)
+        if User.objects.get(pk=pku).email != '':
+            update_event(User.objects.get(pk=pku).email, selected_event.event_id)
         print(User.objects.all())
         print(selected_event)
         print(pku)
@@ -435,7 +474,7 @@ for entry in result['items']:
 
 
 
-def create_event(start_time, summary, duration=1, description=None, location=None):
+def create_event(start_time, summary, description, email, duration=1, location=None, ):
     end_time = start_time + timedelta(hours=duration)
     
     event = {
@@ -450,6 +489,9 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
             'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
             'timeZone': 'America/New_York',
         },
+        'attendees' : [
+            {'email': email },
+        ],
         'reminders': {
             'useDefault': False,
             'overrides': [
@@ -458,7 +500,42 @@ def create_event(start_time, summary, duration=1, description=None, location=Non
             ],
         },
     }
-    return service.events().insert(calendarId=calendar_id, body=event).execute()
+    event = service.events().insert(calendarId=calendar_id, body=event, sendUpdates='all').execute()
+    print(event['id'])
+    return event
+
+def update_event(email, event_id):
+    event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+    #current_email = event['attendees'][0]['email']
+    #print(event['attendees'][0])
+    email = {'email': email, 'responseStatus': 'needsAction'}
+    #print(email)
+    #email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
+    exists1 = False
+    for index in range(len(event['attendees'])):
+        if email == event['attendees'][index]:
+            exists1 = True
+    if exists1 == False :
+        event['attendees'].append(email)
+    # exists = False
+    # for index in range(len(event['attendees'])):
+    #     print(event['attendees'][index])
+    #     if email1 == event['attendees'][index]:
+    #         exists = True
+    # if exists == False :
+    #     event['attendees'].append(email1)
+    # email = 'megan2022stuff@gmail.com'
+    # email1 = 'mv5vc@virginia.edu'
+    # event['attendees'][0]['email'] = 'megan2022stuff@gmail.com'
+    # event['attendees'][0]['email'] = 'mv5vc@virginia.edu'
+    # event['attendees'].append(email)
+    # event['attendees'].append(email1)
+    # for emails in current_email:
+    #     if email != emails:
+    #         event['attendees']['email'] = email
+    #print(event['attendees'])
+    # event['attendees'].append(email)
+    return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
 
 def course_search(request):
     if request.method == "POST":
