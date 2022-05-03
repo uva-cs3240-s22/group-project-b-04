@@ -7,13 +7,58 @@
 {% endblock %}
 
 {% block content %}
-  <div class="d-flex align-items-center justify-content-center" style="height: 75%;">
+<!--column formatting from https://www.w3schools.com/howto/howto_css_two_columns.asp-->
+<style>
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+</style>
+<div class="d-flex align-items-center justify-content-center" style="margin: 2vh 4vw 2vh 4vw;">
     <div class="info-block text-dark">
       <h4>What are our favorite study spaces?</h4>
     </br>
       <p>Rice Hall -- 85 Engineer's Way, Charlottesville, VA 22903</p>
+        <div class="row">
+        <div class="column">
+            <iframe width="300" height="250" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=%2085%20Engineer's%20Way%2C%20Charlottesville%2C%20VA%2022903&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+        </div>
+            <div class="column">
+                <img img id="ricehall" src="{% static 'assets/ricehall.jpg' %}" alt="rice study pic" width="300" height="250"/>
+            </div>
+    </div>
     </br>
       <p>Clemons Library -- 164 McCormick Rd, Charlottesville, VA 22903</p>
+        <div class="row">
+        <div class="column">
+            <iframe width="300" height="250" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=164%20McCormick%20Rd%2C%20Charlottesville%2C%20VA%2022903&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+        </div>
+            <div class="column">
+                <img img id="clem" src="{% static 'assets/clem.jpg' %}" alt="clem study pic" width="300" height="250"/>
+            </div>
     </div>
-  </div>
+        <p>Clark Hall -- 291 McCormick Road, Charlottesville, VA 22903</p>
+        <div class="row">
+        <div class="column">
+            <iframe width="300" height="250" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=291%20McCormick%20Road%2C%20Charlottesville%2C%20VA%2022903&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+        </div>
+            <div class="column">
+                <img img id="clark" src="{% static 'assets/clark.jpg' %}" alt="clark study pic" width="300" height="250"/>
+            </div>
+    </div>
+        <p>Thorton Stacks -- 351 McCormick Road, Charlottesville, VA 22904</p>
+        <div class="row">
+        <div class="column">
+            <iframe width="300" height="250" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/place?q=351%20McCormick%20Road%2C%20Charlottesville%2C%20VA%2022904&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+        </div>
+            <div class="column">
+                <img img id="thorton" src="{% static 'assets/thorton.jpg' %}" alt="thorton study pic" width="300" height="250"/>
+            </div>
+    </div>
+    </div>
+</div>
 {% endblock %}
