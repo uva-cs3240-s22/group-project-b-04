@@ -288,10 +288,10 @@ def contactus(request):
         try:
             send_mail(subject, question, 'megan2022stuff@gmail.com', ['megan2020stuff@gmail.com'])
         except BadHeaderError:
-            return HttpResponse('Invalid header')
-        return HttpResponseRedirect(reverse('about'))
+            return render(request, "studysite/contactus_form.html", {'form':form, 'error_message': "Invalid Header",})
+        return render(request, "studysite/contactus_form.html", {'form': ContactUsForm(), 'error_message': "Thanks for the message! We'll Reach out to you soon!",})
     form = ContactUsForm()
-    return render(request, "studysite/contactus_form.html", {'form':form})
+    return render(request, "studysite/contactus_form.html", {'form':form, 'error_message': "",})
 
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
