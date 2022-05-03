@@ -69,6 +69,7 @@ class LoginView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+#postprofile based on https://www.geeksforgeeks.org/how-to-create-and-use-signals-in-django/#:~:text=instance.profile.save%20%28%29%20You%20can%20get%20confused%20from%20this,The%20other%20method%20save_profile%20just%20saves%20the%20instance.
 def postprofile(request, username):
     try:
         profile = request.user.userprofile
@@ -129,15 +130,6 @@ def showcourse():
                     class_list.append(classCourse)
                     course = Course(course_number=item[1], course_subject=item[0], course_name=item[4])
                     course.save()
-    # courses = Course.objects.all()
-    # p = Paginator(courses, 25)
-    # page_number = request.GET.get('page')
-    # try:
-    #     page_obj = p.get_page(page_number)
-    # except PageNotAnInteger:
-    #     page_obj = p.page(1)
-    # except EmptyPage:
-    #     page_obj = p.page(p.num_pages)
 
 class CoursesView(LoginRequiredMixin, generic.ListView):
     permission_denied_message = "Please login to view this page."
@@ -264,16 +256,11 @@ def addStudyEvent(request):
     if request.method == "POST" :
         owner = request.user
         date_obj = date.fromisoformat(request.POST['meeting_date'])
-        #print(type(time))
         time_obj = time.fromisoformat(request.POST['start_time'])
-        #print(type(time_obj))
-        #time_obj = time.strptime(request.POST['start_time'],"%H:%M")
         date_time = datetime.combine(date_obj, time_obj)
-        #print(type(request.POST['event_course']))
         event = StudyEvent(owner = owner, course = Course.objects.get(id=int(request.POST['event_course'])), max_users = request.POST['max-users'], time = date_time, description = request.POST['description'])
         coursename = event.course.course_subject + " " + event.course.course_number
         email = request.user.email
-        eventId = event.course.course_number
         created_event = create_event(date_time, coursename, event.description, email)
         event.event_id = created_event['id']
         print("the event id")
@@ -305,8 +292,6 @@ def contactus(request):
         return HttpResponseRedirect(reverse('about'))
     form = ContactUsForm()
     return render(request, "studysite/contactus_form.html", {'form':form})
-    # form = ContactUsForm()
-    # return render(request, 'studysite/contactus_form.html', {'form': form})
 
 def addUserToEvent(request, pk, pku):
     course = get_object_or_404
@@ -318,17 +303,8 @@ def addUserToEvent(request, pk, pku):
         return HttpResponseRedirect(reverse('event-finder'))
     else:
         selected_event.users.add(User.objects.get(pk=pku))
-        print(selected_event.course.course_number)
-        print("event id: ")
-        print(selected_event.event_id)
-        print(selected_event.description)
         if User.objects.get(pk=pku).email != '':
             update_event(User.objects.get(pk=pku).email, selected_event.event_id)
-        print(User.objects.all())
-        print(selected_event)
-        print(pku)
-        print(StudyEvent.objects.all())
-        #ProfileView.request.user.pk
         selected_event.save()
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
@@ -374,7 +350,6 @@ def addCourseToUser(request, pk, pku):
 
 def deleteCourseFromUser(request, uid, pk):
     if 'delete_course' in request.POST :
-        print("hello")
         course = get_object_or_404(Course, pk=pk)
         try:
             selected_course = Course.objects.get(pk=pk)
@@ -384,8 +359,6 @@ def deleteCourseFromUser(request, uid, pk):
             return HttpResponseRedirect(reverse('dashboard', kwargs={'username': User.objects.get(id=uid).username,}))
         else:
             selected_course.course_roster.remove(uid)
-            print(selected_course.course_roster.all())
-            #ProfileView.request.user.pk
             selected_course.save()
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
@@ -474,10 +447,6 @@ for entry in result['items']:
         calendar_id = entry['id']
         break
 
-
-
-
-
 def create_event(start_time, summary, description, email, duration=1, location=None, ):
     end_time = start_time + timedelta(hours=duration)
     
@@ -510,11 +479,7 @@ def create_event(start_time, summary, description, email, duration=1, location=N
 
 def update_event(email, event_id):
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
-    #current_email = event['attendees'][0]['email']
-    #print(event['attendees'][0])
     email = {'email': email, 'responseStatus': 'accepted'}
-    #print(email)
-    #email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
     exists1 = False
     for index in range(len(event['attendees'])):
         if email == event['attendees'][index]:
@@ -526,50 +491,16 @@ def update_event(email, event_id):
 
 def delete_event_fromUser(email, event_id):
     event = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
-#     # current_email = event['attendees'][0]['email']
-#     # print(event['attendees'][0])
     email = {'email': email, 'responseStatus': 'accepted'}
-    # email1 = {'email': 'megan2020stuff@gmail.com', 'responseStatus': 'needsAction'}
-    # email2 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
-    # email3 = {'email': 'megan2022stuff@gmail.com', 'responseStatus': 'needsAction'}
-    # event['attendees'].append(email1)
-    # event['attendees'].append(email2)
-    # event['attendees'].append(email3)
-#     # print(email)
-#     # email1 = {'email': 'mv5vc@virginia.edu', 'responseStatus': 'needsAction'}
-#     # exists1 = False
     new_email_list = []
     for index in range(len(event['attendees'])):
         spec_email = event['attendees'][index]
         if email != spec_email:
-            # spec_e = spec_email['email']
-            # new_email = {'email': spec_e}
             new_email_list.append(spec_email)
     email3 = {'email': 'megan2022stuff@gmail.com', 'responseStatus': 'needsAction'}
     new_email_list.append(email3)
     event['attendees'] = new_email_list
-    print(new_email_list)
     return service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
-
-    # exists = False
-    # for index in range(len(event['attendees'])):
-    #     print(event['attendees'][index])
-    #     if email1 == event['attendees'][index]:
-    #         exists = True
-    # if exists == False :
-    #     event['attendees'].append(email1)
-    # email = 'megan2022stuff@gmail.com'
-    # email1 = 'mv5vc@virginia.edu'
-    # event['attendees'][0]['email'] = 'megan2022stuff@gmail.com'
-    # event['attendees'][0]['email'] = 'mv5vc@virginia.edu'
-    # event['attendees'].append(email)
-    # event['attendees'].append(email1)
-    # for emails in current_email:
-    #     if email != emails:
-    #         event['attendees']['email'] = email
-    #print(event['attendees'])
-    # event['attendees'].append(email)
-
 
 def course_search(request):
     if request.method == "POST":
