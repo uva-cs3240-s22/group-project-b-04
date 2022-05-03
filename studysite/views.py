@@ -318,7 +318,7 @@ def deleteUserFromEvent(request, uid, pk):
     except (KeyError, StudyEvent.DoesNotExist):
         # Redisplay the question voting form.
         print("Website doesn't exist")
-        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
+        return HttpResponseRedirect(reverse('event-finder'))
     else:
         selected_event.users.remove(uid)
         if request.user.email != '':
@@ -329,7 +329,7 @@ def deleteUserFromEvent(request, uid, pk):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse('dashboard', kwargs={'username':request.user.username,}))
+        return HttpResponseRedirect(reverse('event-finder'))
 
 def addCourseToUser(request, pk, pku):
     course = get_object_or_404(Course, pk=pk)

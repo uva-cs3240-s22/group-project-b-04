@@ -1,3 +1,4 @@
+
 #pfp {
     margin: 1vh 1vw 1vh 1vw;
     border-radius: 100%;
@@ -22,4 +23,15 @@
     border-radius: 1.5vw;
     border-width: 2px;
     padding: 2vw;
+}
+
+.delete-btn:hover {
+    color:white;
+    background-color: #2C2735;
+}
+
+.delete-btn {
+    font-size: 1.5vw;
+    padding: 1vw;
+    min-width: 5vw;
 }

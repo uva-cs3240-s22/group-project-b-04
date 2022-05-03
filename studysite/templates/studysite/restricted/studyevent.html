@@ -8,25 +8,43 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="d-flex flex-column justify-content-start align-items-start" style="margin: 5vh 8vw 5vh 8vw;">
-        <h1 class="d-flex justify-content-start page-title mb-3">STUDY EVENT</h1>
-        <h3 class="ml-auto justify-content-start mt-5">{{ studyevent.course }} by {{ studyevent.owner }}</h3>
-    </div>
+    
+    <div class="d-flex flex-row justify-content-between align-items-center mt-5" style="margin: 0.5vh 8vw 0.5vh 8vw;">
+            <h1 class="d-flex justify-content-left">STUDY EVENT</h1>
+            <p><a class="d-flex justify-content-right" href="{% url 'event-finder' %}">Return to Event List</a></p>
+        </div>
+        <h3 class="ml-auto justify-content-start mt-5" style="margin: 0vh 8vw 2vh 8vw;">{{ studyevent.course }} by {{ studyevent.owner }}</h3>
     <div class="container w-100 d-flex flex-column justify-content-center align-items-start px-5">
         <div class="container-body px-5">
             <p><strong>Description:</strong> {{ studyevent.description }}</p>
+            
             <p><strong>Attendees: </strong></p>
-            <div class="row row-cols-3 d-flex justify-content-start align-items-center">
+            <div class="d-flex justify-content-start align-items-center">
                 {% for user in participants %}
-                <div class="card user-card">
+                <div class="card user-card mx-4">
                     <div class="card-body d-flex justify-content-center align-items-center px-1">
                         <div class="d-flex flex-row justify-content-around align-items-center" style="width:100%;">
-                            <img id="pfp" src="{{ user.userprofile.image.url }}" alt="profile picture"/>
+                            {% if user.userprofile.image == "default.jpg" %}
+                                <img img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
+                            {% else %}
+                                <img img id="pfp" src="{{ user.userprofile.image.url }}"/>
+                            {% endif %}
                             <h5 class="card-text">{{ user.username }}</h5>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center mt-5">
+                <h5 class="mx-4" style="color:crimson;">You will be removed from this event's Attendees and returned to the Event List</h5>
+                <h5 class="mx-4" style="color:crimson;">You can rejoin events</h5>
+            <form action="{% url 'delete-event' user.id studyevent.pk %}" method="POST" id="delete-event-user-form">
+                {% csrf_token %}
+                <div class="d-flex justify-content-end align-items-center mt-4" style="margin-left: 1vw;">  
+                    <input class="btn btn-outline-dark delete-btn" type="submit" name="delete_event" value="delete"/>
+                    </div>
+                </div>
+            </form>
             </div>
         </div>
     </div>
