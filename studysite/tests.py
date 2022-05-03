@@ -188,6 +188,9 @@ class URLTest(unittest.TestCase):
     self.user1.delete()
     self.user2.delete()
 
+    self.userprofile1.delete()
+    self.userprofile2.delete()
+
 class CourseTest(unittest.TestCase):
   def setUp(self):
     try:
