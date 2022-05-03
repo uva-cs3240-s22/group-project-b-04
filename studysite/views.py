@@ -347,6 +347,7 @@ def addCourseToUser(request, pk, pku):
         return HttpResponseRedirect(reverse('course-finder', kwargs={'filtered':'all',}))
 
 def deleteCourseFromUser(request, uid, pk):
+    # idea to name buttons in order to use two on the same page from https://www.geeksforgeeks.org/how-to-use-multiple-submit-buttons-in-an-html-form/
     if 'delete_course' in request.POST :
         course = get_object_or_404(Course, pk=pk)
         try:
