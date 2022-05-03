@@ -10,7 +10,9 @@
 {% block content %}
     <div class="container d-flex justify-content-center align-items-center w-100">
         <div class="left-content d-flex justify-content-center align-items-center">
-            {% if user.userprofile.image == "default.jpg" %}
+            {% if user.email == '' and user.userprofile.image == "default.jpg" %}
+                <img class="pfp" src="{% static 'assets/def.jpg' %}" alt="Pfp" width="10" height="10"/>
+                {% elif user.userprofile.image == "default.jpg" %}
                 <img img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
                 {% else %}
                 <img img id="pfp" src="{{ user.userprofile.image.url }}"/>

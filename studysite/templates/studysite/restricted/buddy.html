@@ -27,11 +27,13 @@
             <div class="card mx-auto buddy-listing" style="width: 75vw;">
                 <div class="card-body d-flex align-items-center justify-content-between" style="margin: 0.5vh 1.5vw 0.5vh 1.5vw;">
                     <div class="con1 d-flex">
-                        {% if user.userprofile.image == "default.jpg" %}
-                        <img img id="pfp" src="{{ to_user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
+                        {% if user.email == '' and user.userprofile.image == "default.jpg" %}
+                            <img class="pfp" src="{% static 'assets/def.jpg' %}" alt="Pfp"/>
+                        {% elif user.userprofile.image == "default.jpg" %}
+                            <img img id="pfp" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="profile picture"/>
                         {% else %}
-                        <img img id="pfp" src="{{ to_user.userprofile.image.url }}"/>
-                        {% endif %}
+                            <img img id="pfp" src="{{ user.userprofile.image.url }}"/>
+                    {% endif %}
                     </div>
                     <div class="con2 d-flex flex-column" style="width:72%;">
                         <h4 class="d-flex card-title">{{ to_user.first_name }} {{ to_user.last_name }}</h4>
