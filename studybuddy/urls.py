@@ -29,4 +29,7 @@ urlpatterns = [
     path('studysite/', include('studysite.urls') ),
     path('', lambda request: redirect('studysite/', permanent=True)),
 ]
+
+#Figured out formatting for urlpatterns and how to get media files from https://docs.djangoproject.com/en/4.0/howto/static-files/
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
