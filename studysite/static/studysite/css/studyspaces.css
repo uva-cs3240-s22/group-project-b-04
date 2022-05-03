@@ -14,3 +14,18 @@
     width:80%;
     min-height: 45vh;
 }
+
+.heading, .main-content {
+    margin-top: 3vh;
+    font-weight: 200;
+    letter-spacing: 0.1em;
+}
+
+.hours {
+    line-height: 0.5em;
+}
+
+.location {
+    padding: 2vw;
+    margin-left: 4vw;
+}

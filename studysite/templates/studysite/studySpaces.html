@@ -8,22 +8,72 @@
 
 {% block content %}
 <!--column formatting from https://www.w3schools.com/howto/howto_css_two_columns.asp-->
-<div class="d-flex align-items-center justify-content-center mx-auto mt-5 main-content">
-    <div class="info-block text-dark">
-      <h4>What are our favorite study spaces?</h4>
-    </br>
-      <p>Rice Hall -- 85 Engineer's Way, Charlottesville, VA 22903</p>
-        <div class="row">
-        <div class="column">
-            <iframe width="300" height="250" style="border:0" loading="lazy" allowfullscreen
-src="https://www.google.com/maps/embed/v1/place?q=%2085%20Engineer's%20Way%2C%20Charlottesville%2C%20VA%2022903&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+<div class="d-flex  flex-column align-items-center justify-content-center mx-auto mt-5 main-content">
+
+    <div class="d-flex flex-column justify-content-center align-items-center mb-5 heading" style="width:100%;">
+        <h1>STUDY BUDDY STUDY GUIDE</h1>
+        <div class="d-flex flex-row justify-content-between align-items-center" style="width:40%;">
+            <a class="d-flex justify-content-right" href="#">Study Spots</a>
+            <a class="d-flex justify-content-right" href="#">Study Resources</a>
+            <a class="d-flex justify-content-right" href="#">Study Tips</a>
         </div>
-            <div class="column">
-                <img img id="ricehall" src="{% static 'assets/ricehall.jpg' %}" alt="rice study pic" width="300" height="250"/>
-            </div>
     </div>
-    </br>
-      <p>Clemons Library -- 164 McCormick Rd, Charlottesville, VA 22903</p>
+    
+    <div class="d-flex flex-column justify-content-center align-items-center mt-5 mb-4">
+        <h4 class="mx-auto mb-5">Don't Know Where to Study?</h4>
+        
+
+        <div class="d-flex flex-row justify-content-around align-items-center w-100 mt-3">
+            <div class="d-flex flex-column ml-auto mr-5 justify-content-center align-items-center">
+                <h3 class="mxb3"><strong>RICE HALL</strong></h3>
+                <div class="d-flex flex-column hours justify-content-center align-items-center mt-2">
+                    <p>Hours of Operation</p>
+                    <p>Monday: 00 AM - 00 PM</p>
+                    <p>Tuesday: 00 AM - 00 PM</p>
+                    <p>Wednesday: 00 AM - 00 PM</p>
+                    <p>Thursday: 00 AM - 00 PM</p>
+                    <p>Friday: 00 AM - 00 PM</p>
+                    <p>Saturday: 00 AM - 00 PM</p>
+                    <p>Sunday: 00 AM - 00 PM</p>
+                </div>
+                
+            </div>
+            <div class='d-flex flex-column mr-auto justify-content-center align-items-center'>
+                <div class='d-flex flex-row justify-content-center align-items-center location'>
+                    <img class="mr-5" id="ricehall" src="{% static 'assets/ricehall.jpg' %}" alt="rice study pic" style="width:18vw;height:15vw;"/>
+                    <iframe style="width:18vw;height:15vw;" style="border:0" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?q=%2085%20Engineer's%20Way%2C%20Charlottesville%2C%20VA%2022903&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+                </div>
+                <a class="mx-auto" href="https://goo.gl/maps/Ff2YfUnq8t8qCd1B7" alt="google map link">Rice Hall -- 85 Engineer's Way, Charlottesville, VA 22903</a>
+            </div>
+        </div>
+
+
+        <div class="d-flex flex-row justify-content-around align-items-center w-100 mt-3">
+            <div class="d-flex flex-column ml-auto mr-5 justify-content-center align-items-center">
+                <h3 class="mxb3"><strong>CLEMMONS LIBRARY</strong></h3>
+                <div class="d-flex flex-column hours justify-content-center align-items-center mt-2">
+                    <p>Hours of Operation</p>
+                    <p>Monday: 00 AM - 00 PM</p>
+                    <p>Tuesday: 00 AM - 00 PM</p>
+                    <p>Wednesday: 00 AM - 00 PM</p>
+                    <p>Thursday: 00 AM - 00 PM</p>
+                    <p>Friday: 00 AM - 00 PM</p>
+                    <p>Saturday: 00 AM - 00 PM</p>
+                    <p>Sunday: 00 AM - 00 PM</p>
+                </div>
+                
+            </div>
+            <div class='d-flex flex-column mr-auto justify-content-center align-items-center'>
+                <div class='d-flex flex-row justify-content-center align-items-center location'>
+                    <img class="mr-5" id="ricehall" src="{% static 'assets/ricehall.jpg' %}" alt="rice study pic" style="width:18vw;height:15vw;"/>
+                    <iframe style="width:18vw;height:15vw;" style="border:0" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?q=%2085%20Engineer's%20Way%2C%20Charlottesville%2C%20VA%2022903&key=AIzaSyAxHBO29s-PZXkm73Qlr9WhI6t_tSzc-O0"></iframe>
+                </div>
+                <a class="mx-auto" href="https://goo.gl/maps/JbPngTCRDbzg5v6A6" alt="google map link">Clemons Library -- 164 McCormick Rd, Charlottesville, VA 22903</a>
+            </div>
+        </div>
+
+
+      <p></p>
         <div class="row">
         <div class="column">
             <iframe width="300" height="250" style="border:0" loading="lazy" allowfullscreen
