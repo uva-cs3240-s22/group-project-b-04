@@ -27,6 +27,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('logout', LogoutView.as_view(), name='logout'),
     path('about/', views.AboutView.as_view(), name='about'),
+    path('studySpaces/', views.StudySpacesView.as_view(), name='studySpaces'),
     path('<str:username>/profile', views.ProfileView.as_view(), name='profile'),
     path('<str:username>/profile/edit_profile', views.postprofile, name='edit_profile'),
     path('courses/<str:filtered>', views.CoursesView.as_view(), name='course-finder'),
